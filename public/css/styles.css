@@ -7727,6 +7727,10 @@ textarea.form-control-lg {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
 }
+.text-theme {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-theme-rgb), var(--bs-text-opacity)) !important;
+}
 
 .text-secondary {
   --bs-text-opacity: 1;
@@ -11331,7 +11335,7 @@ hr.divider {
   height: 0.2rem;
   max-width: 3.25rem;
   margin: 1.5rem auto;
-  background-color: #f4623a;
+  background-color: #5ce1e6;
   opacity: 1;
 }
 
