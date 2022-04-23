@@ -1,0 +1,224 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\DayOfWeekModel;
+use App\Models\HourModel;
+use App\Models\RoomModel;
+use Illuminate\Http\Request;
+use App\Models\ScheduleModel;
+use Illuminate\Support\Facades\DB;
+use App\Models\ScheduleHourDayModel;
+use Carbon\Carbon;
+
+class ScheduleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // $schedule = ScheduleModel::all();
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
+
+        $dataSelect = [];
+        $day = NULL;
+        for ($i=0; $i < 7; $i++) {
+            if ($i == 0) {
+                $day = Carbon::now();
+                
+            } else {
+                $day = Carbon::now()->addDays($i);
+            }
+
+            if ($day->isSunday()) {                
+                continue;
+            }
+
+            array_push($dataSelect, $day);
+        }
+        // dd($dataSelect);
+
+        return view('schedule.index', compact('hours', 'rooms', 'dataSelect'));
+    }
+
+    public function showSpecificShcedule(Request $request)
+    {
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
+
+        $_day = Carbon::parse($request->day)->format('Y-m-d');
+        $schedules = ScheduleModel::where('date', $_day)->get();
+
+        $dataSelect = [];
+        $day = NULL;
+        for ($i=0; $i < 7; $i++) {
+            if ($i == 0) {
+                $day = Carbon::now();
+                
+            } else {
+                $day = Carbon::now()->addDays($i);
+            }
+
+            if ($day->isSunday()) {                
+                continue;
+            }
+
+            array_push($dataSelect, $day);
+        }
+
+        $showSpecificShedule = true;
+
+        return view('schedule.index', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $dados = $request->all();
+
+        try {
+            DB::beginTransaction();
+
+            $dados['status'] = 'Ocupado';
+            
+            ScheduleModel::create($dados);
+
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamento realizado com sucesso!']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+        
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        $dados = $request->all();
+        try {
+            DB::beginTransaction();
+            $schedule = ScheduleModel::findOrFail($dados['schedule_id']);
+    
+            $schedule->delete();
+    
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamento cancelado com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+
+    }
+
+    public function modalSchedule(Request $request)
+    {
+        $dados = $request->all();
+
+        $hour = HourModel::find($dados['hour_id']);
+        $room = RoomModel::find($dados['room_id']);
+        $inUse = false;
+        $novoAgendamento = false;
+        $cancelamento = false;
+        $action = 'schedule.destroy';
+        $data = $dados['data'];
+
+        $schedules = ScheduleModel::where([
+            'date' => $dados['data'],
+            'hour_id' => $dados['hour_id'],
+            'room_id' => $dados['room_id'],
+            'user_id' => $dados['user_id'],
+        ])->first();
+        
+        $schedulesB = ScheduleModel::where([
+            'date' => $dados['data'],
+            'hour_id' => $dados['hour_id'],
+            'room_id' => $dados['room_id'],
+        ])->first();
+
+        // Verifica se a sala já está em uso pela pessoa logada
+        // No horário selecionado
+        if (!is_null($schedules)) {
+            // Se não tiver, retorna o modal de cancelamento
+            $inUse = true;
+            $cancelamento = true;
+            $novoAgendamento = false;
+            
+            return view('schedule.modals.modal-schedule', compact('schedules', 'hour', 'room', 'inUse', 'data', 'cancelamento', 'novoAgendamento', 'action'));
+            
+        } else if ($schedules == NULL && !empty($schedulesB)) {
+            // Se a sala está em uso por outra pessoa, 
+            // retorna a mensagem informando que o horário está ocupado
+            $novoAgendamento = false; 
+            $cancelamento = false;
+            $inUse = true;           
+            return view('schedule.modals.modal-schedule', compact('hour', 'room', 'data', 'inUse', 'novoAgendamento', 'cancelamento'));
+        } else if (empty($schedules) && empty($schedulesB)) {
+            // Se a sala não está em uso, retorna o modal de cadastro
+            $inUse = false;
+            $novoAgendamento = true;
+            $cancelamento = false;
+            return view('schedule.modals.modal-schedule', compact('inUse', 'novoAgendamento', 'cancelamento', 'hour', 'room', 'data'));
+        }
+    }
+}
