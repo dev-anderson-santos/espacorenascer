@@ -32,6 +32,7 @@
 </div>
 @endif
 <form action="" method="post">
+    <input type="hidden" id="schedule" value="{{ !empty($schedules) ? $schedules->id : '' }}">
     @if ($cancelamento)
         <input type="hidden" name="action" value="{{ $action }}">
     @endif
@@ -59,7 +60,11 @@
     @endif
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="btn-fechar" data-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-primary" id="agendar">{{ $cancelamento ? 'Cancelar Agendamanto' : 'Agendar' }}</button>        
+        @if ($cancelamento)
+            <button type="button" class="btn btn-danger" id="btn-cancelar-agendamento">Cancelar Agendamento</button>
+        @else
+            <button type="button" class="btn btn-primary" id="agendar">Agendar</button>
+        @endif
     </div>
 </form>
 
@@ -76,66 +81,66 @@
 
 <script>
 $('#agendar').on('click', function () {
-    if ($('[name="action"]').val() != undefined) {
-        bootbox.confirm({
-            title: 'Cancelar Agendamento',
-            message: "Deseja realmente cancelar o agendamento?<br> Esta ação não poderá ser desfeita!",
-            buttons: {
-                confirm: {
-                    label: 'Sim',
-                    className: 'btn-danger'
-                },
-                cancel: {
-                    label: 'Não',
-                    className: 'btn-secondary'
-                }
+    $.ajax({
+        url: '{{ route('schedule.store') }}',
+        method: 'POST',
+        data: {
+            room_id: {{ $room->id }},
+            hour_id: {{ $hour->id }},
+            user_id: {{ auth()->user()->id }},
+            date: $('#data-agendamento').val(),
+            created_by: {{ auth()->user()->id }},
+            tipo: $('#type-schedule').val(),
+            _token: '{{ csrf_token() }}'
+        },
+        beforeSend: function () {
+            $('#agendar').prop('disabled', true);
+            $('#agendar').html('Agendando <i class="fa fa-spinner fa-spin"></i>');
+        },
+        success: function(data) {
+            $('#agendar').html('Agendado!');
+            console.table(data);
+            location.reload();
+        }
+    });
+});
+
+$('#btn-cancelar-agendamento').on('click', function () {
+    bootbox.confirm({
+        title: 'Cancelar Agendamento',
+        message: "Deseja realmente cancelar o agendamento?<br> Esta ação não poderá ser desfeita!",
+        buttons: {
+            confirm: {
+                label: 'Sim',
+                className: 'btn-danger'
             },
-            callback: function (result) {
-                if (result) {
-                    $.ajax({
-                        url: '/app/schedule/to-destroy-schedule',
-                        method: 'POST',
-                        data: {
-                            schedule_id: {{ !empty($schedules) ? $schedules->id : '' }},
-                            _token: '{{ csrf_token() }}'
-                        },
-                        beforeSend: function () {
-                            $('#agendar').prop('disabled', true);
-                            $('#btn-fechar').prop('disabled', true);
-                            $('#agendar').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
-                        },
-                        success: function(data) {
-                            $('#agendar').html('Cancelado!');
-                            console.table(data);
-                            location.reload();
-                        }
-                    });
-                }
+            cancel: {
+                label: 'Não',
+                className: 'btn-secondary'
             }
-        });
-    } else {
-        $.ajax({
-            url: '{{ route('schedule.store') }}',
-            method: 'POST',
-            data: {
-                room_id: {{ $room->id }},
-                hour_id: {{ $hour->id }},
-                user_id: {{ auth()->user()->id }},
-                date: $('#data-agendamento').val(),
-                created_by: {{ auth()->user()->id }},
-                tipo: $('#type-schedule').val(),
-                _token: '{{ csrf_token() }}'
-            },
-            beforeSend: function () {
-                $('#agendar').prop('disabled', true);
-                $('#agendar').html('Agendando <i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function(data) {
-                $('#agendar').html('Agendado!');
-                console.table(data);
-                location.reload();
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: '/app/schedule/to-destroy-schedule',
+                    method: 'POST',
+                    data: {
+                        schedule_id: $('#schedule').val() != '' ? $('#schedule').val() : -1,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: function () {
+                        $('#agendar').prop('disabled', true);
+                        $('#btn-fechar').prop('disabled', true);
+                        $('#agendar').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                    },
+                    success: function(data) {
+                        $('#agendar').html('Cancelado!');
+                        console.table(data);
+                        location.reload();
+                    }
+                });
             }
-        });
-    }
+        }
+    });
 });
 </script>
