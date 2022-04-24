@@ -49,14 +49,10 @@
                                     @else
                                         <a href="javascript:void(0)" onclick="modalGlobalOpen('{{ route('schedule.modal-schedule', ['room_id' => $room->id, 'hour_id' => $hour->id, 'user_id' => auth()->user()->id, 'data' => $_day]) }}', 'Agendamento')">
                                         @php
-                                            $schedule = \App\Models\ScheduleModel::where('hour_id', $hour->id)->get();
+                                            $schedule = \App\Models\ScheduleModel::where(['hour_id' => $hour->id, 'date' => $_day, 'room_id' => $room->id])->orderBy('hour_id', 'ASC')->first();
                                         @endphp
-                                        @if(count($schedule) > 0 && !empty($schedule[$loop->index]))
-                                            @if ($schedule[$loop->index]->date == $_day && $schedule[$loop->index]->room_id == $room->id)
-                                                {{ $schedule[$loop->index]->user->name }} 
-                                            @else
-                                                Livre
-                                            @endif
+                                        @if (!empty($schedule))
+                                            {{ $schedule->user->name }}
                                         @else
                                             Livre
                                         @endif
