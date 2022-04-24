@@ -255,7 +255,7 @@ return [
         // ],
         // ['header' => 'account_settings'],
         [
-            'text' => 'Dashboard',
+            'text' => 'Meus horários',
             'url'  => '/home',
             'icon' => 'fas fa-chart-line',
         ],
