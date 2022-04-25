@@ -1,0 +1,356 @@
+<?php
+
+use Carbon\Carbon;
+// use App\Models\DenunciaAtendimentoModel;
+
+if(!function_exists('removeCaracteresEspeciais')) {
+    /**
+     * Retorna a string informada sem caracteres especiais.
+     *
+     * @param string $string
+     * @return string|null
+    */
+    function removeCaracteresEspeciais($string) {
+
+        $_string = iconv( "UTF-8" , "ASCII//TRANSLIT//IGNORE" , $string );
+        $_string = preg_replace(['/[ ]/' , '/[^A-Za-z0-9\-]/'] , ['' , ''], $_string);
+        $_string = str_replace('-', '', $_string);
+
+        return $_string != '' ? $_string : null;
+    }
+}
+
+if(!function_exists('generatePassword')) {
+
+    function generatePassword($qtyCaraceters = 8)
+    {
+        //Letras minúsculas embaralhadas
+        $smallLetters = str_shuffle('abcdefghijklmnopqrstuvwxyz');
+
+        //Letras maiúsculas embaralhadas
+        $capitalLetters = str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+        //Números aleatórios
+        $numbers = (((date('Ymd') / 12) * 24) + mt_rand(800, 9999));
+        $numbers .= 1234567890;
+
+        //Caracteres Especiais
+        $specialCharacters = str_shuffle('!@#$%*-');
+
+        //Junta tudo
+        $characters = $capitalLetters . $smallLetters . $numbers . $specialCharacters;
+
+        //Embaralha e pega apenas a quantidade de caracteres informada no parâmetro
+        $password = substr(str_shuffle($characters), 0, $qtyCaraceters);
+
+        //Retorna a senha
+        return $password;
+    }
+}
+
+if (!function_exists('maskCPF')) {
+    /**
+     * Adiciona a mascara $mask no $str
+     *
+     * @param $mask ###.###.###-##
+     * @param $str
+     * @return mixed
+     */
+    function maskCPF($mask, $str)
+    {
+        $str = str_replace(" ", "", $str);
+        for ($i = 0; $i < strlen($str); $i++) {
+            if($i < 7) {
+                $mask[ strpos($mask, "#") ] = 'X';    
+            } else {
+                $mask[ strpos($mask, "#") ] = $str[ $i ];
+            }
+        }
+
+        return $mask;
+    }
+}
+
+if (!function_exists('mask')) {
+    /**
+     * Adiciona a mascara $mask no $str
+     *
+     * @param $mask ###.###.###-##
+     * @param $str
+     * @return mixed
+     */
+    function mask($mask, $str)
+    {
+        // dd($mask, $str);
+        $str = str_replace(" ", "", $str);
+        for ($i = 0; $i < strlen($str); $i++) {
+            $mask[ strpos($mask, "#") ] = $str[ $i ];
+        }
+
+        return $mask;
+    }
+}
+
+// if(!function_exists('perfil')) {
+//     function perfil($perfil = 0|[])
+//     {   
+//         $perfilTipoUsuario =  \App\Models\UsuarioModel::find(session('id_usuario'))->tipoUsuario->perfil;
+//         if(is_array($perfil))
+//             return in_array($perfilTipoUsuario, $perfil);
+            
+//         return $perfil == $perfilTipoUsuario;
+//     }
+// }
+
+// if(!function_exists('perfilExcept')) {
+//     function perfilExcept($perfil = 0|[])
+//     {   
+//         $perfilTipoUsuario =  \App\Models\UsuarioModel::find(session('id_usuario'))->tipoUsuario->perfil;
+//         if(is_array($perfil))
+//             return !in_array($perfilTipoUsuario, $perfil);
+            
+//         return $perfil != $perfilTipoUsuario;
+//     }
+// }
+
+// if(!function_exists('notificacoes')) {
+//     function notificacoes()
+//     {   
+//         $notificacoes = \App\Models\NotificacoesModel::where([
+//             'id_usuario' => session()->get('id_usuario'),
+//             'lido_em' => NULL 
+//         ])->get();
+//         return $notificacoes;
+//     }
+// }
+
+if(!function_exists('getEstados')) {
+    function getEstados(string $sigla = NULL)
+    {   
+        $estados = [
+            "AC" => "Acre",
+            "AL" => "Alagoas",
+            "AP" => "Amapá",
+            "AM" => "Amazonas",
+            "BA" => "Bahia",
+            "CE" => "Ceará",
+            "DF" => "Distrito Federal",
+            "ES" => "Espírito Santo",
+            "GO" => "Goiás",
+            "MA" => "Maranhão",
+            "MT" => "Mato Grosso",
+            "MS" => "Mato Grosso do Sul",
+            "MG" => "Minas Gerais",
+            "PA" => "Pará",
+            "PB" => "Paraíba",
+            "PR" => "Paraná",
+            "PE" => "Pernambuco",
+            "PI" => "Piauí",
+            "RJ" => "Rio de Janeiro",
+            "RN" => "Rio Grande do Norte",
+            "RS" => "Rio Grande do Sul",
+            "RO" => "Rondônia",
+            "RR" => "Roraima",
+            "SC" => "Santa Catarina",
+            "SP" => "São Paulo",
+            "SE" => "Sergipe",
+            "TO" => "Tocantins",
+        ];
+
+        return is_null($sigla) ? $estados : $estados[$sigla];
+    }
+}
+
+if(!function_exists('denunciaAtendimentoStatus')) {
+    function denunciaAtendimentoStatus(string $item = NULL)
+    {   
+        $status = [
+            'AGUARDANDO_REVISAO' => 'Aguardando Revisão',
+            'AGUARDANDO_CORRECAO' => 'Aguardando Correção',
+            'AGUARDANDO_DIFUSAO' => 'Aguardando Difusão',
+            'DIFUNDIDA' => 'Difundida',
+            'AGUARDANDO_RESULTADOS' => 'Aguardando Resultados',
+            'AGUARDANDO_ANALISE' => 'Aguardando Análise',
+            'ARQUIVADA' => 'Arquivada',
+            'FINALIZADA' => 'Finalizada',
+            'EM_EDICAO' => 'Em cadastramento',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+if(!function_exists('pelesEnvolvidos')) {
+    function pelesEnvolvidos(string $item = NULL)
+    {   
+        $status = [
+            'branco' => 'Branco',
+            'negro' => 'Negro',
+            'pardo' => 'Pardo',
+            'desconhece' => 'Desconhece',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+if(!function_exists('estaturasEnvolvidos')) {
+    function estaturasEnvolvidos(string $item = NULL)
+    {   
+        $status = [
+            'alta' => 'Alta',
+            'baixa' => 'Baixa',
+            'mediana' => 'Mediana',
+            'desconhece' => 'Desconhece',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+if(!function_exists('portesEnvolvidos')) {
+    function portesEnvolvidos(string $item = NULL)
+    {   
+        $status = [
+            'magro' => 'Magro',
+            'normal' => 'Normal',
+            'gordo' => 'Gordo',
+            'desconhece' => 'Desconhece',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+if(!function_exists('cabelosEnvolvidos')) {
+    function cabelosEnvolvidos(string $item = NULL)
+    {   
+        $status = [
+            'pretos' => 'Pretos',
+            'castanhos' => 'Castanhos',
+            'loiros' => 'Loiros',
+            'ruivos' => 'Ruivos',
+            'grisalhos' => 'Grisalhos',
+            'careca' => 'Careca',
+            'desconhece' => 'Desconhece',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+if(!function_exists('olhosEnvolvidos')) {
+    function olhosEnvolvidos(string $item = NULL)
+    {   
+        $status = [
+            'pretos' => 'Pretos',
+            'castanhos' => 'Castanhos',
+            'verdes' => 'Verdes',
+            'azuis' => 'Azuis',
+            'desconhece' => 'Desconhece',
+        ];
+
+        return is_null($item) ? $status : $status[$item];
+    }
+}
+
+// if(!function_exists('updateStatusDenunciaAtendimento')) {
+//     function updateStatusDenunciaAtendimento(DenunciaAtendimentoModel $atendimento)
+//     {   
+//         if($atendimento->tipo == 'DENUNCIA') {
+//             $dados = [];
+//             if ($atendimento->status == 'AGUARDANDO_CORRECAO' && perfil(['Administrador', 'Supervisor', 'Operador'])) {
+//                 $dados['status'] = 'AGUARDANDO_REVISAO';
+//                 $dados['corrigido_por'] = session()->get('id_usuario');
+//                 $dados['observacoes_para_correcao'] = NULL;
+                
+//             } else if ($atendimento->status == 'AGUARDANDO_DIFUSAO' && perfil(['Administrador', 'Supervisor', 'Difusor'])) {
+//                 $dados['status'] = 'AGUARDANDO_REVISAO';
+//                 $dados['corrigido_por'] = session()->get('id_usuario');
+//                 $dados['observacoes_do_difusor'] = NULL;
+//             }
+    
+//             return $dados;
+//         }
+        
+//         return [];
+//     }
+// }
+
+if(!function_exists('formatarLog')) {
+    function formatarLog($log)
+    {   
+        $space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $str = '';
+        foreach (json_decode($log) as $k => $item) {
+            if($k == 'text') {
+                $str = $item;
+            } else {
+                foreach ($item as $key => $value) {
+                    $str = $str . strtoupper(str_replace('_', ' ', $key)) . ':<br>';
+                    $str = $str . $space . '<strong>de:</strong> '. $value->before . '<br>';
+                    $str = $str . $space . '<strong>para:</strong> '. $value->after . '<br>';
+                }
+            }
+        }
+        return $str;
+    }
+}
+
+if(!function_exists('origemDenuncia')) {
+    function origemDenuncia(string $item = NULL)
+    {   
+        $origem = [
+            'INTERNA' => 'Interna',
+            '180' => '180',
+            'DENUNCIE_AQUI' => 'Denuncie Aqui'
+        ];
+
+        return is_null($item) ? $origem : $origem[$item];
+    }
+}
+
+if (!function_exists('getVersion')) {
+    /**
+     * Busca a versão do sistema
+     *
+     * @return string
+     */
+    function getVersion()
+    {
+        $content = file_get_contents(base_path('package.json'));
+        $content = json_decode($content,true);
+        
+        return $content['version'];
+    }
+}
+
+// if (!function_exists('gerarProtocolo')) {
+//     /**
+//      * Gera o protocolo de atendimento
+//      *
+//      * @param array $dados
+//      * @return string
+//      */
+//     function gerarProtocolo(array $dados)
+//     {
+//         $tipo = $dados['tipo'] == 'ATENDIMENTO' ? 'A' : 'D';
+
+//         $denunciaAux = DenunciaAtendimentoModel::{strtolower($dados['tipo'])}()->latest()->first();
+//         $sequencia = sprintf('%05d', DenunciaAtendimentoModel::{strtolower($dados['tipo'])}()->whereNotNull('protocolo')->get()->count() + 1);
+        
+//         if ($denunciaAux) {
+//             $mesCriacaoAtendimento = Carbon::parse($denunciaAux->created_at)->format('m');
+//             $mesAtual = Carbon::now()->format('m');
+
+//             if(($mesAtual > $mesCriacaoAtendimento) || ($mesCriacaoAtendimento == 12 && $mesAtual == 1)) {
+//                 $sequencia = sprintf('%05d', 1);
+//             }
+//         }
+
+//         $data = Carbon::now()->format('m.Y');
+        
+//         return "$tipo$sequencia.$data";
+            
+//     }
+// }
