@@ -97,10 +97,20 @@ $('#agendar').on('click', function () {
             $('#agendar').prop('disabled', true);
             $('#agendar').html('Agendando <i class="fa fa-spinner fa-spin"></i>');
         },
-        success: function(data) {
-            $('#agendar').html('Agendado!');
-            console.table(data);
-            location.reload();
+        success: function(response) {
+            if(response.status == 'success') {
+                $('#agendar').html('Agendado!');
+                location.reload();
+            } else if (response.status == 'warning') {
+                bootbox.alert(response.message);
+                $('#agendar').html('Agendar');
+                $('#agendar').prop('disabled', true);
+                $('#agendar').remove('i');
+            } else if (response.status == 'error') {
+                $('#agendar').html('Não Agendado!');
+                bootbox.alert('Ocorreu um erro ao agendar o horário!');
+                console.log(response.message);
+            }
         }
     });
 });
