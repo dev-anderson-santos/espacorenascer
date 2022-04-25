@@ -30,6 +30,7 @@ class User extends Authenticatable
         'age_range_service',
         'approach_lines',
         'is_admin',
+        'status'
     ];
 
     /**
