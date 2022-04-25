@@ -16,11 +16,11 @@ class CreateUsersHasAddressesTable extends Migration
         Schema::create('users_has_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('addresses_id')->nullable(false);
+            $table->unsignedBigInteger('address_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('addresses_id')->references('id')->on('addresses');
+            $table->foreign('address_id')->references('id')->on('addresses');
         });
     }
 

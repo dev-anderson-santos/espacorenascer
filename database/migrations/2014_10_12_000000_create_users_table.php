@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->text('age_range_service')->nullable(true);
             $table->text('approach_lines')->nullable(true);
             $table->smallInteger('is_admin')->nullable(true);
+            $table->smallInteger('status')->default('1');
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
