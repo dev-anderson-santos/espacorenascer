@@ -14,8 +14,7 @@ class AddressModel extends Model
         'number',
         'district',
         'city',
-        'state',
-        'country'
+        'state'
     ];
 
     public function roomHasAddresses()
