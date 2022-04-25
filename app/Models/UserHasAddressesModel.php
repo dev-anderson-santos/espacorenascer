@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserHasAddressesModel extends Model
 {
-    protected $table = 'user_has_addresses';
+    protected $table = 'users_has_addresses';
     protected $fillable = ['user_id', 'address_id'];
 
     public function user()
