@@ -10942,3 +10942,7 @@ a.text-dark:focus {
   }
 }
 
+.border-left-danger {
+  border-left: .25rem solid #e74a3b!important;
+}
+
