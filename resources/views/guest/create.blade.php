@@ -151,7 +151,7 @@
                                             <div class="row m-3">
                                                 <div class="col-12 col-md-6 mt-2 mb-2">
                                                     <label class="form-labels" for="formacoes_academicas">Formações Acadêmicas</label>
-                                                    <textarea id="academic_formations" style="min-height: 150px;" name="formacoes_academicas" class="form-control"></textarea>
+                                                    <textarea id="academic_formations" style="min-height: 150px;" name="academic_formations" class="form-control"></textarea>
                                                 </div>
                                                 
                                                 <div class="col-12 col-md-6 mt-2 mb-2">
