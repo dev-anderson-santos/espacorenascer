@@ -13,6 +13,18 @@ use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
+
+    public function mySchedules()
+    {
+        $schedules = ScheduleModel::where('user_id', auth()->user()->id)->get();
+
+        // Listtar dois meses
+        // Agrupar por mes, depois por tipo, somando cada um e colocar o total
+        // No botão detalhes, abrir um modal com uma tabela listando:
+        // - Profissional, Tipo de atendimento, Dia da semana, Horário, Sala, Created_at
+
+        return view('schedule.my-schedules', compact('schedules'));
+    }
     /**
      * Display a listing of the resource.
      *
@@ -100,6 +112,16 @@ class ScheduleController extends Controller
 
             $dados['status'] = 'Ocupado';
             
+            $scheduleInUse = ScheduleModel::where([
+                'date' => $dados['date'],
+                'hour_id' => $dados['hour_id'],
+                'room_id' => $dados['room_id'],
+            ])->first();
+
+            if($scheduleInUse) {
+                return response()->json(['status' => 'warning', 'message' => 'Este horário já está ocupado.']);
+            }
+
             ScheduleModel::create($dados);
 
             DB::commit();
@@ -199,7 +221,7 @@ class ScheduleController extends Controller
         // Verifica se a sala já está em uso pela pessoa logada
         // No horário selecionado
         if (!is_null($schedules)) {
-            // Se não tiver, retorna o modal de cancelamento
+            // Se tiver, retorna o modal de cancelamento
             $inUse = true;
             $cancelamento = true;
             $novoAgendamento = false;
@@ -207,7 +229,7 @@ class ScheduleController extends Controller
             return view('schedule.modals.modal-schedule', compact('schedules', 'hour', 'room', 'inUse', 'data', 'cancelamento', 'novoAgendamento', 'action'));
             
         } else if ($schedules == NULL && !empty($schedulesB)) {
-            // Se a sala está em uso por outra pessoa, 
+            // Se a sala está em uso por outra pessoa (schedulesB), 
             // retorna a mensagem informando que o horário está ocupado
             $novoAgendamento = false; 
             $cancelamento = false;
