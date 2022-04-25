@@ -28,7 +28,7 @@ class HomeController extends Controller
 
     public function create()
     {
-        return view('guest.create');
+        
     }
     
     public function schedule()
