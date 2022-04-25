@@ -69,6 +69,11 @@
                 </a>
             @endif
             <a class="btn btn-default btn-flat float-right @if(!$profile_url) btn-block @endif"
+               href="{{ route('user.edit', ['user_id' => auth()->user()->id]) }}">
+                <i class="fas fa-user"></i>
+                Meus Dados
+            </a>
+            <a class="btn btn-default btn-flat float-right @if(!$profile_url) btn-block @endif"
                href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fa fa-fw fa-power-off"></i>
                 {{ __('adminlte::adminlte.log_out') }}
@@ -78,7 +83,7 @@
                     {{ method_field(config('adminlte.logout_method')) }}
                 @endif
                 {{ csrf_field() }}
-            </form>
+            </form>            
         </li>
 
     </ul>
