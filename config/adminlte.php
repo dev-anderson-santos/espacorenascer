@@ -256,8 +256,8 @@ return [
         // ['header' => 'account_settings'],
         [
             'text' => 'Meus horários',
-            'url'  => '/home',
-            'icon' => 'fas fa-chart-line',
+            'url'  => '/app/schedule/my-schedules',
+            'icon' => 'fas fa-clock',
         ],
         [
             'text' => 'Agenda',
@@ -268,22 +268,26 @@ return [
             'text' => 'Clientes',
             'url'  => 'admin/settings',
             'icon' => 'fas fa-users',
+            'can'  => 'is_admin',
         ],
-        [
-            'text' => 'Salas',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-home',
-        ],
+        // [
+        //     'text' => 'Salas',
+        //     'url'  => 'admin/settings',
+        //     'icon' => 'fas fa-home',
+        //     'can'  => 'is_admin',
+        // ],
         [
             'text' => 'Contratos',
             'url'  => 'admin/settings',
             'icon' => 'fas fa-file-contract',
+            'can'  => 'is_admin',
         ],
-        [
-            'text' => 'Configurações',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-cogs',
-        ],
+        // [
+        //     'text' => 'Configurações',
+        //     'url'  => 'admin/settings',
+        //     'icon' => 'fas fa-cogs',
+        //     'can'  => 'is_admin',
+        // ],
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',
