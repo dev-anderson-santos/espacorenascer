@@ -76,7 +76,7 @@
                                                 
                                                 <div class="col-12 col-md-3 mt-2 mb-2">
                                                     <label class="form-labels" for="data_nascimento">Data de Nascimento</label>
-                                                    <input name="birth_date" id="data_nascimento" class="form-control" maxlength="10" type="text" placeholder="00/00/0000" value="{{ old('birth_date') ?? $usuario->birth_date ?? '' }}">
+                                                    <input name="birth_date" id="data_nascimento" class="form-control" maxlength="10" type="date" placeholder="00/00/0000" value="{{ old('birth_date') ?? $usuario->birth_date ?? '' }}">
                                                 </div>
                                                 
                                             </div>

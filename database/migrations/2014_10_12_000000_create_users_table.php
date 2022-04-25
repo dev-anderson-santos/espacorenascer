@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('cpf')->nullable(true)->unique();
             $table->string('inscricao_crp_crm')->nullable(true);
-            $table->dateTime('birth_date')->nullable(true);
+            $table->date('birth_date')->nullable(true);
             $table->text('academic_formations')->nullable(true);
             $table->text('syndromes_special_situations_experience')->nullable(true);
             $table->text('age_range_service')->nullable(true);
