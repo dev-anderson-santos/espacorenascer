@@ -30,7 +30,7 @@
                    value="{{ old('username') }}" placeholder="Informe o usuário" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
-                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                    <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
             @if($errors->has('username'))
@@ -88,7 +88,7 @@
     {{-- Register link --}}
     @if($register_url)
         <p class="my-0">
-            <a href="{{ $register_url }}">
+            <a href="{{ route('user.guest-create') }}">
                 {{ __('adminlte::adminlte.register_a_new_membership') }}
             </a>
         </p>
