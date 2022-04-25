@@ -266,7 +266,7 @@ return [
         ],
         [
             'text' => 'Clientes',
-            'url'  => 'admin/settings',
+            'url'  => '#',
             'icon' => 'fas fa-users',
             'can'  => 'is_admin',
         ],
@@ -278,7 +278,7 @@ return [
         // ],
         [
             'text' => 'Contratos',
-            'url'  => 'admin/settings',
+            'url'  => '#',
             'icon' => 'fas fa-file-contract',
             'can'  => 'is_admin',
         ],
