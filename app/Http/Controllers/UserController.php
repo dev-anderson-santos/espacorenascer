@@ -80,7 +80,7 @@ class UserController extends Controller
             return redirect()->route('schedule.my-schedules')->with('success', 'Usuário cadastrado com sucesso!');
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e->getMessage());
+            
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -174,7 +174,7 @@ class UserController extends Controller
             return redirect()->route('user.edit', ['user_id' => $user->id])->with('success', 'Usuário atualizado com sucesso!');
         } catch(\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+            
             $message = 'Ocorreu um erro ao salvar.';
             return redirect()->route('user.edit', $dados['user_id'])->with(['error' => true, 'message' => $message]);
         }
