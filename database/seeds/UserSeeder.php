@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             'email' => 'danielamontechiaregentil@gmail.com',
             'password' => Hash::make('888123'),
             'phone' => '21986022928',
-            'is_admin' => '1'
+            'is_admin' => '1',
+            'status' => '1'
         ]);
 
         DB::table('users')->insert([
@@ -28,7 +29,8 @@ class UserSeeder extends Seeder
             'email' => 'dev.anderson.santos@gmail.com',
             'password' => Hash::make('!Q@W#E4r5t6y'),
             'phone' => '21976662004',
-            'is_admin' => '1'
+            'is_admin' => '1',
+            'status' => '1',
         ]);
     }
 }
