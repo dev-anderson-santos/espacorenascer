@@ -4,9 +4,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // TODO: Remover o -- selecione -- após escolher uma data
-// TODO: Listar os usuários cadastrados
+// TODO: Listar os usuários cadastrados - OK
 // TODO: Criar tela dos Meus horários
-// TODO: Colocar a versão com os itens acima para ela testar
+// TODO: Gravar agendamento fixo
+// TODO: Permitir agendar, como admin, para todos os usuários
+// TODO: Gerar relatório de agendamentos mensais informando para o usuário quanto ele deve pagar por mês
+// TODO: Enviar e-mail após agendamento
 
 Route::get('/', function () {
     return view('index.index');
@@ -20,6 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 Route::group(['prefix' => 'app'],function () {
 
     Route::group(['prefix' => 'user'], function () {
+        Route::get('/clients', 'UserController@index')->name('user.index');
         Route::get('/new', 'UserController@create')->name('user.guest-create');
         Route::post('/store', 'UserController@store')->name('user.store');
         Route::get('/edit/{user_id}', 'UserController@edit')->name('user.edit');

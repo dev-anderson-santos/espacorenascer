@@ -266,7 +266,7 @@ return [
         ],
         [
             'text' => 'Clientes',
-            'url'  => '#',
+            'url'  => '/app/user/clients',
             'icon' => 'fas fa-users',
             'can'  => 'is_admin',
         ],
