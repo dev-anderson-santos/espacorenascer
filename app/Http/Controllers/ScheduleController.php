@@ -38,7 +38,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < 7; $i++) {
+        for ($i=0; $i < 28; $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
@@ -67,7 +67,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < 7; $i++) {
+        for ($i=0; $i < 28; $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
@@ -88,16 +88,6 @@ class ScheduleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -109,6 +99,8 @@ class ScheduleController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $dia = $dados['date'];
 
             $dados['status'] = 'Ocupado';
             
@@ -122,7 +114,56 @@ class ScheduleController extends Controller
                 return response()->json(['status' => 'warning', 'message' => 'Este horário já está ocupado.']);
             }
 
-            ScheduleModel::create($dados);
+            if ($dados['tipo'] == 'Fixo') {
+                
+
+                $arrDays = [];
+                for ($i = Carbon::parse($dia)->weekOfMonth; $i <= Carbon::parse($dia)->endOfMonth()->weekOfMonth; $i++) {
+                    if($i == Carbon::parse($dia)->weekOfMonth) {
+                        $arrDays[$i] = $dia;
+
+                        if (Carbon::parse($arrDays[$i])->isLastWeek()) {
+                            break;
+                        }
+                    } else {
+                        $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
+
+                        if (Carbon::parse($arrDays[$i])->isLastWeek() || Carbon::parse($arrDays[$i])->isNextMonth()) {
+                            unset($arrDays[$i]);
+                            break;
+                        }
+                    }
+                }
+
+                $arrDataEmUso = [];
+                $horariosEmUso = false;
+                foreach ($arrDays as $key => $value) {
+                    
+                    $dados['date'] = $value;
+
+                    $scheduleInUse = ScheduleModel::where([
+                        'date' => $dados['date'],
+                        'hour_id' => $dados['hour_id'],
+                        'room_id' => $dados['room_id'],
+                    ])->first();
+
+                    if($scheduleInUse) {
+                        $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
+                        $arrDataEmUso[$key]['hora'] = HourModel::where('id', $dados['hour_id'])->first()->hour;
+                        $horariosEmUso = true;
+                        continue;
+                    }
+
+                    ScheduleModel::create($dados);
+                }
+
+                DB::commit();
+                return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento realizado com sucesso!']);
+
+            } else {
+                ScheduleModel::create($dados);
+            }
+
 
             DB::commit();
             return response()->json(['status' => 'success', 'message' => 'Agendamento realizado com sucesso!']);

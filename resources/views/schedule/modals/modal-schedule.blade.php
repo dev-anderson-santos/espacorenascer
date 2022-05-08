@@ -50,7 +50,11 @@
                     <option value="Fixo">Fixo</option>
                 </select>
             </div>
-        </div>        
+        </div>  
+        <div class="clearfix">&nbsp;</div>
+        <div class="alert alert-warning" style="font-size: 15pt" role="alert">
+            <i class="fas fa-info-circle"></i> Verifique todos os dados antes de confirmar o agendamento.
+        </div>      
     @endif
     @if ($cancelamento)
         @include('componentes.alerts', [
@@ -106,6 +110,62 @@ $('#agendar').on('click', function () {
                 $('#agendar').html('Agendar');
                 $('#agendar').prop('disabled', true);
                 $('#agendar').remove('i');
+            } else if (response.status == 'well-done') {
+                $('#agendar').html('Agendado!');
+                if (response.horariosEmUso) {
+                    var dados = '';
+                    $.each(response.arrDataEmUso, function(index, horario) {
+                        // console.log(horario.data);
+                        dados += '<tr><td>' + horario.hora + '</td><td>' + horario.data + '</td></tr>'
+                    })
+                    bootbox.confirm({
+                        title: 'Agendamento realizado com sucesso!',
+                        message: `
+                        <div class="alert alert-info" style="font-size: 15pt" role="alert">
+                            <i class="fas fa-info-circle"></i> Os seguintes horários não foram agendados pois já estavam ocupados.
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Horario</th>
+                                            <th>Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        ${dados}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>`,
+                        buttons: {
+                            confirm: {
+                                label: 'Sim',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'Não',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                location.reload();
+                            } else {
+                                $('#agendar').html('Agendar');
+                                $('#agendar').prop('disabled', false);
+                                $('#agendar').remove('i');
+                            }
+                        }
+                    });
+                } else {
+                    bootbox.alert(response.message);
+                    location.reload();
+                }
+                console.log(response.message);
             } else if (response.status == 'error') {
                 $('#agendar').html('Não Agendado!');
                 bootbox.alert('Ocorreu um erro ao agendar o horário!');
