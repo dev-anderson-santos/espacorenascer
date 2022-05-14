@@ -20,7 +20,7 @@ class CreateSchedulesTable extends Migration
             $table->unsignedBigInteger('created_by')->nullable(false);
             $table->unsignedBigInteger('hour_id')->nullable(false);
             $table->dateTime('date');
-            $table->enum('status', ['Livre', 'Ocupado'])->default('Livre');
+            $table->enum('status', ['Ativo', 'Finalizado'])->default('Livre');
             $table->enum('tipo', ['Avulso', 'Fixo'])->default('Avulso');
             $table->softDeletes();
             $table->timestamps();
