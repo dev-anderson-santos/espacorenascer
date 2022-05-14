@@ -22,7 +22,7 @@
 @if (!empty($schedules))
 <div class="row">
     <div class="col-md-12 {{ $cancelamento ? 'text-danger' : '' }}">
-        <span style="font-weight: 800;">Criado em:</span> {{ \Carbon\Carbon::parse($schedules->created_at)->isoFormat('dddd, DD \d\e MMMM \d\e Y') ?? '' }}
+        <span style="font-weight: 800;">Criado em:</span> {{ \Carbon\Carbon::parse($schedules->created_at)->format('d/m/Y H:i:s') ?? '' }}
     </div>
 </div>
 <div class="row">
@@ -54,18 +54,48 @@
         <div class="clearfix">&nbsp;</div>
         <div class="alert alert-warning" style="font-size: 15pt" role="alert">
             <i class="fas fa-info-circle"></i> Verifique todos os dados antes de confirmar o agendamento.
-        </div>      
+        </div>
+        @php
+            $dataSelecionada = \Carbon\Carbon::parse($data)->subDays(2)->format('Y-m-d');
+            $dataNow = \Carbon\Carbon::now()->format('Y-m-d');
+            $horaAtual = \Carbon\Carbon::now()->format('H:i');
+            $horaSetted = \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->format('H:i');
+        @endphp
+        @if (!empty($schedules) && $schedules->status == 'Finalizado')
+            @include('componentes.alerts', [
+                'type' => 'alert-danger',
+                'text' => 'Este agendamento não poderá ser cancelado.',
+                'smallText' => 'O agendamento só pode ser cancelado até às 20h da data anterior a esta.'
+            ])
+        @else
+            @include('componentes.alerts', [
+                'type' => 'alert-danger',
+                'text' => 'Este agendamento poderá ser cancelado até às 20h do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
+            ]) 
+        @endif
+           
+        <div class="clearfix">&nbsp;</div>  
     @endif
     @if ($cancelamento)
-        @include('componentes.alerts', [
-            'type' => 'alert-danger',
-            'text' => 'O agendamento poderá ser cancelado em até 24 horas de antecedência!'
-        ])
+        <div class="clearfix">&nbsp;</div>
+        @if (!$canCancel)
+            @include('componentes.alerts', [
+                'type' => 'alert-danger',
+                'text' => 'Este agendamento não pode mais ser cancelado.'
+            ])
+        @else
+            @include('componentes.alerts', [
+                'type' => 'alert-danger',
+                'text' => 'Este agendamento poderá ser cancelado até às 20h do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
+            ])
+        @endif        
     @endif
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="btn-fechar" data-dismiss="modal">Fechar</button>
         @if ($cancelamento)
-            <button type="button" class="btn btn-danger" id="btn-cancelar-agendamento">Cancelar Agendamento</button>
+            @if($canCancel)
+                <button type="button" class="btn btn-danger" id="btn-cancelar-agendamento">Cancelar Agendamento</button>
+            @endif
         @else
             <button type="button" class="btn btn-primary" id="agendar">Agendar</button>
         @endif
@@ -199,14 +229,43 @@ $('#btn-cancelar-agendamento').on('click', function () {
                         _token: '{{ csrf_token() }}'
                     },
                     beforeSend: function () {
-                        $('#agendar').prop('disabled', true);
+                        $('#btn-cancelar-agendamento').prop('disabled', true);
                         $('#btn-fechar').prop('disabled', true);
-                        $('#agendar').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                        $('#btn-cancelar-agendamento').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
                     },
-                    success: function(data) {
-                        $('#agendar').html('Cancelado!');
-                        console.table(data);
-                        location.reload();
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            $('#btn-cancelar-agendamento').html('Cancelado!');
+                            
+                            bootbox.alert({
+                                title: 'Cancelamento',
+                                message: response.message,
+                                callback: function () {
+                                    location.reload();
+                                }
+                            });
+                        } else if (response.status == 'info') {
+                            $('#btn-cancelar-agendamento').prop('disabled', false);
+                            $('#btn-fechar').prop('disabled', false);
+                            $('#btn-cancelar-agendamento').html('Não cancelado!');
+
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function () {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            $('#btn-cancelar-agendamento').prop('disabled', false);
+                            $('#btn-fechar').prop('disabled', false);
+                            $('#btn-cancelar-agendamento').html('Não cancelado!');
+
+                            bootbox.alert({
+                                title: 'Erro',
+                                message: response.message
+                            });
+                        } 
                     }
                 });
             }
