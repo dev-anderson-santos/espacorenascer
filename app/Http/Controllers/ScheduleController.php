@@ -196,7 +196,7 @@ class ScheduleController extends Controller
     
             $now = Carbon::now()->format('Y-m-d');
 
-            if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (/* now()->format('H:i') */'23:00' >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
+            if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (now()->format('H:i') >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
                 return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
             }
 
@@ -418,7 +418,7 @@ class ScheduleController extends Controller
 
             foreach ($schedules as $schedule) {
                 // dump($schedule->date);
-                if (Carbon::parse($now)->diffInDays($schedule->date, false) < 1 && '23:00' >= SettingsModel::first()->hora_fechamento) {
+                if (Carbon::parse($now)->diffInDays($schedule->date, false) < 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
                     // dd('teste');
                     $schedule->update([
                         'status' => 'Finalizado'
