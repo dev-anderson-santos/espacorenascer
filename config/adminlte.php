@@ -256,7 +256,7 @@ return [
         // ['header' => 'account_settings'],
         [
             'text' => 'Meus horários',
-            'url'  => '/app/schedule/my-schedules',
+            'url'  => '/app/schedule/user-schedules',
             'icon' => 'fas fa-clock',
         ],
         [
@@ -264,10 +264,21 @@ return [
             'url'  => '/app/schedule',
             'icon' => 'fas fa-calendar-alt',
         ],
+        // [
+        //     'text' => 'Fechamentos do mês',
+        //     'url'  => '/app/schedule/fechamento-mes',
+        //     'icon' => 'fas fa-file-invoice-dollar',
+        // ],
         [
             'text' => 'Clientes',
             'url'  => '/app/user/clients',
             'icon' => 'fas fa-users',
+            'can'  => 'is_admin',
+        ],
+        [
+            'text' => 'Configurações',
+            'url'  => '/app/settings',
+            'icon' => 'fas fa-cog',
             'can'  => 'is_admin',
         ],
         // [
@@ -276,12 +287,7 @@ return [
         //     'icon' => 'fas fa-home',
         //     'can'  => 'is_admin',
         // ],
-        [
-            'text' => 'Contratos',
-            'url'  => '#',
-            'icon' => 'fas fa-file-contract',
-            'can'  => 'is_admin',
-        ],
+        
         // [
         //     'text' => 'Configurações',
         //     'url'  => 'admin/settings',
