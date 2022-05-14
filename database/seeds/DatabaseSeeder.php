@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SettingsModel;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             HourSeeder::class,
             RoomSeeder::class,
+            SettingsSeeder::class,
         ]);
     }
 }
