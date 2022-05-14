@@ -1,7 +1,11 @@
 @extends('adminlte::page')
 
 @section('content')
-
+<style>
+    .seta::before {
+        display: none!important;
+    }
+</style>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -31,8 +35,16 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phone ?? ''}}</td>
                     <td>
-                        <a href="{{ route('user.edit', ['user_id' => $user->id]) }}" class="btn btn-warning btn-sm rounded-circle" title="Editar"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="{{ route('user.edit', ['user_id' => $user->id]) }}" class="btn btn-info btn-sm rounded-circle" title="Ver horários agendados"><i class="fas fa-calendar-alt"></i></a>
+                        <div class="btn-group dropleft">
+                            <a class="dropdown-toggle seta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="{{ route('user.edit', ['user_id' => $user->id]) }}" class="dropdown-item btn btn-sm" title="Editar"><i class="fas fa-pencil-alt text-warning"></i> Editar</a>
+                                <a href="{{ route('schedule.user-schedules', ['user_id' => $user->id]) }}" class="dropdown-item btn btn-sm" title="Ver horários agendados"><i class="fas fa-calendar-alt text-info"></i> Ver horários agendados</a>
+                            </div>
+                        </div>
+                        
                     </td>
                 </tr>
                 @endforeach

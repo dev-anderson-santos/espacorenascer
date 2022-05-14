@@ -160,6 +160,10 @@ class UserController extends Controller
                 $message = 'Usuário não encontrado.';
                 return redirect()->back()->with(['error' => true, 'message' => $message]);
             }
+
+            if ($user->password != $dados['password']) {
+                $dados['password'] = Hash::make($dados['password']);
+            }
             
             $user->update($dados);
 
