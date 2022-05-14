@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/app/schedule/my-schedules';
+    public const HOME = '/app/schedule/user-schedules';
 
     /**
      * Define your route model bindings, pattern filters, etc.
