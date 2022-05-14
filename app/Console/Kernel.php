@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\MonitorScheduleCron;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        MonitorScheduleCron::class,
     ];
 
     /**
@@ -25,6 +26,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('schedule:shouldfinalize')->everyTwoMinutes();
+        // $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
+        // $schedule->command('schedule:shouldfinalize')->twiceDaily(16, 20);
     }
 
     /**
