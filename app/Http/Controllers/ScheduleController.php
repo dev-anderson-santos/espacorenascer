@@ -16,6 +16,7 @@ class ScheduleController extends Controller
 
     public function userSchedules($user_id = NULL)
     {
+        // dump(now()->diffInDays('2022-05-21', false), now()->format('Y-m-d H:i') > $schedule->date . ' ' . SettingsModel::first()->hora_fechamento);
         $id = !is_null($user_id) ? $user_id : auth()->user()->id;
 
         $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários - ' . User::find($id)->name : 'Meus horários';
@@ -196,7 +197,9 @@ class ScheduleController extends Controller
     
             $now = Carbon::now()->format('Y-m-d');
 
-            if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (now()->format('H:i') >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
+            // dd(Carbon::parse($now)->diffInDays($schedule->date, false) <= 1, now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i'));
+            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+            // if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (now()->format('H:i') >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
                 return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
             }
 
@@ -403,7 +406,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            // dd($e);
+            dd($e);
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao mudar o tipo de agendamento.']);
         }
     }

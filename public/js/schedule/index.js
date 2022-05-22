@@ -13,18 +13,27 @@ $(function() {
         ],
     });
 
-    // $('#tabela-horarios-usuario').DataTable({
-    //     "order": [[ 0, "asc" ]],
-    //     "bLengthChange": false, // Oculta o campo Show [10, 15,...] entries
-    //     "paging":   false,
-    //     "filter": false,
-    //     "info":     false,
-    //     "scrollX": true,
-    //     "columnDefs": [
-    //         // { orderable: false, className: 'reorder', targets: 0 },
-    //         { orderable: false, targets: '_all' }
-    //     ],
-    // });
+    $('#tabela-horarios-usuario').DataTable({
+        // "order": [[ 0, "asc" ]],
+        "bLengthChange": false, // Oculta o campo Show [10, 15,...] entries
+        "paging":   true,
+        "filter": false,
+        "info":     false,
+        "scrollX": true,
+        "columnDefs": [
+            // { orderable: false, className: 'reorder', targets: 0 },
+            { orderable: false, targets: '_all' }
+        ],
+        "language": {
+            "zeroRecords": "Nenhum dado encontrado.",
+            "infoEmpty": "Nenhum dado encontrado.",
+            "info": "Mostrando página _START_ de _END_ de _TOTAL_ registros.",
+            "paginate": {
+                "previous": "Anterior",
+                "next": "Próximo",
+              }
+        },
+    });
 
     // setInterval(tick, 1000);
 });
@@ -122,7 +131,7 @@ function mudarTipo(token, scheduleID, tipo, data, hora) {
                                     // console.log(horario.data);
                                     dados += '<tr><td>' + horario.hora + '</td><td>' + horario.data + '</td></tr>'
                                 })
-                                bootbox.confirm({
+                                bootbox.alert({
                                     title: 'Agendamento realizado com sucesso!',
                                     message: `
                                     <div class="alert alert-info" style="font-size: 15pt" role="alert">
@@ -145,29 +154,18 @@ function mudarTipo(token, scheduleID, tipo, data, hora) {
                                             </table>
                                         </div>
                                     </div>`,
-                                    buttons: {
-                                        confirm: {
-                                            label: 'Sim',
-                                            className: 'btn-success'
-                                        },
-                                        cancel: {
-                                            label: 'Não',
-                                            className: 'btn-danger'
-                                        }
-                                    },
-                                    callback: function (result) {
-                                        if (result) {
-                                            location.reload();
-                                        } else {
-                                            $('#agendar').html('Agendar');
-                                            $('#agendar').prop('disabled', false);
-                                            $('#agendar').remove('i');
-                                        }
+                                    callback: function () {
+                                        location.reload();
                                     }
                                 });
                             } else {
-                                bootbox.alert(response.message);
-                                location.reload();
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message,
+                                    callback: function () {
+                                        location.reload();
+                                    }
+                                });
                             }
                             console.log(response.message);
                         } else {
@@ -183,22 +181,92 @@ function mudarTipo(token, scheduleID, tipo, data, hora) {
     });
 }
 
-// function tick() {
-//     //get the mins of the current time
-//     var mins = new Date().getMinutes();
-//     var sec = new Date().getSeconds();
-//     if (mins == "46" && sec == "30") {
-    
-//         $.ajax({
-//             url: '/app/schedule/update-all-schedules',
-//             method: 'GET',
-//             success: function(response) {
-//                 if (response.status == 'success') {
-//                     console.log(response.message);
-//                     location.reload();
-//                 }
-//             }
-//         })
-//     }
-//     console.log('Tick ' + mins + ':' + sec);
-// }
+function faturarFinalizarAtendimento(token, scheduleID) {
+    // bootbox.confirm({
+    //     title: 'Faturar/Finalizar atendimento',
+    //     message: "Deseja realmente faturar o atendimento?",
+    //     buttons: {
+    //         confirm: {
+    //             label: 'Sim',
+    //             className: 'btn-success'
+    //         },
+    //         cancel: {
+    //             label: 'Não',
+    //             className: 'btn-secondary'
+    //         }
+    //     },
+    //     callback: function (result) {
+    //         if (result) {
+    //             $.ajax({
+    //                 url: '/app/schedule/faturar-finalizar-atendimento',
+    //                 method: 'POST',
+    //                 data: {
+    //                     _token: token,
+    //                     schedule_id: scheduleID != '' ? scheduleID : -1,
+    //                 },
+    //                 success: function(response) {
+    //                     if (response.status == 'success') {
+    //                         bootbox.alert({
+    //                             title: 'Faturar/Finalizar atendimento',
+    //                             message: response.message,
+    //                             callback: function () {
+    //                                 location.reload();
+    //                             }
+    //                         });
+    //                     } else {
+    //                         bootbox.alert({
+    //                             title: 'Informação',
+    //                             message: response.message
+    //                         });
+    //                     }                        
+    //                 }
+    //             });
+    //         }
+    //     }
+    // });
+}
+
+function naoFaturarAgendamento(token, scheduleID) {
+    // bootbox.confirm({
+    //     title: 'Não faturar agendamento',
+    //     message: "Deseja realmente não faturar o agendamento?",
+    //     buttons: {
+    //         confirm: {
+    //             label: 'Sim',
+    //             className: 'btn-success'
+    //         },
+    //         cancel: {
+    //             label: 'Não',
+    //             className: 'btn-secondary'
+    //         }
+    //     },
+    //     callback: function (result) {
+    //         if (result) {
+    //             $.ajax({
+    //                 url: '/app/schedule/nao-faturar-agendamento',
+    //                 method: 'POST',
+    //                 data: {
+    //                     _token: token,
+    //                     schedule_id: scheduleID != '' ? scheduleID : -1,
+    //                 },
+    //                 success: function(response) {
+    //                     if (response.status == 'success') {
+    //                         bootbox.alert({
+    //                             title: 'Não faturar agendamento',
+    //                             message: response.message,
+    //                             callback: function () {
+    //                                 location.reload();
+    //                             }
+    //                         });
+    //                     } else {
+    //                         bootbox.alert({
+    //                             title: 'Informação',
+    //                             message: response.message
+    //                         });
+    //                     }                        
+    //                 }
+    //             });
+    //         }
+    //     }
+    // });
+}

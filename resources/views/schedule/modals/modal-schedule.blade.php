@@ -61,16 +61,18 @@
             $horaAtual = \Carbon\Carbon::now()->format('H:i');
             $horaSetted = \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->format('H:i');
         @endphp
-        @if (!empty($schedules) && $schedules->status == 'Finalizado')
+        @if (!empty($schedules) && $schedules->status == 'Finalizado'
+            || \Carbon\Carbon::parse($dataNow)->diffInDays($data, false) <= 1 && now()->format('Y-m-d H:i') > \Carbon\Carbon::parse($data . ' ' . $horaSetted)->subDays()->format('Y-m-d H:i')
+            )
             @include('componentes.alerts', [
                 'type' => 'alert-danger',
                 'text' => 'Este agendamento não poderá ser cancelado.',
-                'smallText' => 'O agendamento só pode ser cancelado até às 20h da data anterior a esta.'
+                'smallText' => 'O agendamento só pode ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' da data anterior a escolhida.'
             ])
         @else
             @include('componentes.alerts', [
                 'type' => 'alert-danger',
-                'text' => 'Este agendamento poderá ser cancelado até às 20h do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
+                'text' => 'Este agendamento poderá ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
             ]) 
         @endif
            
@@ -86,7 +88,7 @@
         @else
             @include('componentes.alerts', [
                 'type' => 'alert-danger',
-                'text' => 'Este agendamento poderá ser cancelado até às 20h do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
+                'text' => 'Este agendamento poderá ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' do dia ' . \Carbon\Carbon::parse($data)->subDays(1)->format('d/m/Y') . '.'
             ])
         @endif        
     @endif

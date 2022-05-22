@@ -20,45 +20,51 @@
 
         <h4>Bem-vindo(a) <b>{{ auth()->user()->name }}</b></h4>
 
-        <table class="table table-striped" id="tabela-horarios-usuario">
+        <table class="table table-striped table-bordered table-sm" id="tabela-horarios-usuario" style="width:100%">
             <thead>
                 <tr>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Sala</th>
-                    <th>Tipo de agendamento</th>
+                    <th style="text-align: center">Data</th>
+                    <th style="text-align: center">Horário</th>
+                    <th style="text-align: center">Sala</th>
+                    <th style="text-align: center">Tipo de agendamento</th>
                     <th>Status</th>
-                    @if (auth()->user()->is_admin == 1)
-                    <th>Ações</th>
-                    @endif
+                    {{-- @if (auth()->user()->is_admin == 1) --}}
+                    <th style="text-align: center">Ações</th>
+                    {{-- @endif --}}
                 </tr>
             </thead>
             <tbody>
                 @forelse ($schedules as $schedule)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
-                    <td>{{ $schedule->hour->hour }}</td>
-                    <td>{{ $schedule->room->name }}</td>
-                    <td>{{ $schedule->tipo }}</td>
+                    <td style="text-align: center">{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
+                    <td style="text-align: center">{{ $schedule->hour->hour }}</td>
+                    <td style="text-align: center">{{ $schedule->room->name }}</td>
+                    <td style="text-align: center">{{ $schedule->tipo }}</td>
                     <td>{{ $schedule->status }}</td>
-                    @if (auth()->user()->is_admin == 1)
-                    <td>
+                    {{-- @if (auth()->user()->is_admin == 1) --}}
+                    <td style="text-align: center">
                         <div class="btn-group dropleft">
                             <a class="dropdown-toggle seta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-ellipsis-h"></i>
                             </a>
                             <div class="dropdown-menu">
+                                {{-- <a href="#" onclick="naoFaturarAgendamento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Não faturar agendamento"><i class="fas fa-coins text-danger"></i> Não faturar agendamento</a> --}}
+                                @if ($schedule->status == 'Ativo')
+                                {{-- <a href="#" onclick="faturarFinalizarAtendimento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Faturar/Finalizar agendamento"><i class="fas fa-hand-holding-usd text-warning"></i> Faturar/Finalizar agendamento</a> --}}
                                 <a href="#" onclick="cancelarAgendamentoUser('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
                                 <a href="#" onclick="mudarTipo('{{ csrf_token() }}', {{ $schedule->id }}, '{{ $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo' }}', '{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}', '{{ $schedule->hour->hour }}')" class="dropdown-item btn btn-sm" title="{{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}"><i class="fas fa-exchange-alt text-secondary"></i> {{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}</a>
+                                @else
+                                <a href="#" class="dropdown-item btn btn-sm" title="Nenhuma ação disponível"><i class="fas fa-ban text-secondary"></i> Nenhuma ação disponível</a>
+                                @endif
                             </div>
                         </div>                        
                     </td>                        
-                    @endif
+                    {{-- @endif --}}
                 </tr>
                 @empty
-                <tr>
+                {{-- <tr>
                     <td colspan="5">Nenhum horário cadastrado</td>
-                </tr>
+                </tr> --}}
                 @endforelse
             </tbody>
         </table>
