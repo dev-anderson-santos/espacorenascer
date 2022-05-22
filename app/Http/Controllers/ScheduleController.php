@@ -406,7 +406,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            // dd($e);
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao mudar o tipo de agendamento.']);
         }
     }
