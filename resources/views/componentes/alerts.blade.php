@@ -9,6 +9,25 @@
     @endif
 @endif
 
+@if (!empty($type) && $type == 'alert-warning')
+    <div class="component-alert-warning">
+        {{ $text }}        
+    </div>
+    @if (!empty($smallText))
+        <small>{{ $smallText }}</small>
+    @endif
+@endif
+
+@if (!empty($type) && $type == 'alert-info')
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        {{ $text }}        
+    </div>
+    @if (!empty($smallText))
+        <small>{{ $smallText }}</small>
+    @endif
+@endif
+
 @if (session()->has('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       {{ session()->get('message') }}

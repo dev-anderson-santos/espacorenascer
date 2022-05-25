@@ -16,12 +16,16 @@ class ScheduleController extends Controller
 
     public function userSchedules($user_id = NULL)
     {
-        // dump(now()->diffInDays('2022-05-21', false), now()->format('Y-m-d H:i') > $schedule->date . ' ' . SettingsModel::first()->hora_fechamento);
         $id = !is_null($user_id) ? $user_id : auth()->user()->id;
 
-        $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários - ' . User::find($id)->name : 'Meus horários';
+        $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários Ativos - ' . User::find($id)->name : 'Meus horários Ativos';
 
-        $schedules = ScheduleModel::where('user_id', $id)->orderBy('date', 'ASC')->get();
+        $schedules = ScheduleModel::where([
+            'user_id' => $id,
+            'faturado' => 0,
+        ])
+        ->whereMonth('date', Carbon::now()->format('m'))
+        ->orderBy('date', 'ASC')->get();
 
         return view('schedule.my-schedules', compact('schedules', 'titulo'));
     }
@@ -285,48 +289,127 @@ class ScheduleController extends Controller
         }
     }
 
-    public function fechamentosDoMes(Request $request)
+    public function fechamentosDoMes(Request $request, $user_id = null)
     {
-        // Listtar dois meses
-        // Agrupar por mes, depois por tipo, somando cada um e colocar o total
-        // No botão detalhes, abrir um modal com uma tabela listando:
-        // - Profissional, Tipo de atendimento, Dia da semana, Horário, Sala, Created_at
+        $id = !is_null($user_id) ? $user_id : auth()->user()->id;
 
-        // $dados = $request->all();
-
-        // $id = !is_null($dados['user_id']) ? $dados['user_id'] : auth()->user()->id;
-
-        // $titulo = !is_null($dados['user_id']) && $dados['user_id'] != auth()->user()->id ? 'Horários - ' . User::find($id)->name : 'Meus horários';
+        $user_name = !is_null($user_id) && $user_id != auth()->user()->id ? ' - ' . User::find($id)->name : '';
 
         $setting = SettingsModel::first();
         $valorFixo = $setting->valor_fixo;
         $valorAvulso = $setting->valor_avulso;
 
-        $mesAtual = ScheduleModel::where([
-                        'user_id' => auth()->user()->id,
-                        'date' => Carbon::now()->format('Y-m-d'),
-                    ])->first()->date;
+        $concluidosParcialAtivoFixo = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Ativo',
+                        'tipo' => 'Fixo'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->get();
 
-        $totalMesAtualFixo = ScheduleModel::where([
-                        'user_id' => auth()->user()->id,
-                        // 'date' => Carbon::now()->format('Y-m-d'),
-                        'tipo' => 'Fixo',
-                    ])->get()->count();
+        $concluidosParcialAtivoAvulso = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Ativo',
+                        'tipo' => 'Avulso'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->get();
 
-        $totalMesAtualAvulso = ScheduleModel::where([
-                        'user_id' => auth()->user()->id,
-                        // 'date' => Carbon::now()->format('Y-m-d'),
-                        'tipo' => 'Avulso',
-                    ])->get()->count();
+        $concluidosParcialFinalizadoFixo = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Finalizado',
+                        'tipo' => 'Fixo'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->get();
 
-        return view('fechamentos-mes.index', compact('mesAtual', 'totalMesAtualFixo', 'totalMesAtualAvulso', 'valorFixo', 'valorAvulso'));
+        $concluidosParcialFinalizadoAvulso = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Finalizado',
+                        'tipo' => 'Avulso'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->get();
 
-        // $mesAnterior = ScheduleModel::select('date', '*')
-        //             ->where([
-        //                 'user_id' => auth()->user()->id,
-        //                 'date' => Carbon::now()->format('m'),
-        //             ])->first();
+        $concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
+
+        // $totalParcialAgendamentos = ScheduleModel::where([
+        //                 'user_id' => $id,                        
+        //                 'status' => 'Ativo',
+        //             ])
+        //             ->whereMonth('date', Carbon::now()->format('m'))
+        //             ->get();
         
+        // é preciso calcular com o valor fixo e o valor avulso
+        // Veirificar se algums horario foi escolhido como avulso
+        $totalAvulso = 0;
+        if ($concluidosParcialAtivoAvulso->count() > 0) {
+            $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
+        }
+        if ($concluidosParcialFinalizadoAvulso->count() > 0) {
+            $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
+        }
+
+        $totalFixo = 0;
+        if ($concluidosParcialAtivoFixo->count() > 0) {
+            $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
+        }
+        if ($concluidosParcialFinalizadoFixo->count() > 0) {
+            $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
+        }
+
+        $totalParcialValor = $totalAvulso + $totalFixo;
+
+        //---- Mês anterior
+
+        $concluidosMesAnteriorAvulso = ScheduleModel::where([
+            'user_id' => $id,
+            'status' => 'Finalizado',
+            'tipo' => 'Avulso',
+            'faturado' => 1
+        ])
+        ->whereIn('tipo', ['Fixo', 'Avulso'])
+        ->whereMonth('date', Carbon::now()->subMonths()->format('m'))
+        ->get();
+
+        $concluidosMesAnteriorFixo = ScheduleModel::where([
+                    'user_id' => $id,
+                    'status' => 'Finalizado',
+                    'tipo' => 'Fixo',
+                    'faturado' => 1
+                ])
+                ->whereMonth('date', Carbon::now()->subMonths()->format('m'))
+                ->get();
+
+        $concluidosAgendamentosMesAnterior = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();
+
+        // é preciso calcular com o valor fixo e o valor avulso
+        // Veirificar se algums horario foi escolhido como avulso
+        $totalAvulsoMesAnterior = 0;
+        if ($concluidosMesAnteriorAvulso->count() > 0) {
+        $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
+        }
+
+        $totalFixoMesAnterior = 0;
+        if ($concluidosMesAnteriorFixo->count() > 0) {
+        $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
+        }
+
+        $totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
+
+        return view('fechamentos-mes.index', 
+            compact(
+                'id',
+                'user_name', 
+                'concluidosParcialAgendamentos', 
+                'totalParcialValor', 
+                'concluidosAgendamentosMesAnterior', 
+                'totalMesAnterior'
+            ));
     }
 
     public function mudarTipoAgendamento(Request $request)
@@ -439,5 +522,22 @@ class ScheduleController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao atualizar os horários.']);
         }
 
+    }
+
+    public function details(Request $request)
+    {
+        $dados = $request->all();
+
+        $schedulesToShow = null;
+
+        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->subMonths()->format('m'))->get();
+
+        if ($dados['schedule_type'] == 'MES_ATUAL') {
+            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->get();
+        }
+
+        // dd($schedulesToShow);
+
+        return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));
     }
 }

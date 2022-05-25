@@ -51,7 +51,8 @@ class MonitorScheduleCron extends Command
                 if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
                 // if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
                     $schedule->update([
-                        'status' => 'Finalizado'
+                        'status' => 'Finalizado',
+                        'finalizado_em' => now()->format('Y-m-d H:i:s')
                     ]);
                 }        
             }

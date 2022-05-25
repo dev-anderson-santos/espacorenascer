@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>{{ $titulo }}</h1>
+                <h1>{{ $titulo }} ({{ $schedules->count() }})</h1>
             </div>
         </div>
     </div>
@@ -20,6 +20,11 @@
 
         <h4>Bem-vindo(a) <b>{{ auth()->user()->name }}</b></h4>
 
+        @include('componentes.alerts', [
+            'type' => 'alert-info',
+            'text' => 'O agendamento só pode ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' da data anterior a escolhida.'
+        ])
+
         <table class="table table-striped table-bordered table-sm" id="tabela-horarios-usuario" style="width:100%">
             <thead>
                 <tr>
@@ -27,7 +32,7 @@
                     <th style="text-align: center">Horário</th>
                     <th style="text-align: center">Sala</th>
                     <th style="text-align: center">Tipo de agendamento</th>
-                    <th>Status</th>
+                    {{-- <th>Status</th> --}}
                     {{-- @if (auth()->user()->is_admin == 1) --}}
                     <th style="text-align: center">Ações</th>
                     {{-- @endif --}}
@@ -40,7 +45,7 @@
                     <td style="text-align: center">{{ $schedule->hour->hour }}</td>
                     <td style="text-align: center">{{ $schedule->room->name }}</td>
                     <td style="text-align: center">{{ $schedule->tipo }}</td>
-                    <td>{{ $schedule->status }}</td>
+                    {{-- <td>{{ $schedule->status }}</td> --}}
                     {{-- @if (auth()->user()->is_admin == 1) --}}
                     <td style="text-align: center">
                         <div class="btn-group dropleft">

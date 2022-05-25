@@ -42,6 +42,7 @@
                             <div class="dropdown-menu">
                                 <a href="{{ route('user.edit', ['user_id' => $user->id]) }}" class="dropdown-item btn btn-sm" title="Editar"><i class="fas fa-pencil-alt text-warning"></i> Editar</a>
                                 <a href="{{ route('schedule.user-schedules', ['user_id' => $user->id]) }}" class="dropdown-item btn btn-sm" title="Ver horários agendados"><i class="fas fa-calendar-alt text-info"></i> Ver horários agendados</a>
+                                <a href="{{ route('schedule.fechamento-mes', ['user_id' => $user->id]) }}" class="dropdown-item btn btn-sm" title="Fechamentos do mês"><i class="fas fa-sack-dollar text-success"></i> Fechamentos do mês</a>
                             </div>
                         </div>
                         

@@ -10,6 +10,8 @@ class SettingsModel extends Model
     protected $fillable = [
         'valor_fixo',
         'valor_avulso',
-        'hora_fechamento'
+        'hora_fechamento',
+        'dia_fechamento',
+        'data_vencimento',
     ];
 }

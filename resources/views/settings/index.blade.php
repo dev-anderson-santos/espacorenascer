@@ -40,15 +40,19 @@
                         <input type="time" name="hora_fechamento" class="form-control" value="{{ $setting->hora_fechamento ?? '' }}">
                     </div>
                 </div>
-            </div>
-            {{-- <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="">Dia do fechamento:</label>
-                        <input type="text" name="dia_fechamento" class="form-control" value="{{ $setting->dia_fechamento ?? '' }}">
+                        <label for="">Dia do vencimento:</label>
+                        <input type="number" name="dia_fechamento" class="form-control" min="0" max="31" value="{{ $setting->dia_fechamento ?? '1' }}">
                     </div>
                 </div>
-            </div> --}}
+                {{-- <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Data do vencimento:</label>
+                        <input type="date" name="data_vencimento" class="form-control" value="{{ $setting->data_vencimento ?? '' }}">
+                    </div>
+                </div> --}}
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary float-right">Salvar</button>

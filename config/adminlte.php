@@ -264,11 +264,11 @@ return [
             'url'  => '/app/schedule',
             'icon' => 'fas fa-calendar-alt',
         ],
-        // [
-        //     'text' => 'Fechamentos do mês',
-        //     'url'  => '/app/schedule/fechamento-mes',
-        //     'icon' => 'fas fa-file-invoice-dollar',
-        // ],
+        [
+            'text' => 'Fechamentos do mês',
+            'url'  => '/app/schedule/fechamento-mes',
+            'icon' => 'fas fa-file-invoice-dollar',
+        ],
         [
             'text' => 'Clientes',
             'url'  => '/app/user/clients',

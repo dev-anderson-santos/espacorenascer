@@ -15,7 +15,9 @@ class ScheduleModel extends Model
         'hour_id', 
         'date',
         'status',
-        'tipo'
+        'tipo',
+        'faturado',
+        'finalizado_em',
     ];
 
     public function user()

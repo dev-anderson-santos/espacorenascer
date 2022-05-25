@@ -9,9 +9,8 @@
                     <span aria-hidden="true" style="font-size: 24pt; color: black;">&times;</span>
                     {{-- <span id="helpBlock" class="fa fa-close" aria-hidden="true"></span> --}}
                 </button>
-                <!-- tive que tirar o h4 por causa da criação de hieraquia no html - ases  - dev. FR -->
             </div>
-                <div class="modal-body" id="getModalGlobalLoad" style="min-height: 20%; --overflow-y:scroll">
+                <div class="modal-body" id="getModalGlobalLoad" style="min-height: 20%; max-height:700px; overflow-y:auto">
             </div>
         </div>
     </div>

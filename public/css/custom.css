@@ -16,3 +16,12 @@
     font-size: large;
     font-weight: 700;
 }
+.component-alert-info {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    padding: 20px;
+    border-radius:10px;
+    font-size: large;
+    font-weight: 700;
+}
