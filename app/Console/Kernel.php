@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         MonitorScheduleCron::class,
-        MonitorScheduleFaturarCronCron::class,
+        MonitorScheduleFaturarCron::class,
     ];
 
     /**
