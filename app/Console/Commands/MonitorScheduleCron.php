@@ -48,7 +48,7 @@ class MonitorScheduleCron extends Command
             $now = Carbon::now()->format('Y-m-d');
 
             foreach ($schedules as $schedule) {
-                if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($schedule->date)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
                 // if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
                     $schedule->update([
                         'status' => 'Finalizado',
