@@ -17,8 +17,11 @@
 </section>
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped table-bordered table-sm" id="tabela-clientes" style="width:100%">
-            <thead>
+        <table class="table table-striped table-bordered table-sm" id="tabela-clientes" style="display: block;
+        overflow-x: auto;
+        white-space: nowrap;">
+            <thead class="display: table;
+            width: 100%;">
                 <tr>
                     <th style="text-align: center" scope="col">Nome</th>
                     <th style="text-align: center" scope="col">E-mail</th>
@@ -26,7 +29,8 @@
                     <th style="text-align: center" scope="col">Ações</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="display: table;
+            width: 100%;">
                 @foreach ($users as $user)
                 <tr>
                     {{-- <th scope="row">{{ $user->id }}</th> --}}
