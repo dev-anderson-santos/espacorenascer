@@ -17,20 +17,19 @@
 </section>
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered table-sm" id="tabela-clientes" style="width:100%">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Ações</th>
+                    <th style="text-align: center" scope="col">Nome</th>
+                    <th style="text-align: center" scope="col">E-mail</th>
+                    <th style="text-align: center" scope="col">Telefone</th>
+                    <th style="text-align: center" scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($users as $user)
                 <tr>
-                    <th scope="row">{{ $user->id }}</th>
+                    {{-- <th scope="row">{{ $user->id }}</th> --}}
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phone ?? ''}}</td>
