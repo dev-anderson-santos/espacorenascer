@@ -26,7 +26,7 @@
 
         {{-- Username field --}}
         <div class="input-group mb-3">
-            <input type="text" name="username" class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}"
+            <input type="text" name="username" class="form-control {{ $errors->has('username') || session()->has('user_inativated') ? 'is-invalid' : '' }}"
                    value="{{ old('username') }}" placeholder="Informe o usuário" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
@@ -36,6 +36,11 @@
             @if($errors->has('username'))
                 <div class="invalid-feedback">
                     <strong>{{ $errors->first('username') }}</strong>
+                </div>
+            @endif
+            @if(session()->has('user_inativated'))
+                <div class="invalid-feedback">
+                    <strong>{{ session()->get('user_inativated') }}</strong>
                 </div>
             @endif
         </div>

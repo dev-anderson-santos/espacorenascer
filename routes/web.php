@@ -15,15 +15,19 @@ Route::get('/', function () {
 })->name('index');
 
 Auth::routes();
+Route::post('/login', [
+    'uses'          => 'Auth\LoginController@login',
+    'middleware'    => 'checkstatus',
+]);
 
 Route::group(['prefix' => 'app'],function () {
 
     Route::group(['prefix' => 'user'], function () {
-        Route::get('/clients', 'UserController@index')->name('user.index');
+        Route::get('/clients', 'UserController@index')->middleware('auth')->name('user.index');
         Route::get('/new', 'UserController@create')->name('user.guest-create');
         Route::post('/store', 'UserController@store')->name('user.store');
-        Route::get('/edit/{user_id}', 'UserController@edit')->name('user.edit');
-        Route::put('/update', 'UserController@update')->name('user.update');
+        Route::get('/edit/{user_id}', 'UserController@edit')->middleware('auth')->name('user.edit');
+        Route::put('/update', 'UserController@update')->middleware('auth')->name('user.update');
     });
 
     Route::group(['prefix' => 'schedule', 'middleware' => 'auth'], function () {
@@ -39,7 +43,7 @@ Route::group(['prefix' => 'app'],function () {
         Route::get('/details', 'ScheduleController@details')->name('schedule.details');
     });
 
-    Route::group(['prefix' => 'settings'], function () {
+    Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function () {
         Route::get('/', 'SettingsController@index')->name('settings.index');
         Route::post('/', 'SettingsController@update')->name('settings.update');
     });

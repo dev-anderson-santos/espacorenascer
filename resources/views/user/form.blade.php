@@ -23,7 +23,7 @@
             <input type="hidden" name="user_id" value="{{ $user->id ?? '' }}">
             <fieldset>
                 <legend>Dados de Acesso</legend>
-                @if ($user->is_admin == 1)                            
+                @if (auth()->user()->is_admin == 1)                            
                     <div class="row">
                         <div class="col-md-4">
                             <label for="status" class="col-form-label">Status:</label>

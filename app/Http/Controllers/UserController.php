@@ -6,6 +6,7 @@ use App\User;
 use Carbon\Carbon;
 use App\Models\AddressModel;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\UserHasAddressesModel;
@@ -145,12 +146,12 @@ class UserController extends Controller
             DB::beginTransaction();
             
             $rules = [
-                'username' => 'required|string|max:255|unique:users,username,'.$request->id,
-                'email' => 'required|string|email|max:255|unique:users,' . $request->id,
+                'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($request->user_id)],
+                'email' => 'required|string|email|max:255|unique:users,' . $request->user_id,
                 'password' => 'required|string|min:8|confirmed',
                 'phone' => 'required|string|max:255',
-                'inscricao_crp_crm' => 'required|string|max:255|unique:users,' . $request->id,
-                'cpf' => ['required', 'digits:11', 'unique:users,cpf,'.$request->id]
+                'inscricao_crp_crm' => 'required|string|max:255|unique:users,' . $request->user_id,
+                'cpf' => ['required', 'digits:11', 'unique:users,cpf,'.$request->user_id]
             ];
 
             $messages = [
