@@ -6,7 +6,7 @@ $(function() {
         "paging":   false,
         "filter": false,
         "info":     false,
-        "scrollX": true,
+        // "scrollX": true,
         "columnDefs": [
             // { orderable: false, className: 'reorder', targets: 0 },
             { orderable: false, targets: '_all' }

@@ -84,6 +84,7 @@
     {{-- Base Scripts --}}
     @if(!config('adminlte.enabled_laravel_mix'))
         <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <script src="{{ asset('sweet-alert-2/sweetalert2.all.min.js') }}"></script>
@@ -94,6 +95,7 @@
         <script src="{{ asset('js/funcoes-gerais/modal-global.js').'?'.time() }}" ></script>
         <script src="{{ asset('js/funcoes-gerais/index.js') }}"></script>
         <script src="{{ asset('js/schedule/index.js') }}"></script>
+        <script src="{{ asset('js/user/index.js') }}"></script>
 
         {{-- Configured Scripts --}}
         @include('adminlte::plugins', ['type' => 'js'])

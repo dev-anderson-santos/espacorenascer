@@ -17,11 +17,10 @@
 </section>
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped table-bordered table-sm" id="tabela-clientes" style="display: block;
-        overflow-x: auto;
-        white-space: nowrap;">
-            <thead class="display: table;
-            width: 100%;">
+        <div style="overflow-x: auto">
+        <table class="table table-striped table-bordered table-sm" id="tabela-clientes" style="width: 100%">
+            <thead {{-- class="display: table;
+            width: 100%;" --}}>
                 <tr>
                     <th style="text-align: center" scope="col">Nome</th>
                     <th style="text-align: center" scope="col">E-mail</th>
@@ -29,14 +28,14 @@
                     <th style="text-align: center" scope="col">Ações</th>
                 </tr>
             </thead>
-            <tbody class="display: table;
-            width: 100%;">
+            <tbody {{-- class="display: table;
+            width: 100%;" --}}>
                 @foreach ($users as $user)
                 <tr>
                     {{-- <th scope="row">{{ $user->id }}</th> --}}
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->phone ?? ''}}</td>
+                    <td class="telefone_com_ddd">{{ $user->phone ?? ''}}</td>
                     <td>
                         <div class="btn-group dropleft">
                             <a class="dropdown-toggle seta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,6 +53,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 

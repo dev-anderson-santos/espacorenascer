@@ -70,9 +70,10 @@
                             <input name="name" class="form-control nome_razao_social" type="text" value="{{ old('name') ?? $user->name ?? '' }}">
                         </div>
                         
-                        <div class="col-9 col-md-4">
+                        <div class="col-9 col-md-4 cpf-group">
                             <label class="form-labels" for="cpfcnpj">CPF</label>
                             <input name="cpf" id="cpf" class="form-control cpf border-left-danger @error('cpf') is-invalid @enderror" type="text" value="{{ old('cpf') ?? $user->cpf ?? '' }}" required="" maxlength="15">
+                            <small class="hint-cpf" style="color: red"></small>
                             @error('cpf')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
@@ -80,7 +81,10 @@
                         
                         <div class="col-12 col-md-4 mt-2">
                             <label class="form-labels" for="crp_crm">Nº Inscrição CRP/CRM</label>
-                            <input name="inscricao_crp_crm" id="crp_crm" class="form-control" type="text" value="{{ old('inscricao_crp_crm') ?? $user->inscricao_crp_crm ?? '' }}">
+                            <input name="inscricao_crp_crm" id="crp_crm" class="form-control border-left-danger @error('inscricao_crp_crm') is-invalid @enderror" type="text" value="{{ old('inscricao_crp_crm') ?? $user->inscricao_crp_crm ?? '' }}" required>
+                            @error('inscricao_crp_crm')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         
                         <div class="col-12 col-md-3 mt-2">
@@ -95,7 +99,7 @@
                     <div class="row mb-3">
                         <div class="col-12 col-md-4 mt-2 mb-2">
                             <label class="form-labels" for="tel_con">Telefone de Contato</label>
-                            <input name="phone" class="form-control border-left-danger @error('phone') is-invalid @enderror" id="tel_con" maxlength="15" type="text" value="{{ old('phone') ?? $user->phone ?? '' }}" required="">
+                            <input name="phone" class="form-control telefone_com_ddd border-left-danger @error('phone') is-invalid @enderror" id="tel_con" maxlength="15" type="text" value="{{ old('phone') ?? $user->phone ?? '' }}" required="">
                             @error('phone')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror

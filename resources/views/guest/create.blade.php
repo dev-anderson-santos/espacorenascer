@@ -59,7 +59,10 @@
                             
                             <div class="col-12 col-md-4 mt-2 mb-2">
                                 <label class="form-labels" for="crp_crm">Nº Inscrição CRP/CRM</label>
-                                <input name="inscricao_crp_crm" id="crp_crm" class="form-control" type="text" value="{{ old('inscricao_crp_crm') ?? $usuario->inscricao_crp_crm ?? '' }}">
+                                <input name="inscricao_crp_crm" id="crp_crm" class="form-control border-left-danger @error('inscricao_crp_crm') is-invalid @enderror" type="text" value="{{ old('inscricao_crp_crm') ?? $usuario->inscricao_crp_crm ?? '' }}" required>
+                                @error('inscricao_crp_crm')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="col-12 col-md-3 mt-2 mb-2">

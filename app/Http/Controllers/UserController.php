@@ -48,16 +48,24 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $rules = [
-                'username' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:users',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
+                'phone' => 'required|string|max:255',
+                'inscricao_crp_crm' => 'required|string|max:255',
+                'cpf' => ['required', 'digits:11', 'unique:users,cpf']
             ];
 
             $messages = [
                 'username.required' => 'O campo Usuário é obrigatório',
+                'username.unique' => 'O Usuário informado já está em uso',
                 'email.required' => 'O campo E-mail é obrigatório',
                 'password.required' => 'O campo Senha é obrigatório',
                 'password.confirmed' => 'A confirmação da senha não corresponde.',
+                'phone.required' => 'O campo Telefone é obrigatório',
+                'inscricao_crp_crm.required' => 'O campo Inscrição CRP/CRM é obrigatório',
+                'cpf.required' => 'O campo CPF é obrigatório',
+                'cpf.unique' => 'O CPF informado já está em uso',
             ];
 
             $validator = Validator::make($dados, $rules, $messages);
@@ -137,16 +145,24 @@ class UserController extends Controller
             DB::beginTransaction();
             
             $rules = [
-                'username' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:users,username,'.$request->id,
                 'email' => 'required|string|email|max:255|unique:users,' . $request->id,
                 'password' => 'required|string|min:8|confirmed',
+                'phone' => 'required|string|max:255',
+                'inscricao_crp_crm' => 'required|string|max:255|unique:users,' . $request->id,
+                'cpf' => ['required', 'digits:11', 'unique:users,cpf,'.$request->id]
             ];
 
             $messages = [
                 'username.required' => 'O campo Usuário é obrigatório',
+                'username.unique' => 'O Usuário informado já está em uso',
                 'email.required' => 'O campo E-mail é obrigatório',
                 'password.required' => 'O campo Senha é obrigatório',
                 'password.confirmed' => 'A confirmação da senha não corresponde.',
+                'phone.required' => 'O campo Telefone é obrigatório',
+                'inscricao_crp_crm.required' => 'O campo Inscrição CRP/CRM é obrigatório',
+                'cpf.required' => 'O campo CPF é obrigatório',
+                'cpf.unique' => 'O CPF informado já está em uso',
             ];
 
             $validator = Validator::make($dados, $rules, $messages);
