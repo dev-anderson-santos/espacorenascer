@@ -373,7 +373,7 @@ class ScheduleController extends Controller
             'faturado' => 1
         ])
         ->whereIn('tipo', ['Fixo', 'Avulso'])
-        ->whereMonth('date', Carbon::now()->subMonths()->format('m'))
+        ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
         ->get();
 
         $concluidosMesAnteriorFixo = ScheduleModel::where([
@@ -382,7 +382,7 @@ class ScheduleController extends Controller
                     'tipo' => 'Fixo',
                     'faturado' => 1
                 ])
-                ->whereMonth('date', Carbon::now()->subMonths()->format('m'))
+                ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
                 ->get();
 
         $concluidosAgendamentosMesAnterior = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();
@@ -530,7 +530,7 @@ class ScheduleController extends Controller
 
         $schedulesToShow = null;
 
-        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->subMonths()->format('m'))->get();
+        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->get();
 
         if ($dados['schedule_type'] == 'MES_ATUAL') {
             $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->get();
