@@ -37,7 +37,7 @@
         <div class="clearfix">&nbsp;</div>
         <div class="row">
             <div class="col-md-12">
-                <span style="font-weight: 800">{{ now()->subMonths()->isoFormat('MMMM') }}</span>
+                <span style="font-weight: 800">{{ now()->firstOfMonth()->subMonths()->isoFormat('MMMM') }}</span>
             </div>
         </div>
         <div class="row">
