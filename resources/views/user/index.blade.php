@@ -23,6 +23,7 @@
             width: 100%;" --}}>
                 <tr>
                     <th style="text-align: center" scope="col">Nome</th>
+                    <th style="text-align: center" scope="col">Usuário</th>
                     <th style="text-align: center" scope="col">E-mail</th>
                     <th style="text-align: center" scope="col">Telefone</th>
                     <th style="text-align: center" scope="col">Ações</th>
@@ -34,6 +35,7 @@
                 <tr>
                     {{-- <th scope="row">{{ $user->id }}</th> --}}
                     <td>{{ $user->name }}</td>
+                    <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td class="telefone_com_ddd">{{ $user->phone ?? ''}}</td>
                     <td>
