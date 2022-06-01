@@ -1,7 +1,16 @@
 @if ($novoAgendamento || $cancelamento)
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        @if(auth()->user()->is_admin != 1 || $cancelamento)
         <span style="font-weight: 800;">Profissional:</span> {{ !empty($schedules) ? $schedules->user->name : auth()->user()->name }}
+        @elseif ($novoAgendamento && auth()->user()->is_admin == 1)
+        <span style="font-weight: 800;">Profissional:</span>
+        <select class="form-control" name="user" id="user-id">
+            @foreach (\App\User::all() as $item)
+                <option value="{{ $item->id }}">{{ $item->name }}</option>
+            @endforeach
+        </select>
+        @endif
     </div>
 </div>
 <div class="row">
@@ -83,7 +92,8 @@
         @if (!$canCancel)
             @include('componentes.alerts', [
                 'type' => 'alert-danger',
-                'text' => 'Este agendamento não pode mais ser cancelado.'
+                'text' => 'Este agendamento não pode mais ser cancelado.',
+                'smallText' => 'O agendamento só pode ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' da data anterior a escolhida.'
             ])
         @else
             @include('componentes.alerts', [
@@ -123,7 +133,7 @@ $('#agendar').on('click', function () {
         data: {
             room_id: {{ $room->id }},
             hour_id: {{ $hour->id }},
-            user_id: {{ auth()->user()->id }},
+            user_id: $('#user-id').val(),
             date: $('#data-agendamento').val(),
             created_by: {{ auth()->user()->id }},
             tipo: $('#type-schedule').val(),

@@ -232,6 +232,8 @@ class ScheduleController extends Controller
         $cancelamento = false;
         $action = 'schedule.destroy';
         $data = $dados['data'];
+        $now = Carbon::now()->format('Y-m-d');
+        $canCancel = true;
 
         $schedules = ScheduleModel::where([
             'date' => $dados['data'],
@@ -253,9 +255,6 @@ class ScheduleController extends Controller
             $inUse = true;
             $cancelamento = true;
             $novoAgendamento = false;
-            $canCancel = true;
-
-            $now = Carbon::now()->format('Y-m-d');
 
             if ($schedules->status == 'Finalizado') {
                 $canCancel = false;
@@ -278,8 +277,29 @@ class ScheduleController extends Controller
             // retorna a mensagem informando que o horário está ocupado
             $novoAgendamento = false; 
             $cancelamento = false;
+            if(auth()->user()->is_admin == 1) {
+                $cancelamento = true;
+                $action = 'schedule.destroy';
+
+                if ($schedulesB->status == 'Finalizado') {
+                    $canCancel = false;
+                }
+    
+                if (Carbon::parse($now)->diffInDays($schedulesB->date, false) == 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
+                    if ($schedulesB->status != 'Finalizado') {
+                        $schedulesB->update([
+                            'status' => 'Finalizado',
+                        ]);
+                    }
+    
+                    $canCancel = false;
+                }
+
+                $schedules = $schedulesB;
+            }            
+
             $inUse = true;           
-            return view('schedule.modals.modal-schedule', compact('hour', 'room', 'data', 'inUse', 'novoAgendamento', 'cancelamento'));
+            return view('schedule.modals.modal-schedule', compact('hour', 'room', 'data', 'inUse', 'novoAgendamento', 'cancelamento', 'action', 'canCancel', 'schedules'));
         } else if (empty($schedules) && empty($schedulesB)) {
             // Se a sala não está em uso, retorna o modal de cadastro
             $inUse = false;
