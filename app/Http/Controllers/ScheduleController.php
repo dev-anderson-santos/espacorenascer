@@ -202,7 +202,7 @@ class ScheduleController extends Controller
             $now = Carbon::now()->format('Y-m-d');
 
             $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
-            dump(Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i'));
+
             // dd(Carbon::parse($now)->diffInDays($schedule->date, false) <= 1, now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i'));
             if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
             // if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (now()->format('H:i') >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
@@ -218,7 +218,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            echo $e->getMessage();
+
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.']);
         }
 
