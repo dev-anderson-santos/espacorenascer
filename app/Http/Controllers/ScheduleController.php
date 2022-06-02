@@ -216,6 +216,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+            echo $e->getMessage();
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.']);
         }
 
