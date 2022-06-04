@@ -36,7 +36,6 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        // $schedule = ScheduleModel::all();
         $hours = HourModel::all();
         $rooms = RoomModel::all();
 
@@ -56,7 +55,7 @@ class ScheduleController extends Controller
 
             array_push($dataSelect, $day);
         }
-        // dd($dataSelect);
+
         $mostrarAgendamento = false;
         if (now()->isBetween(Carbon::parse('07:00')->format('H:i'), Carbon::parse('22:00')->format('H:i'))) {
             $mostrarAgendamento = true;

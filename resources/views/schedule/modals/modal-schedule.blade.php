@@ -3,6 +3,7 @@
     <div class="col-md-6">
         @if(auth()->user()->is_admin != 1 || $cancelamento)
         <span style="font-weight: 800;">Profissional:</span> {{ !empty($schedules) ? $schedules->user->name : auth()->user()->name }}
+        <input type="hidden" id="user-not-admin-id" value="{{ auth()->user()->id }}">
         @elseif ($novoAgendamento && auth()->user()->is_admin == 1)
         <span style="font-weight: 800;">Profissional:</span>
         <select class="form-control" name="user" id="user-id">
@@ -133,7 +134,7 @@ $('#agendar').on('click', function () {
         data: {
             room_id: {{ $room->id }},
             hour_id: {{ $hour->id }},
-            user_id: $('#user-id').val(),
+            user_id: $('#user-id').val() || $('#user-not-admin-id').val(),
             date: $('#data-agendamento').val(),
             created_by: {{ auth()->user()->id }},
             tipo: $('#type-schedule').val(),
