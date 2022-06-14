@@ -26,16 +26,16 @@
 
         {{-- Username field --}}
         <div class="input-group mb-3">
-            <input type="text" name="username" class="form-control {{ $errors->has('username') || session()->has('user_inativated') ? 'is-invalid' : '' }}"
-                   value="{{ old('username') }}" placeholder="Informe o usuário" autofocus>
+            <input type="text" name="email" class="form-control {{ $errors->has('email') || session()->has('user_inativated') ? 'is-invalid' : '' }}"
+                   value="{{ old('email') }}" placeholder="Informe o seu e-mail" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
-                    <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
-            @if($errors->has('username'))
+            @if($errors->has('email'))
                 <div class="invalid-feedback">
-                    <strong>{{ $errors->first('username') }}</strong>
+                    <strong>{{ $errors->first('email') }}</strong>
                 </div>
             @endif
             @if(session()->has('user_inativated'))
@@ -82,13 +82,13 @@
 
 @section('auth_footer')
     {{-- Password reset link --}}
-    @if($password_reset_url)
+    {{-- @if($password_reset_url)
         <p class="my-0">
             <a href="{{ $password_reset_url }}">
                 {{ __('auth.i_forgot_my_password') }}
             </a>
         </p>
-    @endif
+    @endif --}}
 
     {{-- Register link --}}
     @if($register_url)

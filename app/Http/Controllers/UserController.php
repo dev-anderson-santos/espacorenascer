@@ -49,7 +49,7 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $rules = [
-                'username' => 'required|string|max:255|unique:users',
+                // 'username' => 'required|string|max:255|unique:users',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
                 'phone' => 'required|string|max:255',
@@ -58,9 +58,10 @@ class UserController extends Controller
             ];
 
             $messages = [
-                'username.required' => 'O campo Usuário é obrigatório',
+                // 'username.required' => 'O campo Usuário é obrigatório',
                 'username.unique' => 'O Usuário informado já está em uso',
                 'email.required' => 'O campo E-mail é obrigatório',
+                'email.unique' => 'E-mail já cadastrado.',
                 'password.required' => 'O campo Senha é obrigatório',
                 'password.confirmed' => 'A confirmação da senha não corresponde.',
                 'phone.required' => 'O campo Telefone é obrigatório',
@@ -87,7 +88,7 @@ class UserController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('schedule.my-schedules')->with('success', 'Usuário cadastrado com sucesso!');
+            return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!');
         } catch (\Exception $e) {
             DB::rollback();
             
@@ -146,7 +147,7 @@ class UserController extends Controller
             DB::beginTransaction();
             
             $rules = [
-                'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($request->user_id)],
+                // 'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($request->user_id)],
                 'email' => 'required|string|email|max:255|unique:users,' . $request->user_id,
                 'password' => 'required|string|min:8|confirmed',
                 'phone' => 'required|string|max:255',
@@ -155,9 +156,10 @@ class UserController extends Controller
             ];
 
             $messages = [
-                'username.required' => 'O campo Usuário é obrigatório',
+                // 'username.required' => 'O campo Usuário é obrigatório',
                 'username.unique' => 'O Usuário informado já está em uso',
                 'email.required' => 'O campo E-mail é obrigatório',
+                'email.unique' => 'E-mail já cadastrado.',
                 'password.required' => 'O campo Senha é obrigatório',
                 'password.confirmed' => 'A confirmação da senha não corresponde.',
                 'phone.required' => 'O campo Telefone é obrigatório',

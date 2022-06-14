@@ -96,6 +96,7 @@
         <script src="{{ asset('js/funcoes-gerais/index.js') }}"></script>
         <script src="{{ asset('js/schedule/index.js') }}"></script>
         <script src="{{ asset('js/user/index.js') }}"></script>
+        <script src="{{ asset('js/settings/index.js') }}"></script>
 
         {{-- Configured Scripts --}}
         @include('adminlte::plugins', ['type' => 'js'])

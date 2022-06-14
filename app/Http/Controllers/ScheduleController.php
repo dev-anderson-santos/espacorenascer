@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\DataNaoFaturadaModel;
 
 class ScheduleController extends Controller
 {
@@ -115,6 +116,13 @@ class ScheduleController extends Controller
             $dia = $dados['date'];
 
             $dados['status'] = 'Ativo';
+
+            $datasNaoFaturadas = DataNaoFaturadaModel::all();
+            foreach($datasNaoFaturadas as $data) {
+                if ($data->data == $dia) {
+                    $dados['data_nao_faturada_id'] = $data->id;
+                }
+            }
             
             $scheduleInUse = ScheduleModel::where([
                 'date' => $dados['date'],
@@ -174,7 +182,6 @@ class ScheduleController extends Controller
             } else {
                 ScheduleModel::create($dados);
             }
-
 
             DB::commit();
             return response()->json(['status' => 'success', 'message' => 'Agendamento realizado com sucesso!']);
@@ -328,6 +335,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
                     ->get();
 
         $concluidosParcialAtivoAvulso = ScheduleModel::where([
@@ -337,6 +345,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
                     ->get();
 
         $concluidosParcialFinalizadoFixo = ScheduleModel::where([
@@ -346,6 +355,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
                     ->get();
 
         $concluidosParcialFinalizadoAvulso = ScheduleModel::where([
@@ -355,6 +365,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
                     ->get();
 
         $concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
@@ -396,6 +407,7 @@ class ScheduleController extends Controller
         ])
         ->whereIn('tipo', ['Fixo', 'Avulso'])
         ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+        ->whereNull('data_nao_faturada_id')
         ->get();
 
         $concluidosMesAnteriorFixo = ScheduleModel::where([
@@ -405,6 +417,7 @@ class ScheduleController extends Controller
                     'faturado' => 1
                 ])
                 ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+                ->whereNull('data_nao_faturada_id')
                 ->get();
 
         $concluidosAgendamentosMesAnterior = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();

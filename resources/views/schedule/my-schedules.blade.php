@@ -20,12 +20,35 @@
 
         <h4>Bem-vindo(a) <b>{{ auth()->user()->name }}</b></h4>
 
+        @php
+            $datasNaoFaturadas = \App\Models\DataNaoFaturadaModel::all();
+            
+            $arrDatas = [];
+            foreach ($datasNaoFaturadas as $value) {
+                if (\Carbon\Carbon::parse($value->data)->format('Y-m-d') >= date('Y-m-d')) {
+                    $arrDatas[$value->id] = $value->data;
+                }
+            }
+        @endphp
+
+        @if (count($arrDatas) > 0)
+            <div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i>
+                As datas abaixo não serão faturadas:
+                <ul>
+                @foreach ($arrDatas as $value)
+                    <li>{{ \Carbon\Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</li>
+                @endforeach
+                </ul>
+            </div>
+        @endif
+
         @include('componentes.alerts', [
             'type' => 'alert-info',
             'text' => 'O agendamento só pode ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' da data anterior a escolhida.'
         ])
 
-        <table class="table table-striped table-bordered table-sm" id="tabela-horarios-usuario" style="width:100%">
+        <table class="table table-striped" id="tabela-horarios-usuario" style="width:100%">
             <thead>
                 <tr>
                     <th style="text-align: center">Data</th>
@@ -40,7 +63,7 @@
             </thead>
             <tbody>
                 @forelse ($schedules as $schedule)
-                <tr>
+                <tr style="background:{{ count($arrDatas) > 0 && isset($arrDatas[$schedule->data_nao_faturada_id]) ? '#ffc107' : '' }}">
                     <td style="text-align: center">{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
                     <td style="text-align: center">{{ $schedule->hour->hour }}</td>
                     <td style="text-align: center">{{ $schedule->room->name }}</td>

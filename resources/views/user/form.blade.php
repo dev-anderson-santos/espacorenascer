@@ -42,10 +42,17 @@
                     </div>
                 @endif
                 <div class="row mt-2 mb-3">
-                    <div class="col-12 col-md-6">
+                    {{-- <div class="col-12 col-md-6">
                         <label class="form-labels">Usuário</label>
                         <input name="username" class="form-control username border-left-danger @error('username') is-invalid @enderror" autocomplete="off" type="text" value="{{ old('username') ?? $user->username ?? '' }}" required>
                         @error('username')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div> --}}
+                    <div class="col-12 col-md-6 mt-2 mb-2">
+                        <label class="form-labels" for="email">E-mail</label>
+                        <input name="email" id="email" class="form-control border-left-danger @error('email') is-invalid @enderror" type="email" value="{{ old('email') ?? $user->email ?? '' }}" required="">
+                        @error('email')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -104,13 +111,13 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-12 col-md-8 mt-2 mb-2">
+                        {{-- <div class="col-12 col-md-8 mt-2 mb-2">
                             <label class="form-labels" for="email">E-mail</label>
                             <input name="email" id="email" class="form-control border-left-danger @error('email') is-invalid @enderror" type="email" value="{{ old('email') ?? $user->email ?? '' }}" required="">
                             @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="col-12 col-md-5 mt-2 mb-2">
                             <label class="form-labels" for="end_res">Endereço Residencial</label>
                             <input name="street" id="end_res" class="form-control" type="text" value="{{ old('street') ?? $user->hasAddress->address->street ?? '' }}">

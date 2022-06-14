@@ -16,7 +16,7 @@
 
         @include('componentes.alerts')
 
-        <form action="{{ route('settings.update') }}" method="post">
+        <form action="{{ route('settings.update') }}" method="post" id="form-settings">
             @csrf
             <input type="hidden" name="id" value="{{ $setting->id ?? '' }}">
             <div class="row">
@@ -53,6 +53,41 @@
                     </div>
                 </div> --}}
             </div>
+
+            <fieldset>
+                <legend>Datas não faturadas</legend>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-stripped table-hover table-sm" id="tabela-datas-nao-faturadas" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!empty($datas_nao_faturadas))
+                                    @foreach ($datas_nao_faturadas as $item)
+                                        <tr>
+                                            <td>{{ \Carbon\Carbon::parse($item->data)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="removerDataNaoFaturada({{ $item->id }})" id="btn-remover-data-nao-faturada" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix">&zwnj;</div>
+                    <div class="clearfix">&zwnj;</div>
+                    <div class="col-md-12 text-right mt-3">
+                        <button class="btn btn-primary btn-secondary" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="clearfix">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary float-right">Salvar</button>

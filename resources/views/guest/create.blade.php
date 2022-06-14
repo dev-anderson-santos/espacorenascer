@@ -14,17 +14,24 @@
     <div class="content">
         <div class="card">
             <div class="card-body">
-                <form id="cadastro-profissional" class="form-group" method="post" action="{{ route('user.store') }}">
+                <form id="cadastro-profissional" class="form-group" method="post" action="{{ route('user.store') }}" autocomplete="off">
                     @csrf
                     @if(!empty($user)) @method('PUT') @endif
                     <input type="hidden" name="id" value="{{ $user->id ?? '' }}">
                     <fieldset>
                         <legend>Dados de Acesso</legend>
                         <div class="row mt-3 mb-3">
-                            <div class="col-12 col-md-6 mt-2 mb-2">
+                            {{-- <div class="col-12 col-md-6 mt-2 mb-2">
                                 <label class="form-labels">Usuário</label>
                                 <input name="username" class="form-control username border-left-danger @error('username') is-invalid @enderror" autocomplete="off" type="text" value="{{ old('username') ?? $usuario->username ?? '' }}" required>
                                 @error('username')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div> --}}
+                            <div class="col-12 col-md-6 mt-2 mb-2">
+                                <label class="form-labels" for="email">E-mail</label>
+                                <input name="email" id="email" class="form-control border-left-danger @error('email') is-invalid @enderror" type="email" value="{{ old('email') ?? $usuario->email ?? '' }}" required="">
+                                @error('email')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -81,13 +88,13 @@
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-md-8 mt-2 mb-2">
+                            {{-- <div class="col-12 col-md-8 mt-2 mb-2">
                                 <label class="form-labels" for="email">E-mail</label>
                                 <input name="email" id="email" class="form-control border-left-danger @error('email') is-invalid @enderror" type="email" value="{{ old('email') ?? $usuario->email ?? '' }}" required="">
                                 @error('email')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="col-12 col-md-5 mt-2 mb-2">
                                 <label class="form-labels" for="end_res">Endereço Residencial</label>
                                 <input name="street" id="end_res" class="form-control" type="text" value="{{ old('street') ?? $usuario->address->street ?? '' }}">
