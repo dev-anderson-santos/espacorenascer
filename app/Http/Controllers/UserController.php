@@ -195,7 +195,7 @@ class UserController extends Controller
             ]);
             
             DB::commit();
-            return redirect()->route('user.edit', ['user_id' => $user->id])->with('success', 'Usuário atualizado com sucesso!');
+            return redirect()->route('user.edit', ['user_id' => $user->id])->with(['success' => true, 'message' => 'Usuário atualizado com sucesso!']);
         } catch(\Exception $e) {
             DB::rollBack();
             
