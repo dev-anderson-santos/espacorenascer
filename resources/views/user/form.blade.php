@@ -20,7 +20,7 @@
         <form id="cadastro-profissional" class="form-group" method="post" action="{{ route('user.update') }}">
             @csrf
             @if(!empty($user)) @method('PUT') @endif
-            <input type="hidden" name="id" value="{{ $user->id ?? '' }}">
+            <input type="hidden" name="user_id" value="{{ $user->id ?? '' }}">
             <fieldset>
                 <legend>Dados de Acesso</legend>
                 @if (auth()->user()->is_admin == 1)                            
