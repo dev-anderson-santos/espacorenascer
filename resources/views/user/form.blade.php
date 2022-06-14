@@ -17,6 +17,9 @@
 </section>
 <div class="card">
     <div class="card-body">
+
+        @include('componentes.alerts')
+
         <form id="cadastro-profissional" class="form-group" method="post" action="{{ route('user.update') }}">
             @csrf
             @if(!empty($user)) @method('PUT') @endif
