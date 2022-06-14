@@ -173,7 +173,7 @@ class UserController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $user = User::find($dados['user_id']);
+            $user = User::find($dados['id']);
             
             if(is_null($user)) {
                 $message = 'Usuário não encontrado.';
@@ -200,7 +200,7 @@ class UserController extends Controller
             DB::rollBack();
             
             $message = 'Ocorreu um erro ao salvar.';
-            return redirect()->route('user.edit', $dados['user_id'])->with(['error' => true, 'message' => $message]);
+            return redirect()->route('user.edit', $dados['id'])->with(['error' => true, 'message' => $message]);
         }
     }
 
