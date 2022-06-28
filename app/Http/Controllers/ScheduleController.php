@@ -25,7 +25,7 @@ class ScheduleController extends Controller
             'user_id' => $id,
             'faturado' => 0,
         ])
-        ->whereMonth('date', Carbon::now()->format('m'))
+        ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->orderBy('date', 'ASC')->get();
 
         return view('schedule.my-schedules', compact('schedules', 'titulo'));
