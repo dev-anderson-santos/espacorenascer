@@ -25,7 +25,7 @@
             
             $arrDatas = [];
             foreach ($datasNaoFaturadas as $value) {
-                if (\Carbon\Carbon::parse($value->data)->format('Y-m-d') >= date('Y-m-d')) {
+                if (\Carbon\Carbon::parse($value->data)->format('m') == date('m')) {
                     $arrDatas[$value->id] = $value->data;
                 }
             }
