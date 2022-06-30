@@ -48,7 +48,7 @@ class MonitorScheduleFaturarCron extends Command
             $now = Carbon::now()->format('Y-m-d');
 
             foreach ($schedules as $schedule) {
-                if (Carbon::parse($schedule->date)->endOfMonth()->format('Y-m-d') == $now || Carbon::parse($schedule->date)->format('m') < now()->format('m')) {
+                if (/* Carbon::parse($schedule->date)->endOfMonth()->format('Y-m-d') == $now || */Carbon::parse($schedule->date)->format('m') < now()->format('m')) {
                     $schedule->update([
                         'faturado' => 1
                     ]);
