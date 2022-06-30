@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
-        $schedule->command('schedule:faturar')->twiceDaily(7, 11);
+        $schedule->command('schedule:faturar')->monthly();
         // $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
         // $schedule->command('schedule:shouldfinalize')->twiceDaily(16, 20);
     }
