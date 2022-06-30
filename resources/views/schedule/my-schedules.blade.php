@@ -63,7 +63,13 @@
             </thead>
             <tbody>
                 @forelse ($schedules as $schedule)
-                <tr style="background:{{ count($arrDatas) > 0 && isset($arrDatas[$schedule->data_nao_faturada_id]) ? '#ffc107' : '' }}">
+                @php
+                    $showStyle = false;
+                    if (count($arrDatas) > 0 && isset($arrDatas[$schedule->data_nao_faturada_id])) {
+                        $showStyle = true;
+                    }
+                @endphp
+                <tr @if($showStyle) style="background-color: #ffc107" @endif>
                     <td style="text-align: center">{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
                     <td style="text-align: center">{{ $schedule->hour->hour }}</td>
                     <td style="text-align: center">{{ $schedule->room->name }}</td>
