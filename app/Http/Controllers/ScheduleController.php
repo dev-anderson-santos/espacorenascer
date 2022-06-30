@@ -23,7 +23,7 @@ class ScheduleController extends Controller
 
         $schedules = ScheduleModel::where([
             'user_id' => $id,
-            'faturado' => 0,
+            //'faturado' => 0,
         ])
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->orderBy('date', 'ASC')->get();
