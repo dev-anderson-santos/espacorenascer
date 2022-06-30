@@ -565,13 +565,11 @@ class ScheduleController extends Controller
 
         $schedulesToShow = null;
 
-        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->get();
+        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->whereNull('data_nao_faturada_id')->get();
 
         if ($dados['schedule_type'] == 'MES_ATUAL') {
-            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->get();
+            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->get();
         }
-
-        // dd($schedulesToShow);
 
         return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));
     }
