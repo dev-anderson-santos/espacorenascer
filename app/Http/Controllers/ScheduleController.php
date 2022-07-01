@@ -119,7 +119,7 @@ class ScheduleController extends Controller
 
             $datasNaoFaturadas = DataNaoFaturadaModel::all();
             foreach($datasNaoFaturadas as $data) {
-                if ($data->data == $dia) {
+                if (Carbon::parse($data->data)->format('Y-m-d') == Carbon::parse($dia)->format('Y-m-d')) {
                     $dados['data_nao_faturada_id'] = $data->id;
                 }
             }
