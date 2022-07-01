@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataNaoFaturadaModel;
-use App\Models\ScheduleModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\DataNaoFaturadaModel;
 
 class SettingsController extends Controller
 {
@@ -84,7 +85,7 @@ class SettingsController extends Controller
             $schedules = ScheduleModel::all();
 
             foreach($schedules as $schedule) {
-                if ($schedule->date == $dataNaoFaturada->data) {
+                if (Carbon::parse($schedule->date)->format('Y-m-d') == Carbon::parse($dataNaoFaturada->data)->format('Y-m-d')) {
                     $schedule->update([
                         'data_nao_faturada_id' => $dataNaoFaturada->id,
                     ]);
