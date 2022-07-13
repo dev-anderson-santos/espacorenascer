@@ -11,6 +11,7 @@ use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataNaoFaturadaModel;
+use App\Models\SchedulesNextMonthModel;
 
 class ScheduleController extends Controller
 {
@@ -28,7 +29,16 @@ class ScheduleController extends Controller
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->orderBy('date', 'ASC')->get();
 
-        return view('schedule.my-schedules', compact('schedules', 'titulo'));
+        $schedulesNextMonth = SchedulesNextMonthModel::where([
+            'user_id' => $id,
+            //'faturado' => 0,
+        ])
+        ->whereMonth('date', '>=', Carbon::now()->format('m'))
+        ->orderBy('date', 'ASC')->get();
+
+        $id_user = $id;
+
+        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user'));
     }
     /**
      * Display a listing of the resource.
@@ -42,7 +52,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < 7; $i++) {
+        for ($i=0; $i < env('DAYS_TO_SHOW'); $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
@@ -75,7 +85,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < 7; $i++) {
+        for ($i=0; $i < env('DAYS_TO_SHOW'); $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
@@ -134,25 +144,18 @@ class ScheduleController extends Controller
                 return response()->json(['status' => 'warning', 'message' => 'Este horário já está ocupado.']);
             }
 
+            $now = Carbon::now()->format('Y-m-d');
+            if (Carbon::parse($now)->diffInDays($dia, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($dia)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                $dados['status'] = 'Finalizado';
+                $dados['finalizado_em'] = now()->format('Y-m-d H:i:s');
+            } 
+
             if ($dados['tipo'] == 'Fixo') {                
 
-                $arrDays = [];
-                for ($i = Carbon::parse($dia)->weekOfMonth; $i <= Carbon::parse($dia)->endOfMonth()->weekOfMonth; $i++) {
-                    if($i == Carbon::parse($dia)->weekOfMonth) {
-                        $arrDays[$i] = $dia;
+                $arrDays = getWeekDays($dia);
 
-                        if (Carbon::parse($arrDays[$i])->isLastWeek()) {
-                            break;
-                        }
-                    } else {
-                        $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
-
-                        if (Carbon::parse($arrDays[$i])->isLastWeek() || Carbon::parse($arrDays[$i])->isNextMonth()) {
-                            unset($arrDays[$i]);
-                            break;
-                        }
-                    }
-                }
+                $newDay = Carbon::parse(end($arrDays))->addDays(7)->format('Y-m-d');
+                $arrDaysNextMonth = getWeekDaysNextMonth($newDay);
 
                 $arrDataEmUso = [];
                 $horariosEmUso = false;
@@ -173,7 +176,29 @@ class ScheduleController extends Controller
                         continue;
                     }
 
+                    $dataNaoFaturada = $datasNaoFaturadas->where('data', $value)->first();
+
+                    if (!is_null($dataNaoFaturada)) {
+                        $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
+                    }
+
                     ScheduleModel::create($dados);
+                    $dados['status'] = 'Ativo';
+                    $dados['finalizado_em'] = NULL;
+                    $dados['data_nao_faturada_id'] = NULL;
+                }
+
+                foreach ($arrDaysNextMonth as $key => $value) {
+                    
+                    $dados['date'] = $value;
+
+                    $dataNaoFaturada = $datasNaoFaturadas->where('data', $value)->first();
+                    if (!is_null($dataNaoFaturada)) {
+                        $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
+                    }
+
+                    SchedulesNextMonthModel::create($dados);
+                    $dados['data_nao_faturada_id'] = NULL;
                 }
 
                 DB::commit();
@@ -189,7 +214,6 @@ class ScheduleController extends Controller
             DB::rollback();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
-        
     }
 
     /**
@@ -269,15 +293,24 @@ class ScheduleController extends Controller
                 $canCancel = false;
             }
 
-            if (Carbon::parse($now)->diffInDays($schedules->date, false) == 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
-                if ($schedules->status != 'Finalizado') {
-                    $schedules->update([
-                        'status' => 'Finalizado',
-                    ]);
-                }
+            if (Carbon::parse($now)->diffInDays($schedules->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($schedules->date)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                $schedules->update([
+                    'status' => 'Finalizado',
+                    'finalizado_em' => now()->format('Y-m-d H:i:s')
+                ]);
 
                 $canCancel = false;
-            }
+            } 
+
+            // if (Carbon::parse($now)->diffInDays($schedules->date, false) == 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
+            //     if ($schedules->status != 'Finalizado') {
+            //         $schedules->update([
+            //             'status' => 'Finalizado',
+            //         ]);
+            //     }
+
+            //     $canCancel = false;
+            // }
             
             return view('schedule.modals.modal-schedule', compact('schedules', 'hour', 'room', 'inUse', 'data', 'cancelamento', 'novoAgendamento', 'action', 'canCancel'));
             
@@ -572,5 +605,150 @@ class ScheduleController extends Controller
         }
 
         return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));
+    }
+
+    public function destroyNextMonth(Request $request)
+    {
+        $dados = $request->all();
+        try {
+            DB::beginTransaction();
+            $schedule = SchedulesNextMonthModel::findOrFail($dados['schedule_id']);
+    
+            $now = Carbon::now()->format('Y-m-d');
+
+            $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
+
+            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+            }
+
+            $schedule->delete();
+    
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamento cancelado com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.']);
+        }
+    }
+
+    public function cancelAllFixedSchedules(Request $request, $user_id = NULL)
+    {
+        $id = !is_null($user_id) ? $user_id : auth()->user()->id;
+
+        try {
+            DB::beginTransaction();
+            ScheduleModel::where([
+                'user_id' => $id,
+                'status' => 'Ativo',
+                'tipo' => 'Fixo'
+            ])
+            ->whereMonth('date', now()->format('m'))
+            ->delete();
+    
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamentos cancelados com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar os agendamentos.']);
+        }
+    }
+
+    public function cancelAllFixedNextMonthSchedules(Request $request, $user_id = NULL)
+    {
+        $id = !is_null($user_id) ? $user_id : auth()->user()->id;
+
+        try {
+            DB::beginTransaction();
+            SchedulesNextMonthModel::where([
+                'user_id' => $id,
+                'status' => 'Ativo',
+                'tipo' => 'Fixo'
+            ])
+            ->whereMonth('date', now()->addMonth()->format('m'))
+            ->delete();
+    
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamentos cancelados com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar os agendamentos.']);
+        }
+    }
+
+    public function modalCancelarAgendamentoFixo(Request $request)
+    {
+        $dados = $request->all();
+        
+        $schedule = ScheduleModel::where('id', $dados['schedule_id'])->first();
+        $action = $schedule->tipo == 'Fixo' ? '/app/schedule/cancelar-agendamento-fixo' : '/app/schedule/to-destroy-schedule';
+        $nextWeekDays = getWeekDays($schedule->date);
+
+        if (in_array($schedule->date, $nextWeekDays) && count($nextWeekDays) > 1) {
+            unset($nextWeekDays[array_search($schedule->date, $nextWeekDays)]);
+        }
+
+        $otherWeekSchedules = NULL;
+        $otherWeekSchedulesNextMonth = NULL;
+        $nextMonthDays = NULL;
+        if (count($nextWeekDays) > 0) {
+            $otherWeekSchedules = ScheduleModel::where('user_id', $schedule->user_id)->whereIn('date', $nextWeekDays)->where('date', '!=', $schedule->date)->where('status', 'Ativo')->where('tipo', 'Fixo')->get();
+            
+            $newDay = Carbon::parse(end($nextWeekDays))->addDays(7)->format('Y-m-d');
+            $nextMonthDays = getWeekDaysNextMonth($newDay);
+
+            if (count($nextMonthDays) > 0) {
+                $otherWeekSchedulesNextMonth = SchedulesNextMonthModel::where('user_id', $schedule->user_id)->whereIn('date', $nextMonthDays)->where('status', 'Ativo')->where('tipo', 'Fixo')->get();
+            }
+        }
+
+        return view('schedule.modals.modal-cancelar-agendamento-fixo', [
+            'schedule' => $schedule,
+            'nextWeekDays' => $nextWeekDays,
+            'otherWeekSchedules' => $otherWeekSchedules,
+            'otherWeekSchedulesNextMonth' => $otherWeekSchedulesNextMonth,
+            'action' => $action,
+        ]);
+    }
+
+    public function cancelarAgendamentoFixo(Request $request)
+    {
+        $dados = $request->all();
+        try {
+            DB::beginTransaction();
+            $schedule = ScheduleModel::findOrFail($dados['schedule_id']);
+    
+            $now = Carbon::now()->format('Y-m-d');
+    
+            $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
+    
+            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+            }
+    
+            if (isset($dados['otherWeekSchedules']) && count($dados['otherWeekSchedules']) > 0) {
+                ScheduleModel::whereIn('id', $dados['otherWeekSchedules'])->delete();
+            }
+
+            if (isset($dados['otherWeekSchedulesNextMonth']) && count($dados['otherWeekSchedulesNextMonth']) > 0) {
+                SchedulesNextMonthModel::whereIn('id', $dados['otherWeekSchedulesNextMonth'])->delete();
+            }
+            
+            $schedule->delete();
+    
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Agendamento cancelado com sucesso!']);
+    
+        } catch (\Exception $e) {
+            DB::rollback();
+            // dd($e);
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.', 'error' => $e->getMessage()]);
+        }
     }
 }

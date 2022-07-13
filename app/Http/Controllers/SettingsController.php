@@ -8,6 +8,7 @@ use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataNaoFaturadaModel;
+use App\Models\SchedulesNextMonthModel;
 
 class SettingsController extends Controller
 {
@@ -83,8 +84,17 @@ class SettingsController extends Controller
 
             $dataNaoFaturada = DataNaoFaturadaModel::create($request->all());
             $schedules = ScheduleModel::all();
+            $schedulesNextMonth = SchedulesNextMonthModel::all();
 
             foreach($schedules as $schedule) {
+                if (Carbon::parse($schedule->date)->format('Y-m-d') == Carbon::parse($dataNaoFaturada->data)->format('Y-m-d')) {
+                    $schedule->update([
+                        'data_nao_faturada_id' => $dataNaoFaturada->id,
+                    ]);
+                }
+            }
+
+            foreach($schedulesNextMonth as $schedule) {
                 if (Carbon::parse($schedule->date)->format('Y-m-d') == Carbon::parse($dataNaoFaturada->data)->format('Y-m-d')) {
                     $schedule->update([
                         'data_nao_faturada_id' => $dataNaoFaturada->id,
@@ -109,8 +119,17 @@ class SettingsController extends Controller
 
             $dataNaoFaturada = DataNaoFaturadaModel::find($request->data_nao_faturada_id);
             $schedules = ScheduleModel::all();
+            $schedulesNextMonth = SchedulesNextMonthModel::all();
 
             foreach($schedules as $schedule) {
+                if ($schedule->data_nao_faturada_id == $dataNaoFaturada->id) {
+                    $schedule->update([
+                        'data_nao_faturada_id' => null,
+                    ]);
+                }
+            }
+
+            foreach($schedulesNextMonth as $schedule) {
                 if ($schedule->data_nao_faturada_id == $dataNaoFaturada->id) {
                     $schedule->update([
                         'data_nao_faturada_id' => null,

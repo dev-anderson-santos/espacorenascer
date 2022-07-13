@@ -41,6 +41,12 @@ Route::group(['prefix' => 'app'],function () {
         Route::post('/mudar-tipo-agendamento', 'ScheduleController@mudarTipoAgendamento')->name('schedule.mudar-tipo-agendamento');
         Route::get('/update-all-schedules', 'ScheduleController@updateAllSchedules')->name('schedule.update-all-schedules');
         Route::get('/details', 'ScheduleController@details')->name('schedule.details');
+        Route::post('/destroy-schedule-next-month', 'ScheduleController@destroyNextMonth');
+        Route::post('/mudar-tipo-agendamento-proximo-mes', 'ScheduleController@mudarTipoAgendamentoProximoMes');
+        Route::post('/cancel-all-fixed-schedules/{user_id?}', 'ScheduleController@cancelAllFixedSchedules');
+        Route::post('/cancel-all-fixed-next-month-schedules/{user_id?}', 'ScheduleController@cancelAllFixedNextMonthSchedules');
+        Route::get('/modal-cancelar-agendamento-fixo', 'ScheduleController@modalCancelarAgendamentoFixo')->name('schedule.modal-cancelar-agendamento-fixo');
+        Route::post('/cancelar-agendamento-fixo', 'ScheduleController@cancelarAgendamentoFixo')->name('schedule.cancelar-agendamento-fixo');
     });
 
     Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function () {

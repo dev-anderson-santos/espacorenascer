@@ -147,7 +147,12 @@ $('#agendar').on('click', function () {
         success: function(response) {
             if(response.status == 'success') {
                 $('#agendar').html('Agendado!');
-                location.reload();
+                bootbox.alert({
+                    message: response.message,
+                    callback: function () {
+                        location.reload();
+                    }
+                });
             } else if (response.status == 'warning') {
                 bootbox.alert(response.message);
                 $('#agendar').html('Agendar');
@@ -205,8 +210,12 @@ $('#agendar').on('click', function () {
                         }
                     });
                 } else {
-                    bootbox.alert(response.message);
-                    location.reload();
+                    bootbox.alert({
+                        message: response.message,
+                        callback: function () {
+                            location.reload();
+                        }
+                    });
                 }
                 console.log(response.message);
             } else if (response.status == 'error') {

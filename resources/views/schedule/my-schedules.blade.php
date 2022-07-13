@@ -5,6 +5,17 @@
     .seta::before {
         display: none!important;
     }
+    table tbody {
+        display: block;
+        max-height: 500px;
+        overflow: auto;
+    }
+
+    table thead, table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
 </style>
 <section class="content-header">
     <div class="container-fluid">
@@ -48,7 +59,15 @@
             'text' => 'O agendamento só pode ser cancelado até às '. \Carbon\Carbon::parse(\App\Models\SettingsModel::first()->hora_fechamento)->isoFormat('H\h') .' da data anterior a escolhida.'
         ])
 
-        <table class="table table-striped" id="tabela-horarios-usuario" style="width:100%">
+        {{-- <div class="clearfix">&nbsp;</div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="hidden" id="user_id_mes_atual" value="{{ $id_user }}">
+                <button type="button" class="btn btn-danger" id="btn-cancelar-fixos">Cancelar agendamentos fixos</button>
+            </div>
+        </div> --}}
+
+        <table class="table table-striped table-hover" id="_tabela-horarios-usuario" style="width:100%">
             <thead>
                 <tr>
                     <th style="text-align: center">Data</th>
@@ -85,7 +104,8 @@
                                 {{-- <a href="#" onclick="naoFaturarAgendamento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Não faturar agendamento"><i class="fas fa-coins text-danger"></i> Não faturar agendamento</a> --}}
                                 @if ($schedule->status == 'Ativo')
                                 {{-- <a href="#" onclick="faturarFinalizarAtendimento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Faturar/Finalizar agendamento"><i class="fas fa-hand-holding-usd text-warning"></i> Faturar/Finalizar agendamento</a> --}}
-                                <a href="#" onclick="cancelarAgendamentoUser('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
+                                <a href="javascript:void(0)" onclick="modalGlobalOpen('{{ route('schedule.modal-cancelar-agendamento-fixo', ['schedule_id' => $schedule->id]) }}', 'Cancelar Agendamento Fixo')" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
+                                {{-- <a href="#" onclick="cancelarAgendamentoUser('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a> --}}
                                 <a href="#" onclick="mudarTipo('{{ csrf_token() }}', {{ $schedule->id }}, '{{ $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo' }}', '{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}', '{{ $schedule->hour->hour }}')" class="dropdown-item btn btn-sm" title="{{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}"><i class="fas fa-exchange-alt text-secondary"></i> {{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}</a>
                                 @else
                                 <a href="#" class="dropdown-item btn btn-sm" title="Nenhuma ação disponível"><i class="fas fa-ban text-secondary"></i> Nenhuma ação disponível</a>
@@ -96,12 +116,74 @@
                     {{-- @endif --}}
                 </tr>
                 @empty
-                {{-- <tr>
+                <tr>
                     <td colspan="5">Nenhum horário cadastrado</td>
-                </tr> --}}
+                </tr>
                 @endforelse
             </tbody>
         </table>
+        <div class="clearfix">&nbsp;</div>
+        @if (auth()->user()->is_admin == 1)
+        <fieldset>
+            <legend>Horários fixos para o mês de {{ now()->addMonth()->isoFormat('MMMM') }}</legend>
+        
+            <div class="clearfix">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="user_id_proximo_mes" value="{{ $id_user }}">
+                    <button type="button" class="btn btn-danger" id="btn-cancelar-fixos-proximo-mes">Cancelar agendamentos - mês de {{ now()->addMonth()->isoFormat('MMMM') }}</button>
+                </div>
+            </div>
+            <div class="clearfix">&nbsp;</div>
+            
+            <table class="table table-striped table-hover" id="_tabela-horarios-usuario-proximo-mes" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">Data</th>
+                        <th style="text-align: center">Horário</th>
+                        <th style="text-align: center">Sala</th>
+                        <th style="text-align: center">Tipo de agendamento</th>
+                        <th style="text-align: center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($schedulesNextMonth as $schedule)
+                    @php
+                        $showStyle = false;
+                        if (count($arrDatas) > 0 && isset($arrDatas[$schedule->data_nao_faturada_id])) {
+                            $showStyle = true;
+                        }
+                    @endphp
+                    <tr @if($showStyle) style="background-color: #ffc107" @endif>
+                        <td style="text-align: center">{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
+                        <td style="text-align: center">{{ $schedule->hour->hour }}</td>
+                        <td style="text-align: center">{{ $schedule->room->name }}</td>
+                        <td style="text-align: center">{{ $schedule->tipo }}</td>
+                        <td style="text-align: center">
+                            <div class="btn-group dropleft">
+                                <a class="dropdown-toggle seta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    @if ($schedule->status == 'Ativo')
+                                        <a href="#" onclick="cancelarAgendamentoUserNextMonth('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
+                                        {{-- <a href="#" onclick="mudarTipo('{{ csrf_token() }}', {{ $schedule->id }}, '{{ $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo' }}', '{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}', '{{ $schedule->hour->hour }}')" class="dropdown-item btn btn-sm" title="{{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}"><i class="fas fa-exchange-alt text-secondary"></i> {{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}</a> --}}
+                                    @else
+                                        <a href="#" class="dropdown-item btn btn-sm" title="Nenhuma ação disponível"><i class="fas fa-ban text-secondary"></i> Nenhuma ação disponível</a>
+                                    @endif
+                                </div>
+                            </div>                        
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5">Nenhum horário cadastrado</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </fieldset>
+        @endif
     </div>
 </div>
 

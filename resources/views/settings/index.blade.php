@@ -81,18 +81,19 @@
                     </div>
                     <div class="clearfix">&zwnj;</div>
                     <div class="clearfix">&zwnj;</div>
-                    <div class="col-md-12 text-right mt-3">
+                    {{-- <div class="col-md-12 text-right mt-3">
                         <button class="btn btn-primary btn-secondary" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
-                    </div>
+                    </div> --}}
                 </div>
             </fieldset>
 
             <div class="clearfix">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary float-right">Salvar</button>
+            {{-- <div class="row"> --}}
+                <div class="float-right">
+                    <button class="btn btn-primary btn-secondary" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
-            </div>
+            {{-- </div> --}}
         </form>
     </div>
 </div>

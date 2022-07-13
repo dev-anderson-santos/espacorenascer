@@ -14,9 +14,31 @@ $(function() {
     });
 
     $('#tabela-horarios-usuario').DataTable({
+        "order": [[ 0, "asc" ]],
+        "bLengthChange": false, // Oculta o campo Show [10, 15,...] entries
+        "paging":   false,
+        "filter": false,
+        "info":     false,
+        "scrollX": true,
+        "columnDefs": [
+            // { orderable: false, className: 'reorder', targets: 0 },
+            { orderable: false, targets: '_all' }
+        ],
+        "language": {
+            "zeroRecords": "Nenhum dado encontrado.",
+            "infoEmpty": "Nenhum dado encontrado.",
+            "info": "Mostrando página _START_ de _END_ de _TOTAL_ registros.",
+            "paginate": {
+                "previous": "Anterior",
+                "next": "Próximo",
+              }
+        },
+    });
+
+    $('#tabela-horarios-usuario-proximo-mes').DataTable({
         // "order": [[ 0, "asc" ]],
         "bLengthChange": false, // Oculta o campo Show [10, 15,...] entries
-        "paging":   true,
+        "paging":   false,
         "filter": false,
         "info":     false,
         "scrollX": true,
@@ -36,7 +58,114 @@ $(function() {
     });
 
     // setInterval(tick, 1000);
+    $('#btn-cancelar-fixos').on('click', function () {
+        bootbox.confirm({
+            title: 'Cancelar Todos os Agendamentos',
+            message: "Deseja realmente cancelar todos os <b>Agendamentos Fixos disponíveis</b>?<br> Esta ação não poderá ser desfeita!",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger ok'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary not-ok'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '/app/schedule/cancel-all-fixed-schedules/'+$('#user_id_mes_atual').val(),
+                        method: 'POST',
+                        data: {
+                            _token: $('[name="csrf-token"]').attr('content'),
+                        },
+                        beforeSend: function () {
+                            $('.ok').prop('disabled', true);
+                            $('.not-ok').prop('disabled', true);
+                            $('.ok').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                $('.ok').html('Cancelado!');
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message,
+                                    callback: function () {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                $('.ok').prop('disabled', false);
+                                $('.not-ok').prop('disabled', false);
+                                $('.ok').html('Cancelar');
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message
+                                });
+                            }                        
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $('#btn-cancelar-fixos-proximo-mes').on('click', function () {
+        bootbox.confirm({
+            title: 'Cancelar Agendamentos - Para o Próximo Mês',
+            message: "Deseja realmente cancelar todos os <b>Agendamentos Para o Próximo Mês</b>?<br> Esta ação não poderá ser desfeita!",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger ok'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary not-ok'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '/app/schedule/cancel-all-fixed-next-month-schedules/'+$('#user_id_proximo_mes').val(),
+                        method: 'POST',
+                        data: {
+                            _token: $('[name="csrf-token"]').attr('content'),
+                        },
+                        beforeSend: function () {
+                            $('.ok').prop('disabled', true);
+                            $('.not-ok').prop('disabled', true);
+                            $('.ok').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                $('.ok').html('Cancelado!');
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message,
+                                    callback: function () {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                $('.ok').prop('disabled', false);
+                                $('.not-ok').prop('disabled', false);
+                                $('.ok').html('Cancelar');
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message
+                                });
+                            }                        
+                        }
+                    });
+                }
+            }
+        });
+    });
 });
+
+
 function cancelarAgendamentoUser (token, scheduleID) {
     bootbox.confirm({
         title: 'Cancelar Agendamento',
@@ -181,92 +310,56 @@ function mudarTipo(token, scheduleID, tipo, data, hora) {
     });
 }
 
-function faturarFinalizarAtendimento(token, scheduleID) {
-    // bootbox.confirm({
-    //     title: 'Faturar/Finalizar atendimento',
-    //     message: "Deseja realmente faturar o atendimento?",
-    //     buttons: {
-    //         confirm: {
-    //             label: 'Sim',
-    //             className: 'btn-success'
-    //         },
-    //         cancel: {
-    //             label: 'Não',
-    //             className: 'btn-secondary'
-    //         }
-    //     },
-    //     callback: function (result) {
-    //         if (result) {
-    //             $.ajax({
-    //                 url: '/app/schedule/faturar-finalizar-atendimento',
-    //                 method: 'POST',
-    //                 data: {
-    //                     _token: token,
-    //                     schedule_id: scheduleID != '' ? scheduleID : -1,
-    //                 },
-    //                 success: function(response) {
-    //                     if (response.status == 'success') {
-    //                         bootbox.alert({
-    //                             title: 'Faturar/Finalizar atendimento',
-    //                             message: response.message,
-    //                             callback: function () {
-    //                                 location.reload();
-    //                             }
-    //                         });
-    //                     } else {
-    //                         bootbox.alert({
-    //                             title: 'Informação',
-    //                             message: response.message
-    //                         });
-    //                     }                        
-    //                 }
-    //             });
-    //         }
-    //     }
-    // });
-}
-
-function naoFaturarAgendamento(token, scheduleID) {
-    // bootbox.confirm({
-    //     title: 'Não faturar agendamento',
-    //     message: "Deseja realmente não faturar o agendamento?",
-    //     buttons: {
-    //         confirm: {
-    //             label: 'Sim',
-    //             className: 'btn-success'
-    //         },
-    //         cancel: {
-    //             label: 'Não',
-    //             className: 'btn-secondary'
-    //         }
-    //     },
-    //     callback: function (result) {
-    //         if (result) {
-    //             $.ajax({
-    //                 url: '/app/schedule/nao-faturar-agendamento',
-    //                 method: 'POST',
-    //                 data: {
-    //                     _token: token,
-    //                     schedule_id: scheduleID != '' ? scheduleID : -1,
-    //                 },
-    //                 success: function(response) {
-    //                     if (response.status == 'success') {
-    //                         bootbox.alert({
-    //                             title: 'Não faturar agendamento',
-    //                             message: response.message,
-    //                             callback: function () {
-    //                                 location.reload();
-    //                             }
-    //                         });
-    //                     } else {
-    //                         bootbox.alert({
-    //                             title: 'Informação',
-    //                             message: response.message
-    //                         });
-    //                     }                        
-    //                 }
-    //             });
-    //         }
-    //     }
-    // });
+function cancelarAgendamentoUserNextMonth (token, scheduleID) {
+    bootbox.confirm({
+        title: 'Cancelar Agendamento',
+        message: "Deseja realmente cancelar este agendamento para o próximo mês?<br> Esta ação não poderá ser desfeita!",
+        buttons: {
+            confirm: {
+                label: 'Sim',
+                className: 'btn-danger ok'
+            },
+            cancel: {
+                label: 'Não',
+                className: 'btn-secondary not-ok'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: '/app/schedule/destroy-schedule-next-month',
+                    method: 'POST',
+                    data: {
+                        _token: token,
+                        schedule_id: scheduleID != '' ? scheduleID : -1,
+                    },
+                    beforeSend: function () {
+                        $('.ok').prop('disabled', true);
+                        $('.not-ok').prop('disabled', true);
+                        $('.ok').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            $('.ok').html('Cancelado!');
+                            bootbox.alert({
+                                title: 'Cancelamento',
+                                message: response.message,
+                                callback: function () {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            $('.ok').prop('disabled', false);
+                            $('.not-ok').prop('disabled', false);
+                            $('.ok').html('Cancelar');
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message
+                            });
+                        }                        
+                    }
+                });
+            }
+        }
+    });
 }
