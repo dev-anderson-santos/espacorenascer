@@ -16,7 +16,7 @@
             <div class="alert alert-secondary" style="font-size: 15pt" role="alert">
                 <i class="fas fa-info-circle"></i> Para realizar um agendamento, clique em um horário <b>Livre</b>.
             </div>
-            <form action="{{ route('schedule.show-specific-shedule') }}" method="post" class="form-group">
+            <form action="{{ route('schedule.show-specific-shedule-administrador') }}" method="post" class="form-group">
                 @csrf
                 <div class="form-row">
                     <div class="col-md-4">

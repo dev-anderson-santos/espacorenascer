@@ -46,7 +46,7 @@ Route::group(['prefix' => 'app'],function () {
         Route::get('/modal-cancelar-agendamento-fixo', 'ScheduleController@modalCancelarAgendamentoFixo')->name('schedule.modal-cancelar-agendamento-fixo');
         Route::post('/cancelar-agendamento-fixo', 'ScheduleController@cancelarAgendamentoFixo')->name('schedule.cancelar-agendamento-fixo');
         Route::get('/index-administrador', 'ScheduleController@indexAdmin')->name('schedule.index-administrador');
-        Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule');
+        Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule-administrador');
     });
 
     Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function () {
