@@ -4,6 +4,8 @@ namespace App\Console;
 
 use App\Console\Commands\MonitorScheduleCron;
 use App\Console\Commands\MonitorScheduleFaturarCron;
+use App\Console\Commands\MonitorScheduleMirrorCron;
+use App\Console\Commands\ScheduleDeleteMirroredCron;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,6 +19,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         MonitorScheduleCron::class,
         MonitorScheduleFaturarCron::class,
+        MonitorScheduleMirrorCron::class,
+        ScheduleDeleteMirroredCron::class,
     ];
 
     /**
@@ -30,6 +34,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
         $schedule->command('schedule:faturar')->monthly();
+        $schedule->command('schedule:mirror')->monthlyOn();
+        $schedule->command('schedule:delete-mirrored')->monthlyOn(2, '0:01');
         // $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
         // $schedule->command('schedule:shouldfinalize')->twiceDaily(16, 20);
     }
