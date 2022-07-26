@@ -100,7 +100,7 @@
                     <button class="btn btn-primary btn-warning col-md-4" id="btn-espelhar-agendamentos" type="button">Espelhar agendamentos</button>
                 </div>
                 <div class="col-md-12 mb-2">
-                    <button class="btn btn-primary btn-danger col-md-4" id="btn-excluir-agendamentos-espelhados" type="button">Excluir Agendamentos Expelhados</button>
+                    <button class="btn btn-primary btn-danger col-md-4" id="btn-excluir-agendamentos-espelhados" type="button">Excluir Agendamentos Espelhados</button>
                 </div>
             </div>
 
