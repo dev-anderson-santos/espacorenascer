@@ -42,7 +42,7 @@ class ScheduleDeleteMirroredCron extends Command
         try {
             DB::beginTransaction();
             
-            SchedulesNextMonthModel::whereMonth('date', now()->format('m'))->delete();
+            SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->delete();
 
             DB::commit();
             
