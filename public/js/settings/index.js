@@ -37,6 +37,112 @@ $(function() {
             modalGlobalOpen('/app/settings/modal-adicionar-data-nao-faturada/?settings_id=' + response.settings_id, 'Adicionar Data Não Faturada');            
         });
     });
+
+    $('#btn-faturar-agendamento').on('click', function (event) {
+        bootbox.confirm({
+            title: "Faturar Agendamentos",
+            message: "Deseja realmente faturar todos os agendamentos?<br/><br/>Os agendamentos com datas inferiores a data atual, serão faturados.<br/><br/> <span class='text-danger'><b>Esta ação não poderá ser desfeita.</b></span>",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+
+                if (result) {
+                    $.get('/app/settings/faturar-agendamentos', {}, function(response) {
+                        if (response.status == 'success') {
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            bootbox.alert(response.message)
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $('#btn-espelhar-agendamentos').on('click', function (event) {
+        bootbox.confirm({
+            title: "Espalhar Agendamentos",
+            message: "Deseja realmente espelhar todos os agendamentos?<br/><br/> <span class='text-danger'><b>Esta ação não poderá ser desfeita.</b></span>",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+
+                if (result) {
+                    $.get('/app/settings/espelhar-agendamentos', {}, function(response) {
+                        if (response.status == 'success') {
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            bootbox.alert(response.message)
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $('#btn-excluir-agendamentos-espelhados').on('click', function (event) {
+        bootbox.confirm({
+            title: "Excluir Agendamentos",
+            message: "Deseja realmente excluir todos os agendamentos espelhados?<br/><br/> <span class='text-danger'><b>Esta ação não poderá ser desfeita.</b></span>",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+
+                if (result) {
+                    $.get('/app/settings/excluir-agendamentos-espelhados', {}, function(response) {
+                        if (response.status == 'success') {
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            bootbox.alert(response.message)
+                        }
+                    });
+                }
+            }
+        });
+    });
+
 })
 
 function removerDataNaoFaturada(data_nao_faturada_id) {

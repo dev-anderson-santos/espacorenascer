@@ -88,9 +88,25 @@
             </fieldset>
 
             <div class="clearfix">&nbsp;</div>
+
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary btn-secondary col-md-4" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary btn-success col-md-4" id="btn-faturar-agendamento" type="button">Faturar agendamentos</button>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary btn-warning col-md-4" id="btn-espelhar-agendamentos" type="button">Espelhar agendamentos</button>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary btn-danger col-md-4" id="btn-excluir-agendamentos-espelhados" type="button">Excluir Agendamentos Expelhados</button>
+                </div>
+            </div>
+
+            <div class="clearfix">&nbsp;</div>
             {{-- <div class="row"> --}}
                 <div class="float-right">
-                    <button class="btn btn-primary btn-secondary" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             {{-- </div> --}}

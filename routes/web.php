@@ -49,13 +49,19 @@ Route::group(['prefix' => 'app'],function () {
         Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule-administrador');
     });
 
-    Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function () {
-        Route::get('/', 'SettingsController@index')->name('settings.index');
-        Route::post('/', 'SettingsController@update')->name('settings.update');
-        Route::get('/update-settings-ajax', 'SettingsController@updateSettingsAjax')->name('settings.update-settings-ajax');
-        Route::get('/modal-adicionar-data-nao-faturada', 'SettingsController@modalAdicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
-        Route::post('/adicionar-data-nao-faturada', 'SettingsController@adicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
-        Route::get('/remover-data-nao-faturada', 'SettingsController@removerDataNaoFaturada')->name('settings.removerDataNaoFaturada');
+    Route::group(['middleware' => 'auth'], function () {
+        Route::group(['prefix' => 'settings', 'middleware' => 'is_admin'], function () {
+
+            Route::get('/', 'SettingsController@index')->name('settings.index');
+            Route::post('/', 'SettingsController@update')->name('settings.update');
+            Route::get('/update-settings-ajax', 'SettingsController@updateSettingsAjax')->name('settings.update-settings-ajax');
+            Route::get('/modal-adicionar-data-nao-faturada', 'SettingsController@modalAdicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
+            Route::post('/adicionar-data-nao-faturada', 'SettingsController@adicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
+            Route::get('/remover-data-nao-faturada', 'SettingsController@removerDataNaoFaturada')->name('settings.removerDataNaoFaturada');
+            Route::get('/faturar-agendamentos', 'SettingsController@faturar')->name('settings.faturar');
+            Route::get('/espelhar-agendamentos', 'SettingsController@mirror')->name('settings.mirror');
+            Route::get('/excluir-agendamentos-espelhados', 'SettingsController@deleteMirroredSchedules')->name('settings.removerDataNaoFaturada');
+        });
     });
 });
 

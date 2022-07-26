@@ -148,4 +148,119 @@ class SettingsController extends Controller
             return response()->json(['type' => 'error', 'message' => 'Ocorreu um erro ao remover a data!']);
         }
     }
+
+    public function faturar()
+    {
+        try {
+            DB::beginTransaction();
+
+            $schedules = ScheduleModel::where('status', 'Finalizado')->get();
+
+            foreach ($schedules as $schedule) {
+                if (Carbon::parse($schedule->date)->format('m') < now()->format('m')) {
+                    $schedule->update([
+                        'faturado' => 1
+                    ]);
+                }        
+            }
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'message' => 'Agendamentos faturados com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao faturar os agendamentos!']);
+        }
+    }
+
+    public function mirror()
+    {
+        try {
+            DB::beginTransaction();
+
+            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->get();
+
+            if ($schedulesNextMonth->count() == 0) {
+                return $this->info('Não há agendamentos para o mês seguinte.');
+            }
+
+            $arrLastDays = [];
+            $arrDados = [];
+            foreach ($schedulesNextMonth as $scheduleNext) {
+                if ($scheduleNext->is_mirrored != 1) {
+                    ScheduleModel::create([
+                        'user_id' => $scheduleNext->user_id,
+                        'room_id' => $scheduleNext->room_id,
+                        'created_by' => $scheduleNext->created_by,
+                        'hour_id' => $scheduleNext->hour_id,
+                        'date' => $scheduleNext->date,
+                        'status' => $scheduleNext->status,
+                        'tipo' => $scheduleNext->tipo,
+                        'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                    ]);
+
+                    if (Carbon::parse($scheduleNext->date)->addDays(7)->format('m') > Carbon::parse($scheduleNext->date)->format('m')) {
+                        $arr = getWeekDays($scheduleNext->date);
+                        
+                        $newDay = Carbon::parse(last($arr))->addDays(7)->format('Y-m-d');
+                        $arrLastDays[] = getWeekDaysNextMonth($newDay);
+
+                        $arrDados[] = [
+                            'user_id' => $scheduleNext->user_id,
+                            'room_id' => $scheduleNext->room_id,
+                            'created_by' => $scheduleNext->created_by,
+                            'hour_id' => $scheduleNext->hour_id,
+                            'status' => $scheduleNext->status,
+                            'tipo' => $scheduleNext->tipo,
+                            'is_mirrored' => 1,
+                        ];
+                    }
+                }
+            }
+
+            foreach ($arrLastDays as $keyExterno => $datas) {
+                foreach ($datas as $data) {
+
+                    $dataNaoFaturada = DataNaoFaturadaModel::where('data', $data)->first();
+                    if (!is_null($dataNaoFaturada)) {
+                        $arrDados[$keyExterno]['data_nao_faturada_id'] = $dataNaoFaturada->id;
+                    }
+
+                    $arrDados[$keyExterno]['date'] = $data;
+                    $arrDados[$keyExterno]['data_nao_faturada_id'] = NULL;
+
+                    SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                }
+            }
+
+            DB::commit();
+            
+            return response()->json(['status' => 'success', 'message' => 'Agendamentos espalhados com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao espalhar os agendamentos!']);
+        }
+    }
+
+    public function deleteMirroredSchedules()
+    {
+        try {
+            DB::beginTransaction();
+            
+            SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->delete();
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'message' => 'Agendamentos excluídos com sucesso!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos!']);
+        }
+    }
 }
