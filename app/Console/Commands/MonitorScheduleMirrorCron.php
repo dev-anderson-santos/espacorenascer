@@ -47,6 +47,9 @@ class MonitorScheduleMirrorCron extends Command
         try {
             DB::beginTransaction();
             
+            // TODO: Verificar se é fevereiro e se não é bissexto
+            // TODO: nos outros meses, verificar se tem 30 ou 31 dias
+
             $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->get();
 
             if ($schedulesNextMonth->count() == 0) {

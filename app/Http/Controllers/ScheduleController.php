@@ -751,4 +751,59 @@ class ScheduleController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.', 'error' => $e->getMessage()]);
         }
     }
+
+    public function indexAdmin()
+    {
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
+
+        $dataSelect = [];
+        $day = NULL;
+        for ($i=0; $i < 60; $i++) {
+            if ($i == 0) {
+                $day = Carbon::now();
+                
+            } else {
+                $day = Carbon::now()->addDays($i);
+            }
+
+            if ($day->isSunday()) {                
+                continue;
+            }
+
+            array_push($dataSelect, $day);
+        }
+
+        return view('schedule.index-administrador', compact('hours', 'rooms', 'dataSelect'));
+    }
+
+    public function showSpecificShceduleAdministrador(Request $request)
+    {
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
+
+        $_day = Carbon::parse($request->day)->format('Y-m-d');
+        $schedules = ScheduleModel::where('date', $_day)->get();
+
+        $dataSelect = [];
+        $day = NULL;
+        for ($i=0; $i < 60; $i++) {
+            if ($i == 0) {
+                $day = Carbon::now();
+                
+            } else {
+                $day = Carbon::now()->addDays($i);
+            }
+
+            if ($day->isSunday()) {                
+                continue;
+            }
+
+            array_push($dataSelect, $day);
+        }
+
+        $showSpecificShedule = true;
+
+        return view('schedule.index-administrador', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
+    }
 }

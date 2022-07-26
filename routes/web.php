@@ -4,11 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // TODO: Remover o -- selecione -- após escolher uma data
-// TODO: Permitir agendar, como admin, para todos os usuários
-// TODO: Gerar relatório de agendamentos mensais informando para o usuário quanto ele deve pagar por mês
-// TODO: Enviar e-mail após agendamento
-// TODO: Resetar senha por email
-// TODO: Colocar no campo faturado = 1 quando chegar no dia 31 e exibir os agendamentos em Meus horários enquanto não estiverem faturados
+// TODO: Enviar e-mail após agendamento - NÃO PEDIU
+// TODO: Resetar senha por email - NÃO PEDIU
+// TODO: Calcular os dias para espelhar os agendamentos (verificar se o dia de hoje + 6 dias é o próximo mês)
 
 Route::get('/', function () {
     return view('index.index');
@@ -47,6 +45,8 @@ Route::group(['prefix' => 'app'],function () {
         Route::post('/cancel-all-fixed-next-month-schedules/{user_id?}', 'ScheduleController@cancelAllFixedNextMonthSchedules');
         Route::get('/modal-cancelar-agendamento-fixo', 'ScheduleController@modalCancelarAgendamentoFixo')->name('schedule.modal-cancelar-agendamento-fixo');
         Route::post('/cancelar-agendamento-fixo', 'ScheduleController@cancelarAgendamentoFixo')->name('schedule.cancelar-agendamento-fixo');
+        Route::get('/index-administrador', 'ScheduleController@indexAdmin')->name('schedule.index-administrador');
+        Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule');
     });
 
     Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function () {

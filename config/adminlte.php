@@ -265,6 +265,12 @@ return [
             'icon' => 'fas fa-calendar-alt',
         ],
         [
+            'text' => 'Agenda Administrador',
+            'url'  => '/app/schedule/index-administrador',
+            'icon' => 'fas fa-calendar-alt',
+            'can'  => 'is_admin'
+        ],
+        [
             'text' => 'Fechamentos do mês',
             'url'  => '/app/schedule/fechamento-mes',
             'icon' => 'fas fa-file-invoice-dollar',
