@@ -47,7 +47,7 @@ class MonitorScheduleMirrorCron extends Command
         try {
             DB::beginTransaction();
             
-            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->format('m'))->get();
+            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->get();
 
             if ($schedulesNextMonth->count() == 0) {
                 return $this->info('Não há agendamentos para o mês seguinte.');
