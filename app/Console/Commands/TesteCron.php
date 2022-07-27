@@ -11,7 +11,7 @@ class TesteCron extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:testecron';
+    protected $signature = 'ander:testecron';
 
     /**
      * The console command description.
