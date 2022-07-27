@@ -183,14 +183,15 @@ class SettingsController extends Controller
             $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->get();
 
             if ($schedulesNextMonth->count() == 0) {
-                return $this->info('Não há agendamentos para o mês seguinte.');
+                return response()->json(['status' => 'info', 'message' => 'Não há agendamentos para espelhar para o mês seguinte.']);
             }
 
             $arrLastDays = [];
             $arrDados = [];
             foreach ($schedulesNextMonth as $scheduleNext) {
                 if ($scheduleNext->is_mirrored != 1) {
-                    ScheduleModel::create([
+                    
+                    $schedule_temp = ScheduleModel::where([
                         'user_id' => $scheduleNext->user_id,
                         'room_id' => $scheduleNext->room_id,
                         'created_by' => $scheduleNext->created_by,
@@ -198,24 +199,37 @@ class SettingsController extends Controller
                         'date' => $scheduleNext->date,
                         'status' => $scheduleNext->status,
                         'tipo' => $scheduleNext->tipo,
-                        'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
-                    ]);
+                        'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id
+                    ])->first();
 
-                    if (Carbon::parse($scheduleNext->date)->addDays(7)->format('m') > Carbon::parse($scheduleNext->date)->format('m')) {
-                        $arr = getWeekDays($scheduleNext->date);
-                        
-                        $newDay = Carbon::parse(last($arr))->addDays(7)->format('Y-m-d');
-                        $arrLastDays[] = getWeekDaysNextMonth($newDay);
-
-                        $arrDados[] = [
+                    if (empty($schedule_temp)) {
+                        ScheduleModel::create([
                             'user_id' => $scheduleNext->user_id,
                             'room_id' => $scheduleNext->room_id,
                             'created_by' => $scheduleNext->created_by,
                             'hour_id' => $scheduleNext->hour_id,
+                            'date' => $scheduleNext->date,
                             'status' => $scheduleNext->status,
                             'tipo' => $scheduleNext->tipo,
-                            'is_mirrored' => 1,
-                        ];
+                            'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                        ]);
+
+                        if (Carbon::parse($scheduleNext->date)->addDays(7)->format('m') > Carbon::parse($scheduleNext->date)->format('m')) {
+                            $arr = getWeekDays($scheduleNext->date);
+                            
+                            $newDay = Carbon::parse(last($arr))->addDays(7)->format('Y-m-d');
+                            $arrLastDays[] = getWeekDaysNextMonth($newDay);
+
+                            $arrDados[] = [
+                                'user_id' => $scheduleNext->user_id,
+                                'room_id' => $scheduleNext->room_id,
+                                'created_by' => $scheduleNext->created_by,
+                                'hour_id' => $scheduleNext->hour_id,
+                                'status' => $scheduleNext->status,
+                                'tipo' => $scheduleNext->tipo,
+                                'is_mirrored' => 1,
+                            ];
+                        }
                     }
                 }
             }
@@ -231,7 +245,20 @@ class SettingsController extends Controller
                     $arrDados[$keyExterno]['date'] = $data;
                     $arrDados[$keyExterno]['data_nao_faturada_id'] = NULL;
 
-                    SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                    $scheduleNext = SchedulesNextMonthModel::where([
+                        'date' => $arrDados[$keyExterno]['date'],
+                        'user_id' => $arrDados[$keyExterno]['user_id'],
+                        'room_id' => $arrDados[$keyExterno]['room_id'],
+                        'created_by' => $arrDados[$keyExterno]['created_by'],
+                        'hour_id' => $arrDados[$keyExterno]['hour_id'],
+                        'status' => $arrDados[$keyExterno]['status'],
+                        'tipo' => $arrDados[$keyExterno]['tipo'],
+                        'is_mirrored' => 1,
+                    ])->first();
+
+                    if (empty($scheduleNext)) {
+                        SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                    }                    
                 }
             }
 
@@ -242,7 +269,7 @@ class SettingsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             
-            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao espalhar os agendamentos!']);
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao espalhar os agendamentos!', 'erro' => $e->getMessage()]);
         }
     }
 
