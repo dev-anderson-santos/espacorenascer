@@ -6,6 +6,7 @@ use App\Console\Commands\MonitorScheduleCron;
 use App\Console\Commands\MonitorScheduleFaturarCron;
 use App\Console\Commands\MonitorScheduleMirrorCron;
 use App\Console\Commands\ScheduleDeleteMirroredCron;
+use App\Console\Commands\TesteCron;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         MonitorScheduleFaturarCron::class,
         MonitorScheduleMirrorCron::class,
         ScheduleDeleteMirroredCron::class,
+        TesteCron::class,
     ];
 
     /**
@@ -32,6 +34,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('ander:testecron')->daily();
         $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
         $schedule->command('schedule:faturar')->monthly();
         $schedule->command('schedule:mirror')->monthlyOn();
