@@ -99,8 +99,11 @@ $(function() {
                                     location.reload();
                                 }
                             });
+                        } else if (response.status == 'info') {
+                            bootbox.alert(response.message)
                         } else {
                             bootbox.alert(response.message)
+                            console.log(response.erro);
                         }
                     });
                 }
