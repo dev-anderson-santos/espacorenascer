@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('ander:testecron')->daily();
+        // $schedule->command('ander:testecron')->daily();
         $schedule->command('schedule:shouldfinalize')->twiceDaily(8, 12);
         $schedule->command('schedule:faturar')->monthly();
         $schedule->command('schedule:mirror')->monthlyOn();
