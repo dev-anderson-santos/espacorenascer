@@ -154,14 +154,17 @@ class SettingsController extends Controller
         try {
             DB::beginTransaction();
 
-            $schedules = ScheduleModel::where('status', 'Finalizado')->get();
+            $schedules = ScheduleModel::where('status', 'Finalizado')
+                ->where('faturado', '!=', 1)
+                ->whereBetween('date', [
+                    now()->subMonth()->startOfMonth()->format('Y-m-d'),
+                    now()->subMonth()->endOfMonth()->format('Y-m-d')
+                ])->get();
 
             foreach ($schedules as $schedule) {
-                if (Carbon::parse($schedule->date)->format('m') < now()->format('m')) {
-                    $schedule->update([
-                        'faturado' => 1
-                    ]);
-                }        
+                $schedule->update([
+                    'faturado' => 1
+                ]);      
             }
 
             DB::commit();

@@ -44,21 +44,31 @@ class MonitorScheduleFaturarCron extends Command
         try {
             DB::beginTransaction();
 
-            $schedules = ScheduleModel::where('status', 'Finalizado')->get();
-            $now = Carbon::now()->format('Y-m-d');
+            $schedules = ScheduleModel::where('status', 'Finalizado')
+                ->where('faturado', '!=', 1)
+                ->whereBetween('date', [
+                    now()->subMonth()->startOfMonth()->format('Y-m-d'),
+                    now()->subMonth()->endOfMonth()->format('Y-m-d')
+                ])->get();
 
+            $faturado = false;
             foreach ($schedules as $schedule) {
-                if (/* Carbon::parse($schedule->date)->endOfMonth()->format('Y-m-d') == $now || */Carbon::parse($schedule->date)->format('m') < now()->format('m')) {
-                    $schedule->update([
-                        'faturado' => 1
-                    ]);
-                }        
+                if (now()->format('d') == 1) {
+                    $faturado = $schedule->update(['faturado' => 1]);
+                }      
             }
 
-            DB::commit();
-            
-            $this->info('Agendamentos faturados com sucesso!');
+            if ($schedules->count() > 0 && $faturado) {
 
+                DB::commit();
+
+                $this->info('Agendamentos faturados com sucesso!');
+            } else if ($schedules->count() == 0) {
+                $this->warn('Não há agendamentos para faturar.');
+            } else if (now()->format('d') != 1 && $schedules->count() > 0) {
+                $this->warn('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y'));
+            }
+            
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
