@@ -37,6 +37,10 @@ class TesteCron extends Command
      */
     public function handle()
     {
-        return $this->info('It works!');
+        if (now()->format('d') == 1) {
+            $this->info('Hoje é o dia de faturar.');
+        } else {
+            $this->warn('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y'));
+        } 
     }
 }
