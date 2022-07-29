@@ -33,6 +33,7 @@ class ScheduleController extends Controller
             'user_id' => $id,
             //'faturado' => 0,
         ])
+        ->where('is_mirrored', 1)
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->orderBy('date', 'ASC')->get();
 
@@ -197,6 +198,7 @@ class ScheduleController extends Controller
                         $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
                     }
 
+                    $dados['is_mirrored'] = 1;
                     SchedulesNextMonthModel::create($dados);
                     $dados['data_nao_faturada_id'] = NULL;
                 }

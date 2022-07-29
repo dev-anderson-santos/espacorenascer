@@ -125,7 +125,7 @@
         <div class="clearfix">&nbsp;</div>
         @if (auth()->user()->is_admin == 1)
         <fieldset>
-            <legend>Horários fixos para o mês de {{ now()->addMonth()->isoFormat('MMMM') }}</legend>
+            <legend>Horários fixos para o próximo mês</legend>
         
             <div class="clearfix">&nbsp;</div>
             <div class="row">

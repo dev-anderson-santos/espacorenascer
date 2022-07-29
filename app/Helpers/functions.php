@@ -360,22 +360,43 @@ if (!function_exists('getWeekDays')) {
     {
         $arrDays = [];
         $weekOfMonth = Carbon::parse($referenceDay)->endOfMonth()->weekOfMonth;
-        for ($i = Carbon::parse($referenceDay)->weekOfMonth; $i <= $weekOfMonth; $i++) {
-            if($i == Carbon::parse($referenceDay)->weekOfMonth) {
-                $arrDays[$i] = $referenceDay;
+        
+        if (Carbon::parse($referenceDay)->isNextMonth()) {
+            for ($i = Carbon::parse($referenceDay)->weekOfMonth; $i <= $weekOfMonth; $i++) {
+                if($i == Carbon::parse($referenceDay)->weekOfMonth) {
+                    $arrDays[$i] = $referenceDay;
+    
+                    if (Carbon::parse($arrDays[$i])->addMonth()->isNextMonth()) {
+                        break;
+                    }
+                } else {
+                    $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
 
-                if (Carbon::parse($arrDays[$i])->isNextMonth()) {
-                    break;
+                    if (Carbon::parse($arrDays[$i])->format('m') != Carbon::parse($arrDays[$i-1])->format('m')) {
+                        unset($arrDays[$i]);
+                        break;
+                    }
                 }
-            } else {
-                $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
-
-                if (/* Carbon::parse($arrDays[$i])->isLastWeek() ||  */Carbon::parse($arrDays[$i])->isNextMonth()) {
-                    unset($arrDays[$i]);
-                    break;
+            }
+        } else {
+            for ($i = Carbon::parse($referenceDay)->weekOfMonth; $i <= $weekOfMonth; $i++) {
+                if($i == Carbon::parse($referenceDay)->weekOfMonth) {
+                    $arrDays[$i] = $referenceDay;
+    
+                    if (Carbon::parse($arrDays[$i])->isNextMonth()) {
+                        break;
+                    }
+                } else {
+                    $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
+    
+                    if (Carbon::parse($arrDays[$i])->isNextMonth()) {
+                        unset($arrDays[$i]);
+                        break;
+                    }
                 }
             }
         }
+        
 
         return $arrDays;
     }

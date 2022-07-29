@@ -46,11 +46,8 @@ class MonitorScheduleMirrorCron extends Command
     {
         try {
             DB::beginTransaction();
-            
-            // TODO: Verificar se é fevereiro e se não é bissexto
-            // TODO: nos outros meses, verificar se tem 30 ou 31 dias
 
-            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->get();
+            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->where('is_mirrored', 1)->get();
 
             if ($schedulesNextMonth->count() == 0) {
                 return $this->info('Não há agendamentos para o mês seguinte.');
@@ -59,7 +56,19 @@ class MonitorScheduleMirrorCron extends Command
             $arrLastDays = [];
             $arrDados = [];
             foreach ($schedulesNextMonth as $scheduleNext) {
-                if ($scheduleNext->is_mirrored != 1) {
+
+                $schedule_temp = ScheduleModel::where([
+                    'user_id' => $scheduleNext->user_id,
+                    'room_id' => $scheduleNext->room_id,
+                    'created_by' => $scheduleNext->created_by,
+                    'hour_id' => $scheduleNext->hour_id,
+                    'date' => $scheduleNext->date,
+                    'status' => $scheduleNext->status,
+                    'tipo' => $scheduleNext->tipo,
+                    'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id
+                ])->first();
+
+                if (empty($schedule_temp)) { // Impedir espelhamento de agendamentos já existentes
                     ScheduleModel::create([
                         'user_id' => $scheduleNext->user_id,
                         'room_id' => $scheduleNext->room_id,
@@ -76,7 +85,6 @@ class MonitorScheduleMirrorCron extends Command
                         
                         $newDay = Carbon::parse(last($arr))->addDays(7)->format('Y-m-d');
                         $arrLastDays[] = getWeekDaysNextMonth($newDay);
-
                         $arrDados[] = [
                             'user_id' => $scheduleNext->user_id,
                             'room_id' => $scheduleNext->room_id,
@@ -87,6 +95,8 @@ class MonitorScheduleMirrorCron extends Command
                             'is_mirrored' => 1,
                         ];
                     }
+
+                    $scheduleNext->update(['is_mirrored' => 0]);
                 }
             }
 
@@ -100,8 +110,21 @@ class MonitorScheduleMirrorCron extends Command
 
                     $arrDados[$keyExterno]['date'] = $data;
                     $arrDados[$keyExterno]['data_nao_faturada_id'] = NULL;
+                    
+                    $scheduleNext = SchedulesNextMonthModel::where([
+                        'date' => $arrDados[$keyExterno]['date'],
+                        'user_id' => $arrDados[$keyExterno]['user_id'],
+                        'room_id' => $arrDados[$keyExterno]['room_id'],
+                        'created_by' => $arrDados[$keyExterno]['created_by'],
+                        'hour_id' => $arrDados[$keyExterno]['hour_id'],
+                        'status' => $arrDados[$keyExterno]['status'],
+                        'tipo' => $arrDados[$keyExterno]['tipo'],
+                        'is_mirrored' => 1,
+                    ])->first();
 
-                    SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                    if (empty($scheduleNext)) {
+                        SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                    }
                 }
             }
 
