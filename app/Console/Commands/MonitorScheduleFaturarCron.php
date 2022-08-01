@@ -62,11 +62,11 @@ class MonitorScheduleFaturarCron extends Command
 
                 DB::commit();
 
-                $this->info('Agendamentos faturados com sucesso!');
+                $this->info('Agendamentos faturados com sucesso! Data atual: ' . now()->format('d/m/Y H:i:s'));
             } else if ($schedules->count() == 0) {
-                $this->warn('Não há agendamentos para faturar.');
+                $this->warn('Não há agendamentos para faturar. Data atual: ' . now()->format('d/m/Y H:i:s'));
             } else if (now()->format('d') != 1 && $schedules->count() > 0) {
-                $this->warn('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y'));
+                $this->warn('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y H:i:s'));
             }
             
         } catch (\Exception $e) {
