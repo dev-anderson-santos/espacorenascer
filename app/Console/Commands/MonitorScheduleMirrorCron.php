@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Models\DataNaoFaturadaModel;
 use Carbon\Carbon;
 use App\Models\HourModel;
 use App\Models\ScheduleModel;
+use App\Mail\NotifyMirrorEvent;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\ScheduleNextMonthMirrorLog;
+use App\Models\DataNaoFaturadaModel;
+use Illuminate\Support\Facades\Mail;
 use App\Models\SchedulesNextMonthModel;
 use Illuminate\Console\Scheduling\Schedule;
 
@@ -47,10 +50,20 @@ class MonitorScheduleMirrorCron extends Command
         try {
             DB::beginTransaction();
 
+            $message = null;
             $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->where('is_mirrored', 1)->get();
 
             if ($schedulesNextMonth->count() == 0) {
-                return $this->info('Não há agendamentos para o mês seguinte.');
+                $message = 'Não há agendamentos para espelhar.';
+
+                ScheduleNextMonthMirrorLog::create([
+                    'message' => $message,
+                    'email' => 'dev.anderson.santos@gmail.com',
+                ]);
+
+                DB::commit();
+                
+                return $this->info($message);
             }
 
             $arrLastDays = [];
@@ -128,9 +141,16 @@ class MonitorScheduleMirrorCron extends Command
                 }
             }
 
+            $message = 'Agendamentos espalhados com sucesso!';
+
+            ScheduleNextMonthMirrorLog::create([
+                'message' => $message,
+                'email' => 'dev.anderson.santos@gmail.com',
+            ]);
+
             DB::commit();
             
-            $this->info('Agendamentos espalhados com sucesso!');
+            $this->info($message);
 
         } catch (\Exception $e) {
             DB::rollback();
