@@ -706,6 +706,13 @@ class ScheduleController extends Controller
             $nextMonthDays = getWeekDaysNextMonth($newDay);
 
             if (count($nextMonthDays) > 0) {
+
+                $newDayAux = end($nextMonthDays);
+                $newDayOfLastMonth = Carbon::parse($newDayAux)->addDays(7)->format('Y-m-d');
+                $daysOfLastMonth = getWeekDaysNextMonth($newDayOfLastMonth);
+
+                $nextMonthDays = array_merge($nextMonthDays, $daysOfLastMonth);
+
                 $otherWeekSchedulesNextMonth = SchedulesNextMonthModel::where('user_id', $schedule->user_id)->whereIn('date', $nextMonthDays)->where('status', 'Ativo')->where('tipo', 'Fixo')->get();
             }
         }
