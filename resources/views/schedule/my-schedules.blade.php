@@ -29,7 +29,9 @@
 <div class="card">
     <div class="card-body">
 
+        @if (auth()->user()->is_admin != 1)
         <h4>Bem-vindo(a) <b>{{ auth()->user()->name }}</b></h4>
+        @endif
 
         @php
             $datasNaoFaturadas = \App\Models\DataNaoFaturadaModel::all();
