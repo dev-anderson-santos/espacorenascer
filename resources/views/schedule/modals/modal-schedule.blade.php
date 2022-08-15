@@ -229,9 +229,9 @@ $('#agendar').on('click', function () {
 });
 
 $('#btn-cancelar-agendamento').on('click', function () {
-    // if ($('.tipo-agendamento').val() == 'Fixo') {
-    //     modalGlobalOpen(`/app/schedule/modal-cancelar-agendamento-fixo/?schedule_id=${$('#schedule').val()}`, 'Cancelar Agendamento Fixo');
-    // } else {
+    if ($('.tipo-agendamento').val() == 'Fixo') {
+        modalGlobalOpen(`/app/schedule/modal-cancelar-agendamento-fixo/?schedule_id=${$('#schedule').val()}`, 'Cancelar Agendamento Fixo');
+    } else {
         bootbox.confirm({
             title: 'Cancelar Agendamento',
             message: "Deseja realmente cancelar o agendamento?<br> Esta ação não poderá ser desfeita!",
@@ -297,6 +297,6 @@ $('#btn-cancelar-agendamento').on('click', function () {
                 }
             }
         });
-    // }
+    }
 });
 </script>
