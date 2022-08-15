@@ -700,7 +700,13 @@ class ScheduleController extends Controller
         $otherWeekSchedulesNextMonth = NULL;
         $nextMonthDays = NULL;
         if (count($nextWeekDays) > 0) {
-            $otherWeekSchedules = ScheduleModel::where('user_id', $schedule->user_id)->whereIn('date', $nextWeekDays)->where('date', '!=', $schedule->date)->where('status', 'Ativo')->where('tipo', 'Fixo')->get();
+            $otherWeekSchedules = ScheduleModel::where('user_id', $schedule->user_id)
+                                ->whereIn('date', $nextWeekDays)->where('date', '!=', $schedule->date)
+                                ->where('status', 'Ativo')
+                                ->where('tipo', 'Fixo')
+                                ->where('hour_id', $schedule->hour_id)
+                                ->where('room_id', $schedule->room_id)
+                                ->get();
             
             $newDay = Carbon::parse(end($nextWeekDays))->addDays(7)->format('Y-m-d');
             $nextMonthDays = getWeekDaysNextMonth($newDay);
@@ -713,7 +719,13 @@ class ScheduleController extends Controller
 
                 $nextMonthDays = array_merge($nextMonthDays, $daysOfLastMonth);
 
-                $otherWeekSchedulesNextMonth = SchedulesNextMonthModel::where('user_id', $schedule->user_id)->whereIn('date', $nextMonthDays)->where('status', 'Ativo')->where('tipo', 'Fixo')->get();
+                $otherWeekSchedulesNextMonth = SchedulesNextMonthModel::where('user_id', $schedule->user_id)
+                                                ->whereIn('date', $nextMonthDays)
+                                                ->where('status', 'Ativo')
+                                                ->where('tipo', 'Fixo')
+                                                ->where('hour_id', $schedule->hour_id)
+                                                ->where('room_id', $schedule->room_id)
+                                                ->get();
             }
         }
 
@@ -815,4 +827,62 @@ class ScheduleController extends Controller
 
         return view('schedule.index-administrador', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
     }
+
+    // public function agendaMes(Request $request)
+    // {
+    //     $hours = HourModel::all();
+    //     $rooms = RoomModel::all();
+
+    //     $_day = Carbon::parse($request->day)->format('Y-m-d');
+    //     $schedules = ScheduleModel::where('date', $_day)->get();
+
+    //     $dataSelect = [];
+    //     $day = NULL;
+    //     for ($i = 0; $i < now()->daysInMonth; $i++) {
+    //         if ($i == 0) {
+    //             $day = now()->startOfMonth();
+                
+    //         } else {
+    //             $day = now()->startOfMonth()->addDays($i);
+    //         }
+
+    //         if ($day->isSunday() || $day->isNextMonth()) {                
+    //             continue;
+    //         }
+
+    //         array_push($dataSelect, $day);
+    //     }
+
+    //     return view('schedule.agenda-mes', compact('hours', 'rooms', 'dataSelect', 'schedules', '_day'));
+    // }
+
+    // public function showSpecificShceduleMes(Request $request)
+    // {
+    //     $hours = HourModel::all();
+    //     $rooms = RoomModel::all();
+
+    //     $_day = Carbon::parse($request->day)->format('Y-m-d');
+    //     $schedules = ScheduleModel::where('date', $_day)->get();
+
+    //     $dataSelect = [];
+    //     $day = NULL;
+    //     for ($i = 0; $i < now()->daysInMonth; $i++) {
+    //         if ($i == 0) {
+    //             $day = now()->startOfMonth();
+                
+    //         } else {
+    //             $day = now()->startOfMonth()->addDays($i);
+    //         }
+
+    //         if ($day->isSunday() || $day->isNextMonth()) {                
+    //             continue;
+    //         }
+
+    //         array_push($dataSelect, $day);
+    //     }
+
+    //     $showSpecificShedule = true;
+
+    //     return view('schedule.agenda-mes', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
+    // }
 }
