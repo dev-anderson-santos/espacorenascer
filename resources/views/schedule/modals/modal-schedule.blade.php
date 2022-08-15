@@ -107,6 +107,7 @@
         <button type="button" class="btn btn-secondary" id="btn-fechar" data-dismiss="modal">Fechar</button>
         @if ($cancelamento)
             @if($canCancel)
+                <input type="hidden" class="tipo-agendamento" value="{{ $schedules->tipo }}">
                 <button type="button" class="btn btn-danger" id="btn-cancelar-agendamento">Cancelar Agendamento</button>
             @endif
         @else
@@ -228,70 +229,74 @@ $('#agendar').on('click', function () {
 });
 
 $('#btn-cancelar-agendamento').on('click', function () {
-    bootbox.confirm({
-        title: 'Cancelar Agendamento',
-        message: "Deseja realmente cancelar o agendamento?<br> Esta ação não poderá ser desfeita!",
-        buttons: {
-            confirm: {
-                label: 'Sim',
-                className: 'btn-danger'
+    if ($('.tipo-agendamento').val() == 'Fixo') {
+        modalGlobalOpen(`/app/schedule/modal-cancelar-agendamento-fixo/?schedule_id=${$('#schedule').val()}`, 'Cancelar Agendamento Fixo');
+    } else {
+        bootbox.confirm({
+            title: 'Cancelar Agendamento',
+            message: "Deseja realmente cancelar o agendamento?<br> Esta ação não poderá ser desfeita!",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
             },
-            cancel: {
-                label: 'Não',
-                className: 'btn-secondary'
-            }
-        },
-        callback: function (result) {
-            if (result) {
-                $.ajax({
-                    url: '/app/schedule/to-destroy-schedule',
-                    method: 'POST',
-                    data: {
-                        schedule_id: $('#schedule').val() != '' ? $('#schedule').val() : -1,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    beforeSend: function () {
-                        $('#btn-cancelar-agendamento').prop('disabled', true);
-                        $('#btn-fechar').prop('disabled', true);
-                        $('#btn-cancelar-agendamento').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
-                    },
-                    success: function(response) {
-                        if (response.status == 'success') {
-                            $('#btn-cancelar-agendamento').html('Cancelado!');
-                            
-                            bootbox.alert({
-                                title: 'Cancelamento',
-                                message: response.message,
-                                callback: function () {
-                                    location.reload();
-                                }
-                            });
-                        } else if (response.status == 'info') {
-                            $('#btn-cancelar-agendamento').prop('disabled', false);
-                            $('#btn-fechar').prop('disabled', false);
-                            $('#btn-cancelar-agendamento').html('Não cancelado!');
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '/app/schedule/to-destroy-schedule',
+                        method: 'POST',
+                        data: {
+                            schedule_id: $('#schedule').val() != '' ? $('#schedule').val() : -1,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        beforeSend: function () {
+                            $('#btn-cancelar-agendamento').prop('disabled', true);
+                            $('#btn-fechar').prop('disabled', true);
+                            $('#btn-cancelar-agendamento').html('Cancelando <i class="fa fa-spinner fa-spin"></i>');
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                $('#btn-cancelar-agendamento').html('Cancelado!');
+                                
+                                bootbox.alert({
+                                    title: 'Cancelamento',
+                                    message: response.message,
+                                    callback: function () {
+                                        location.reload();
+                                    }
+                                });
+                            } else if (response.status == 'info') {
+                                $('#btn-cancelar-agendamento').prop('disabled', false);
+                                $('#btn-fechar').prop('disabled', false);
+                                $('#btn-cancelar-agendamento').html('Não cancelado!');
 
-                            bootbox.alert({
-                                title: 'Informação',
-                                message: response.message,
-                                callback: function () {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            $('#btn-cancelar-agendamento').prop('disabled', false);
-                            $('#btn-fechar').prop('disabled', false);
-                            $('#btn-cancelar-agendamento').html('Não cancelado!');
+                                bootbox.alert({
+                                    title: 'Informação',
+                                    message: response.message,
+                                    callback: function () {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                $('#btn-cancelar-agendamento').prop('disabled', false);
+                                $('#btn-fechar').prop('disabled', false);
+                                $('#btn-cancelar-agendamento').html('Não cancelado!');
 
-                            bootbox.alert({
-                                title: 'Erro',
-                                message: response.message
-                            });
-                        } 
-                    }
-                });
+                                bootbox.alert({
+                                    title: 'Erro',
+                                    message: response.message
+                                });
+                            } 
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 });
 </script>
