@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+// use App\Models\BillingModel;
 use Illuminate\Http\Request;
 use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
+use App\Models\SettingsModelLog;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataNaoFaturadaModel;
+use App\Models\RoomModel;
 use App\Models\SchedulesNextMonthModel;
 
 class SettingsController extends Controller
@@ -21,7 +24,9 @@ class SettingsController extends Controller
     {
         $setting = SettingsModel::first();
         $datas_nao_faturadas = DataNaoFaturadaModel::all();
-        return view('settings.index', compact('setting', 'datas_nao_faturadas'));
+        $rooms = RoomModel::all();
+
+        return view('settings.index', compact('setting', 'datas_nao_faturadas', 'rooms'));
     }
 
     /**
@@ -36,7 +41,21 @@ class SettingsController extends Controller
         try {
             DB::beginTransaction();
 
-            SettingsModel::find($request->id)->update($request->all());
+            $settings = SettingsModel::find($request->id)->update([
+                'valor_fixo' => $request->valor_fixo,
+                'valor_avulso' => $request->valor_avulso,
+                'hora_fechamento' => $request->hora_fechamento,
+                'dia_fechamento' => $request->dia_fechamento,
+            ]);
+
+            SettingsModelLog::create([
+                'user_id' => auth()->user()->id,
+                'settings_id' => $settings->id,
+                'valor_fixo' => $settings->valor_fixo,
+                'valor_avulso' => $settings->valor_avulso,
+                'hora_fechamento' => $settings->hora_fechamento,
+                'dia_fechamento' => $settings->dia_fechamento,
+            ]);
 
             DB::commit();
             return redirect()->route('settings.index')->with(['success' => true, 'message' => 'Configurações atualizadas com sucesso!']);
@@ -58,6 +77,15 @@ class SettingsController extends Controller
                 'valor_avulso' => $request->valor_avulso,
                 'hora_fechamento' => $request->hora_fechamento,
                 'dia_fechamento' => $request->dia_fechamento,
+            ]);
+
+            SettingsModelLog::create([
+                'user_id' => auth()->user()->id,
+                'settings_id' => $settings->id,
+                'valor_fixo' => $settings->valor_fixo,
+                'valor_avulso' => $settings->valor_avulso,
+                'hora_fechamento' => $settings->hora_fechamento,
+                'dia_fechamento' => $settings->dia_fechamento,
             ]);
 
             DB::commit();
@@ -293,4 +321,96 @@ class SettingsController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos!']);
         }
     }
+
+    // public function generateInvoicing()
+    // {
+    //     $setting = SettingsModel::first();
+    //     $valorFixo = $setting->valor_fixo;
+    //     $valorAvulso = $setting->valor_avulso;
+
+    //     //---- Mês anterior ----//
+    //     $concluidosMesAnteriorAvulso = ScheduleModel::where([
+    //         'status' => 'Finalizado',
+    //         'tipo' => 'Avulso',
+    //         'faturado' => 1
+    //     ])
+    //     ->whereIn('tipo', ['Fixo', 'Avulso'])
+    //     ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+    //     ->whereNull('data_nao_faturada_id')
+    //     ->get();
+
+    //     $concluidosMesAnteriorFixo = ScheduleModel::where([
+    //                 'status' => 'Finalizado',
+    //                 'tipo' => 'Fixo',
+    //                 'faturado' => 1
+    //             ])
+    //             ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+    //             ->whereNull('data_nao_faturada_id')
+    //             ->get();
+
+    //     $concluidosAgendamentosMesAnterior = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();
+
+    //     // é preciso calcular com o valor fixo e o valor avulso
+    //     // Veirificar se algums horario foi escolhido como avulso
+    //     $totalAvulsoMesAnterior = 0;
+    //     if ($concluidosMesAnteriorAvulso->count() > 0) {
+    //     $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
+    //     }
+
+    //     $totalFixoMesAnterior = 0;
+    //     if ($concluidosMesAnteriorFixo->count() > 0) {
+    //     $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
+    //     }
+
+    //     $totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
+
+    //     $agendamentos = ScheduleModel::select('user_id', 'date')
+    //     ->where([
+    //         'status' => 'Finalizado',
+    //         'faturado' => 1
+    //     ])
+    //     ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+    //     ->whereNull('data_nao_faturada_id')
+    //     ->get()
+    //     ->groupBy('user_id');
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         foreach ($agendamentos as $key => $item) {
+    //             $billing = BillingModel::where([
+    //                 'user_id' => $key,
+    //                 'month' => Carbon::parse($item->first()->date)->format('m'),
+    //                 'qtd_schedule' => $concluidosAgendamentosMesAnterior,
+    //                 'qtd_avulso' => $totalAvulsoMesAnterior,
+    //                 'qtd_fixo' => $totalFixoMesAnterior,
+    //                 'valor_avulso' => $valorAvulso,
+    //                 'valor_fixo' => $valorFixo,
+    //                 'valor_total' => $totalMesAnterior
+    //             ])->first();
+
+    //             if (empty($billing)) {
+
+    //                 BillingModel::create([
+    //                     'user_id' => $key,
+    //                     'month' => Carbon::parse($item->first()->date)->format('m'),
+    //                     'qtd_schedule' => $concluidosAgendamentosMesAnterior,
+    //                     'qtd_avulso' => $totalAvulsoMesAnterior,
+    //                     'qtd_fixo' => $totalFixoMesAnterior,
+    //                     'valor_avulso' => $valorAvulso,
+    //                     'valor_fixo' => $valorFixo,
+    //                     'valor_total' => $totalMesAnterior
+    //                 ]);
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return redirect()->route('settings.index')->with(['success' => true, 'message' => 'Faturamento gerado com sucesso!']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+            
+    //         return redirect()->route('settings.index')->with(['success' => false, 'message' => 'Ocorreu um erro ao gerar o faturamento!']);
+    //     }
+    // }
 }

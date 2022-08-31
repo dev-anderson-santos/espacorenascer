@@ -71,7 +71,7 @@
                                         <tr>
                                             <td>{{ \Carbon\Carbon::parse($item->data)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
                                             <td>
-                                                <a href="javascript:void(0)" onclick="removerDataNaoFaturada({{ $item->id }})" id="btn-remover-data-nao-faturada" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
+                                                <a href="javascript:void(0)" onclick="removerDataNaoFaturada({{ $item->id }})" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -89,6 +89,7 @@
 
             <div class="clearfix">&nbsp;</div>
 
+            {{--
             <div class="row">
                 <div class="col-md-12 mb-2">
                     <button class="btn btn-primary btn-secondary col-md-4" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
@@ -100,13 +101,14 @@
                     <button class="btn btn-primary btn-warning col-md-4" id="btn-espelhar-agendamentos" type="button">Espelhar agendamentos</button>
                 </div>
                 <div class="col-md-12 mb-2">
-                    <button class="btn btn-primary btn-danger col-md-4" id="btn-excluir-agendamentos-espelhados" type="button">Excluir Agendamentos Espelhados</button>
+                    <a href="{{ route('settings.generate-invoicing') }}" class="btn btn-primary btn-primary col-md-4" type="button">Gerar faturamento do mês</a>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="clearfix">&nbsp;</div>
             {{-- <div class="row"> --}}
                 <div class="float-right">
+                    <button class="btn btn-primary btn-secondary" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             {{-- </div> --}}

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SchedulesNextMonthModel extends Model
 {
     protected $table = 'schedule_next_month';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'user_id', 
         'room_id', 

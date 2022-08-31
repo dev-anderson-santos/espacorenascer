@@ -255,6 +255,12 @@ return [
         // ],
         // ['header' => 'account_settings'],
         [
+            'text' => 'Painel',
+            'url'  => '/app/admin/dashboard',
+            'icon' => 'fas fa-dashboard',
+            'can'  => 'is_admin',
+        ],
+        [
             'text' => 'Meus horários',
             'url'  => '/app/schedule/user-schedules',
             'icon' => 'fas fa-clock',
@@ -270,6 +276,12 @@ return [
             'icon' => 'fas fa-calendar-alt',
             'can'  => 'is_admin'
         ],
+        // [
+        //     'text' => 'Agenda do Mês',
+        //     'url'  => '/app/schedule/agenda-mes',
+        //     'icon' => 'fas fa-calendar-alt',
+        //     'can'  => 'is_admin'
+        // ],
         [
             'text' => 'Fechamentos do mês',
             'url'  => '/app/schedule/fechamento-mes',
@@ -279,6 +291,24 @@ return [
             'text' => 'Clientes',
             'url'  => '/app/user/clients',
             'icon' => 'fas fa-users',
+            'can'  => 'is_admin',
+        ],
+        // [
+        //     'text' => 'Relatórios',
+        //     'icon' => 'fas fa-chart-line',
+        //     'can'  => 'is_admin',
+        //     'submenu' => [
+        //         [
+        //             'text' => 'Pagamentos',
+        //             'url'  => '/app/reports/',
+        //             'icon' => 'fas fa-file-invoice-dollar',
+        //         ],
+        //     ],
+        // ],
+        [
+            'text' => 'Salas',
+            'url'  => '/app/rooms',
+            'icon' => 'fas fa-door-open',
             'can'  => 'is_admin',
         ],
         [

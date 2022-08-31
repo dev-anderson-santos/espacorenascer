@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ScheduleModel extends Model
 {
     protected $table = 'schedules';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'user_id', 
         'room_id', 

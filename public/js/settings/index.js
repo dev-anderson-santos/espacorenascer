@@ -158,8 +158,8 @@ function removerDataNaoFaturada(data_nao_faturada_id) {
                     location.reload();
                 }
             });
-        } else [
+        } else {
             bootbox.alert(response.message)
-        ]
+        }
     });
 }

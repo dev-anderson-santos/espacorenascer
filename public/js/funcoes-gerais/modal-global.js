@@ -29,8 +29,16 @@ function modalGlobalOpen( url , _title , _effect )
 		} ,
 	} ).done( function( data ) {
 		body.html( data );
-	} ).fail( function() {
-		body.html( "<div class='alert alert-danger text-center'><i class='fa fa-exclamation-triangle fa-2x fa-fw'></i> <strong style='font-size: 20px;'>Ocorreu um erro ao carregar os dados!</strong></div>" );
+	} ).fail( function(error, errorThrown ) {
+		if (error.status == 401) {
+			setInterval(function () {
+				body.html( "<div class='alert alert-info text-center'><i class='fa fa-exclamation-triangle fa-2x fa-fw'></i> <strong style='font-size: 20px;'>A sessão expirou, você será redirecionado(a) a tela de login.</strong></div>" );
+			}, 3000);
+
+			// location.reload();
+		} else {
+			body.html( "<div class='alert alert-danger text-center'><i class='fa fa-exclamation-triangle fa-2x fa-fw'></i> <strong style='font-size: 20px;'>Ocorreu um erro ao carregar os dados!</strong></div>" );
+		}
 	} );
 }
 

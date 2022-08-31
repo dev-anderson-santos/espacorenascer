@@ -262,6 +262,12 @@ class ScheduleController extends Controller
 
         $hour = HourModel::find($dados['hour_id']);
         $room = RoomModel::find($dados['room_id']);
+
+        if ($room == null) {
+            $message = 'Esta sala não está disponível';
+            return view('schedule.modals.modal-schedule-info', compact('message'));
+        }
+
         $inUse = false;
         $novoAgendamento = false;
         $cancelamento = false;
