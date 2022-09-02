@@ -104,7 +104,7 @@
                             </a>
                             <div class="dropdown-menu">
                                 {{-- <a href="#" onclick="naoFaturarAgendamento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Não faturar agendamento"><i class="fas fa-coins text-danger"></i> Não faturar agendamento</a> --}}
-                                @if ($schedule->status == 'Ativo')
+                                @if ($schedule->status == 'Ativo' || auth()->user()->is_admin == 1)
                                 {{-- <a href="#" onclick="faturarFinalizarAtendimento('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Faturar/Finalizar agendamento"><i class="fas fa-hand-holding-usd text-warning"></i> Faturar/Finalizar agendamento</a> --}}
                                 <a href="javascript:void(0)" onclick="modalGlobalOpen('{{ route('schedule.modal-cancelar-agendamento-fixo', ['schedule_id' => $schedule->id]) }}', 'Cancelar Agendamento Fixo')" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
                                 {{-- <a href="#" onclick="cancelarAgendamentoUser('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a> --}}

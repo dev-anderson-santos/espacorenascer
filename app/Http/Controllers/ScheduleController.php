@@ -235,10 +235,10 @@ class ScheduleController extends Controller
 
             $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
 
-            // dd(Carbon::parse($now)->diffInDays($schedule->date, false) <= 1, now()->format('Y-m-d H:i') > Carbon::parse($schedule->date . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i'));
-            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
-            // if ((Carbon::parse($now)->diffInDays($schedule->date, false) <= 1) && (now()->format('H:i') >= Carbon::parse(SettingsModel::first()->hora_fechamento)->format('H:i'))) {
-                return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+            if (auth()->user()->is_admin != 1) {
+                if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                    return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+                }
             }
 
             // dd($schedule->date, Carbon::parse($now)->diffInDays($schedule->date, false) <= 1, Carbon::parse('00:00')->format('g:i A') > Carbon::parse(SettingsModel::first()->hora_fechamento)->format('g:i A'));
@@ -310,6 +310,8 @@ class ScheduleController extends Controller
                 $canCancel = false;
             } 
 
+            if(auth()->user()->is_admin == 1) $canCancel = true;
+
             // if (Carbon::parse($now)->diffInDays($schedules->date, false) == 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
             //     if ($schedules->status != 'Finalizado') {
             //         $schedules->update([
@@ -332,7 +334,7 @@ class ScheduleController extends Controller
                 $action = 'schedule.destroy';
 
                 if ($schedulesB->status == 'Finalizado') {
-                    $canCancel = false;
+                    $canCancel = true;
                 }
     
                 if (Carbon::parse($now)->diffInDays($schedulesB->date, false) == 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
@@ -342,7 +344,7 @@ class ScheduleController extends Controller
                         ]);
                     }
     
-                    $canCancel = false;
+                    $canCancel = true;
                 }
 
                 $schedules = $schedulesB;
@@ -626,8 +628,10 @@ class ScheduleController extends Controller
 
             $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
 
-            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
-                return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+            if (auth()->user()->is_admin != 1) {
+                if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                    return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+                }
             }
 
             $schedule->delete();
@@ -755,8 +759,10 @@ class ScheduleController extends Controller
     
             $dateFormated = Carbon::parse($schedule->date)->format('Y-m-d');
     
-            if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
-                return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+            if (auth()->user()->is_admin != 1) {
+                if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse($dateFormated . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+                    return response()->json(['status' => 'info', 'message' => 'Este agendamento não pode ser cancelado.']);
+                }
             }
     
             if (isset($dados['otherWeekSchedules']) && count($dados['otherWeekSchedules']) > 0) {

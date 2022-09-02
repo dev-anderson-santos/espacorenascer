@@ -88,7 +88,7 @@
            
         <div class="clearfix">&nbsp;</div>  
     @endif
-    @if ($cancelamento)
+    @if ($cancelamento && auth()->user()->is_admin != 1)
         <div class="clearfix">&nbsp;</div>
         @if (!$canCancel)
             @include('componentes.alerts', [
