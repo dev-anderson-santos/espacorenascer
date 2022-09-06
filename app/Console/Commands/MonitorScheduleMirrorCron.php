@@ -73,7 +73,7 @@ class MonitorScheduleMirrorCron extends Command
                 $schedule_temp = ScheduleModel::where([
                     'user_id' => $scheduleNext->user_id,
                     'room_id' => $scheduleNext->room_id,
-                    'created_by' => $scheduleNext->created_by,
+                    //'created_by' => $scheduleNext->created_by,
                     'hour_id' => $scheduleNext->hour_id,
                     'date' => $scheduleNext->date,
                     'status' => $scheduleNext->status,
