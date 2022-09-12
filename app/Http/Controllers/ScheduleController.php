@@ -840,61 +840,61 @@ class ScheduleController extends Controller
         return view('schedule.index-administrador', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
     }
 
-    // public function agendaMes(Request $request)
-    // {
-    //     $hours = HourModel::all();
-    //     $rooms = RoomModel::all();
+    public function scheduleSearch(Request $request)
+    {
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
 
-    //     $_day = Carbon::parse($request->day)->format('Y-m-d');
-    //     $schedules = ScheduleModel::where('date', $_day)->get();
+        $_day = Carbon::parse($request->day)->format('Y-m-d');
+        $schedules = ScheduleModel::where('date', $_day)->get();
 
-    //     $dataSelect = [];
-    //     $day = NULL;
-    //     for ($i = 0; $i < now()->daysInMonth; $i++) {
-    //         if ($i == 0) {
-    //             $day = now()->startOfMonth();
+        $dataSelect = [];
+        $day = NULL;
+        for ($i = 0; $i < now()->daysInMonth; $i++) {
+            if ($i == 0) {
+                $day = now()->startOfMonth();
                 
-    //         } else {
-    //             $day = now()->startOfMonth()->addDays($i);
-    //         }
+            } else {
+                $day = now()->startOfMonth()->addDays($i);
+            }
 
-    //         if ($day->isSunday() || $day->isNextMonth()) {                
-    //             continue;
-    //         }
+            if ($day->isSunday() || $day->isNextMonth()) {                
+                continue;
+            }
 
-    //         array_push($dataSelect, $day);
-    //     }
+            array_push($dataSelect, $day);
+        }
 
-    //     return view('schedule.agenda-mes', compact('hours', 'rooms', 'dataSelect', 'schedules', '_day'));
-    // }
+        return view('schedule.schedule-search', compact('hours', 'rooms', 'dataSelect', 'schedules', '_day'));
+    }
 
-    // public function showSpecificShceduleMes(Request $request)
-    // {
-    //     $hours = HourModel::all();
-    //     $rooms = RoomModel::all();
+    public function showSpecificShceduleMonth(Request $request)
+    {
+        $hours = HourModel::all();
+        $rooms = RoomModel::all();
 
-    //     $_day = Carbon::parse($request->day)->format('Y-m-d');
-    //     $schedules = ScheduleModel::where('date', $_day)->get();
+        $_day = Carbon::parse($request->date)->format('Y-m-d');
+        $schedules = ScheduleModel::where('date', $_day)->get();
 
-    //     $dataSelect = [];
-    //     $day = NULL;
-    //     for ($i = 0; $i < now()->daysInMonth; $i++) {
-    //         if ($i == 0) {
-    //             $day = now()->startOfMonth();
+        $dataSelect = [];
+        $day = NULL;
+        for ($i = 0; $i < now()->daysInMonth; $i++) {
+            if ($i == 0) {
+                $day = now()->startOfMonth();
                 
-    //         } else {
-    //             $day = now()->startOfMonth()->addDays($i);
-    //         }
+            } else {
+                $day = now()->startOfMonth()->addDays($i);
+            }
 
-    //         if ($day->isSunday() || $day->isNextMonth()) {                
-    //             continue;
-    //         }
+            if ($day->isSunday() || $day->isNextMonth()) {                
+                continue;
+            }
 
-    //         array_push($dataSelect, $day);
-    //     }
+            array_push($dataSelect, $day);
+        }
 
-    //     $showSpecificShedule = true;
+        $showSpecificShedule = true;
 
-    //     return view('schedule.agenda-mes', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
-    // }
+        return view('schedule.schedule-search', compact('hours', 'rooms', 'dataSelect', 'showSpecificShedule', 'schedules', '_day'));
+    }
 }
