@@ -292,16 +292,17 @@ class ScheduleController extends Controller
             'room_id' => $dados['room_id'],
         ])->first();
         
-        $schedulesNextMonthReserved = SchedulesNextMonthModel::where([
-            'date' => $dados['data'],
-            'hour_id' => $dados['hour_id'],
-            'room_id' => $dados['room_id'],
-        ])->first();
+        // TODO: Verificar o melhor uso desta funcionalidade
+        // $schedulesNextMonthReserved = SchedulesNextMonthModel::where([
+        //     'date' => $dados['data'],
+        //     'hour_id' => $dados['hour_id'],
+        //     'room_id' => $dados['room_id'],
+        // ])->first();
 
-        if ($schedulesNextMonthReserved) {
-            $message = 'Este horário está reservado para espelhamento para o profissional: ' . User::find($schedulesNextMonthReserved->user_id)->name;
-            return view('schedule.modals.modal-schedule-info', compact('message'));
-        }
+        // if ($schedulesNextMonthReserved) {
+        //     $message = 'Este horário está reservado para espelhamento para o profissional: ' . User::find($schedulesNextMonthReserved->user_id)->name;
+        //     return view('schedule.modals.modal-schedule-info', compact('message'));
+        // }
 
         // Verifica se a sala já está em uso pela pessoa logada
         // No horário selecionado
