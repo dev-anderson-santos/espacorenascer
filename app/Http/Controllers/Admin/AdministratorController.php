@@ -14,7 +14,10 @@ class AdministratorController extends Controller
 {
     public function dashboard()
     {
-        $totalSchedulesInMonth = ScheduleModel::whereBetween('date', [
+        $totalSchedulesInMonth = ScheduleModel::whereHas('user', function($query) {
+            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
+        })
+        ->whereBetween('date', [
             now()->startOfMonth()->format('Y-m-d'),
             now()->endOfMonth()->format('Y-m-d')
         ])->get()->count();
