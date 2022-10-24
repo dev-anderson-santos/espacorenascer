@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\AddressModel;
+use App\Models\ChargeModel;
 use App\Models\UserHasAddressesModel;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,5 +56,10 @@ class User extends Authenticatable
     public function hasAddress(): HasOne
     {
         return $this->hasOne(UserHasAddressesModel::class, 'user_id', 'id');
+    }
+
+    public function charge()
+    {
+        return $this->hasOne(ChargeModel::class, 'user_id', 'id');
     }
 }

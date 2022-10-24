@@ -90,6 +90,16 @@ Route::group(['prefix' => 'app'],function () {
         Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
             Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('.dashboard');
         });
+
+        Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
+            Route::group(['prefix' => 'finance'], function() {
+
+                Route::get('/charge', 'FinanceController@index')->name('finance.charge');
+                Route::post('/search-charges', 'FinanceController@searchChargesByMonth')->name('.finance.search-charges');
+                Route::get('/modal-registrar-pagamento', 'FinanceController@modalRegitrarPagamento')->name('.finance.modal-registrar-pagaamento');
+                Route::post('/registrar-pagamento', 'FinanceController@registrarPagamento')->name('.finance.registrar-pagaamento');
+            });
+        });
     });
 });
 
