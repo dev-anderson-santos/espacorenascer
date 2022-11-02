@@ -130,13 +130,13 @@
             <legend>Horários fixos para o próximo mês</legend>
         
             <div class="clearfix">&nbsp;</div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-12">
                     <input type="hidden" id="user_id_proximo_mes" value="{{ $id_user }}">
                     <button type="button" class="btn btn-danger" id="btn-cancelar-fixos-proximo-mes">Cancelar agendamentos - mês de {{ now()->addMonth()->isoFormat('MMMM') }}</button>
                 </div>
             </div>
-            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div> --}}
             
             <table class="table table-striped table-hover" id="_tabela-horarios-usuario-proximo-mes" style="width:100%">
                 <thead>
