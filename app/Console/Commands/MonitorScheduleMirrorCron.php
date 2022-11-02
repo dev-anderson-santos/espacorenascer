@@ -93,7 +93,7 @@ class MonitorScheduleMirrorCron extends Command
                         'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
                     ]);
 
-                    if (Carbon::parse($scheduleNext->date)->addDays(7)->format('m') > Carbon::parse($scheduleNext->date)->format('m')) {
+                    if (Carbon::parse($scheduleNext->date)->addDays(7) > Carbon::parse($scheduleNext->date)) {
                         $arr = getWeekDays($scheduleNext->date);
                         
                         $newDay = Carbon::parse(last($arr))->addDays(7)->format('Y-m-d');
@@ -141,7 +141,7 @@ class MonitorScheduleMirrorCron extends Command
                 }
             }
 
-            $message = 'Agendamentos espalhados com sucesso!';
+            $message = 'Agendamentos espelhados com sucesso!';
 
             ScheduleNextMonthMirrorLog::create([
                 'message' => $message,
