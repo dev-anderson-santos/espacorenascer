@@ -26,7 +26,7 @@ class ScheduleController extends Controller
             'user_id' => $id,
             //'faturado' => 0,
         ])
-        ->whereMonth('date', '>=', Carbon::now()->format('m'))
+        ->where('date', '>=', Carbon::now()->format('Y-m-d'))
         ->orderBy('date', 'ASC')->get();
 
         $schedulesNextMonth = SchedulesNextMonthModel::where([
@@ -34,7 +34,7 @@ class ScheduleController extends Controller
             //'faturado' => 0,
         ])
         ->where('is_mirrored', 1)
-        ->whereMonth('date', '>=', Carbon::now()->format('m'))
+        ->where('date', '>=', Carbon::now()->format('Y-m-d'))
         ->orderBy('date', 'ASC')->get();
 
         $id_user = $id;
