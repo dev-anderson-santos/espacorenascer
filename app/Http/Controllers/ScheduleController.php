@@ -23,10 +23,9 @@ class ScheduleController extends Controller
         $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários Ativos - ' . User::find($id)->name : 'Meus horários Ativos';
 
         $schedules = ScheduleModel::where([
-            'user_id' => $id,
-            //'faturado' => 0,
+            'user_id' => $id
         ])
-        ->where('date', '>=', Carbon::now()->format('Y-m-d'))
+        ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->orderBy('date', 'ASC')->get();
 
         $schedulesNextMonth = SchedulesNextMonthModel::where([
@@ -705,10 +704,10 @@ class ScheduleController extends Controller
 
         $schedulesToShow = null;
 
-        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->whereNull('data_nao_faturada_id')->get();
+        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
 
         if ($dados['schedule_type'] == 'MES_ATUAL') {
-            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->get();
+            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
         }
 
         return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));
