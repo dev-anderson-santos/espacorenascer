@@ -18,6 +18,16 @@
                 <input type="number" name="amount" id="amount" class="form-control" value="{{ $cliente->amount ?? '' }}">
             </div>
         </div>       
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="">Valor a pagar:</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="amount">R$ {{ number_format($total_a_pagar, 2, ',', '.') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>       
     </div>
     @if (!empty($cliente) && $cliente->status != null)
     <div class="row">

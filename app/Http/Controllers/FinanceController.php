@@ -34,7 +34,6 @@ class FinanceController extends Controller
                 'tipo' => 'Avulso',
                 'faturado' => 1
             ])
-            ->whereIn('tipo', ['Fixo', 'Avulso'])
             ->whereMonth('date', $dados['month'])
             ->whereYear('date', $dados['year'])
             ->whereNull('data_nao_faturada_id')
@@ -67,10 +66,25 @@ class FinanceController extends Controller
 
             $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
 
+            $faturaCliente = ChargeModel::where([
+                'user_id' => $cliente->id,
+                'reference_month' => $dados['month'],
+                'reference_year' => $dados['year']
+            ])->first();
+
+            $cliente->fatura_cliente = 0;
+
+            if ($faturaCliente) {
+                $cliente->fatura_cliente = $faturaCliente->amount;
+                $cliente->fatura_cliente_id = $faturaCliente->id;
+            }
+
             return $cliente;
         })->filter(function($cliente) {
             return $cliente->totalMesAnterior > 0;
         });
+
+        // dd($clientes);
 
         $showSpecificShedule = true;
 
@@ -85,14 +99,26 @@ class FinanceController extends Controller
     public function modalRegitrarPagamento(Request $request)
     {
         $dados = $request->all();
-
-        $clienteCharge = ChargeModel::where('user_id', $dados['cliente_id'])->first();
+        
+        $clienteCharge = ChargeModel::when(!empty($dados), function ($query) use ($dados) {
+            if (isset($dados['fatura_cliente_id'])) {
+                $query->where('id', $dados['fatura_cliente_id']);
+            } else {
+                
+                $query->where([
+                    'user_id' => $dados['cliente_id'],
+                    'reference_month' => $dados['month'],
+                    'reference_year' => $dados['year'],
+                ]);
+            }
+        })->first();
 
         return view('finance.modal.modal-registrar-pagamento', [
             'cliente' => $clienteCharge,
             'user_id' => $dados['cliente_id'],
             'month' => $dados['month'],
             'year' => $dados['year'],
+            'total_a_pagar' => $dados['total_a_pagar'],
         ]);
     }
 
@@ -130,7 +156,7 @@ class FinanceController extends Controller
 
             DB::commit();
 
-            return response()->json(['status' => 'success', 'message' => 'Cobrança atualizada com sucesso.']);
+            return response()->json(['status' => 'success', 'message' => 'Cobrança registrada com sucesso.']);
 
         } catch (\Exception $e) {
             DB::rollBack();

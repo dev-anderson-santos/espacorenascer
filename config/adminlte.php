@@ -293,19 +293,19 @@ return [
             'icon' => 'fas fa-users',
             'can'  => 'is_admin',
         ],
-        // [
-        //     'text' => 'Financeiro',
-        //     'icon' => 'fas fa-coins',
-        //     'can'  => 'is_admin',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Cobrança',
-        //             'url'  => '/app/admin/finance/charge',
-        //             'icon' => 'fas fa-hand-holding-usd',
-        //             'can'  => 'is_admin',
-        //         ],
-        //     ],
-        // ],
+        [
+            'text' => 'Financeiro',
+            'icon' => 'fas fa-coins',
+            'can'  => 'is_admin',
+            'submenu' => [
+                [
+                    'text' => 'Cobrança',
+                    'url'  => '/app/admin/finance/charge',
+                    'icon' => 'fas fa-hand-holding-usd',
+                    'can'  => 'is_admin',
+                ],
+            ],
+        ],
         
         // [
         //     'text' => 'Relatórios',

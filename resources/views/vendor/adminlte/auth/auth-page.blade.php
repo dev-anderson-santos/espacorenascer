@@ -22,7 +22,7 @@
         <div class="{{ $auth_type ?? 'login' }}-logo">
             
             <a href="{{ $dashboard_url }}">
-                <img src="{{ asset(config('adminlte.logo_img')) }}" style="width: -webkit-fill-available;">
+                <img src="{{ asset(config('adminlte.logo_img')) }}" style="width: 100%;">
                 {{-- {!! config('adminlte.logo', '<b>Admin</b>LTE') !!} --}}
             </a>
         </div>

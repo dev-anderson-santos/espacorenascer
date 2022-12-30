@@ -61,6 +61,7 @@
                     <th style="text-align: center" scope="col">Profissional</th>
                     <th style="text-align: center" scope="col">Agendamentos</th>
                     <th style="text-align: center" scope="col">Valor a pagar</th>
+                    <th style="text-align: center" scope="col">Valor pago</th>
                     <th style="text-align: center" scope="col">Status</th>
                     <th style="text-align: center" scope="col">Ações</th>
                 </tr>
@@ -74,22 +75,18 @@
                     <td class="text-center">{{ $cliente->concluidosAgendamentosMesAnterior }}</td>
                     <td class="text-center">R$ {{ number_format($cliente->totalMesAnterior, 2, ',', '.') }}</td>
                     <td class="text-center">
+                        R$ {{ $cliente->fatura_cliente != 0 ? $cliente->fatura_cliente : number_format($cliente->fatura_cliente, 2, ',', '.') }}
+                    </td>
+                    <td class="text-center">
                         @php
                             $charge = null;
                             $status = [];
                             $status['badge'] = 'warning';
                             $status['descricao'] = 'Pendente';
 
-                            if ($cliente->charge) {
-                                $charge = $cliente->charge->where([
-                                    'reference_month' => $_month,
-                                    'reference_year' => $_year,
-                                ])->first();
-
-                                if ($charge) {
-                                    $status['badge'] = 'success';
-                                    $status['descricao'] = 'Pago';
-                                }
+                            if ($cliente->fatura_cliente != 0 || ($cliente->fatura_cliente == 0 && !empty($cliente->fatura_cliente_id))) {
+                                $status['badge'] = 'success';
+                                $status['descricao'] = 'Pago';
                             }
                         @endphp
                         <span class="badge badge-pill badge-{{$status['badge']}}">
@@ -97,7 +94,7 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <a href="javascript:void(0)" onclick="modalGlobalOpen(' {{ route('admin.finance.modal-registrar-pagaamento', ['cliente_id' => $cliente->id, 'month' => $_month, 'year' => $_year]) }} ', 'Cobrança - {{ $cliente->name }}')">
+                        <a href="javascript:void(0)" title="Registrar pagamento" onclick="modalGlobalOpen(' {{ route('admin.finance.modal-registrar-pagamento', ['cliente_id' => $cliente->id, 'month' => $_month, 'year' => $_year, 'total_a_pagar' => $cliente->totalMesAnterior, 'fatura_cliente_id' => $cliente->fatura_cliente_id ?? null]) }} ', 'Cobrança de {{ getMonths($_month) }} - {{ $cliente->name }}')">
                             <i class="fas fa-hand-holding-usd"></i>
                         </a>
                     </td>

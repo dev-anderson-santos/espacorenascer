@@ -96,7 +96,7 @@ Route::group(['prefix' => 'app'],function () {
 
                 Route::get('/charge', 'FinanceController@index')->name('finance.charge');
                 Route::post('/search-charges', 'FinanceController@searchChargesByMonth')->name('.finance.search-charges');
-                Route::get('/modal-registrar-pagamento', 'FinanceController@modalRegitrarPagamento')->name('.finance.modal-registrar-pagaamento');
+                Route::get('/modal-registrar-pagamento', 'FinanceController@modalRegitrarPagamento')->name('.finance.modal-registrar-pagamento');
                 Route::post('/registrar-pagamento', 'FinanceController@registrarPagamento')->name('.finance.registrar-pagaamento');
             });
         });
