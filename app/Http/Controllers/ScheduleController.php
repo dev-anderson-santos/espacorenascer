@@ -514,63 +514,6 @@ class ScheduleController extends Controller
             $schedule = ScheduleModel::findOrFail($dados['schedule_id']);
 
             $tipo = $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo';
-
-            // if ($tipo == 'Fixo') {   
-                
-            //     $schedule->update([
-            //         'tipo' => $tipo
-            //     ]);
-
-            //     $dados['user_id'] = $schedule->user_id;
-            //     $dados['created_by'] = auth()->user()->id;
-            //     $dados['hour_id'] = $schedule->hour_id;
-            //     $dados['room_id'] = $schedule->room_id;
-
-            //     $arrDays = [];
-            //     for ($i = Carbon::parse($schedule->date)->weekOfMonth; $i <= Carbon::parse($schedule->date)->endOfMonth()->weekOfMonth; $i++) {
-            //         if($i == Carbon::parse($schedule->date)->weekOfMonth) {
-            //             $arrDays[$i] = $schedule->date;
-
-            //             if (Carbon::parse($arrDays[$i])->isLastWeek()) {
-            //                 break;
-            //             }
-            //         } else {
-            //             $arrDays[$i] = Carbon::parse($arrDays[$i-1])->addDays(7)->format('Y-m-d');
-
-            //             if (Carbon::parse($arrDays[$i])->isLastWeek() || Carbon::parse($arrDays[$i])->isNextMonth()) {
-            //                 unset($arrDays[$i]);
-            //                 break;
-            //             }
-            //         }
-            //     }
-
-            //     $arrDataEmUso = [];
-            //     $horariosEmUso = false;
-            //     foreach ($arrDays as $key => $value) {
-                    
-            //         $dados['date'] = $value;
-
-            //         $scheduleInUse = ScheduleModel::where([
-            //             'date' => $dados['date'],
-            //             'hour_id' => $schedule->hour_id,
-            //             'room_id' => $schedule->room_id,
-            //         ])->first();
-
-            //         if($scheduleInUse) {
-            //             $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
-            //             $arrDataEmUso[$key]['hora'] = HourModel::where('id', $schedule->hour_id)->first()->hour;
-            //             $horariosEmUso = true;
-            //             continue;
-            //         }
-
-            //         $dados['tipo'] = $tipo;
-
-            //         ScheduleModel::create($dados);
-            //     }
-
-            //     DB::commit();
-            //     return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento realizado com sucesso!']);
-            // }
             
             $dia = $schedule->date;
 
@@ -588,10 +531,6 @@ class ScheduleController extends Controller
             } 
 
             if ($tipo == 'Fixo') {
-                
-                $schedule->update([
-                    'tipo' => $tipo
-                ]);
 
                 $dados['user_id'] = $schedule->user_id;
                 $dados['created_by'] = auth()->user()->id;
@@ -608,32 +547,51 @@ class ScheduleController extends Controller
                 $horariosEmUso = false;
                 foreach ($arrDays as $key => $value) {
                     
-                    $dados['date'] = $value;
+                    $dados['date'] = Carbon::parse($value)->format('Y-m-d');
 
-                    $scheduleInUse = ScheduleModel::where([
+                    $schedule_temp = ScheduleModel::where([
+                        'user_id' => $schedule->user_id,
+                        'room_id' => $schedule->room_id,
+                        'hour_id' => $schedule->hour_id,
                         'date' => $dados['date'],
-                        'hour_id' => $dados['hour_id'],
-                        'room_id' => $dados['room_id'],
+                        // 'status' => $schedule->status,
+                        // 'tipo' => $schedule->tipo,
+                        // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
                     ])->first();
 
-                    // TODO: VErificar como deixar de exibir a data 1 como se estivesse sido escolhida por alguém
-                    if($scheduleInUse) {
-                        $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
-                        $arrDataEmUso[$key]['hora'] = HourModel::where('id', $dados['hour_id'])->first()->hour;
-                        $horariosEmUso = true;
-                        continue;
+                    if (!empty($schedule_temp)) {
+    
+                        $schedule_temp->update([
+                            'tipo' => $tipo
+                        ]);
+                    } else {
+
+                        $scheduleInUse = ScheduleModel::where([
+                            'date' => $dados['date'],
+                            'hour_id' => $dados['hour_id'],
+                            'room_id' => $dados['room_id'],
+                        ])->first();
+
+                        // TODO: VErificar como deixar de exibir a data 1 como se estivesse sido escolhida por alguém
+                        if($scheduleInUse) {
+                            $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
+                            $arrDataEmUso[$key]['hora'] = HourModel::where('id', $dados['hour_id'])->first()->hour;
+                            $horariosEmUso = true;
+                            continue;
+                        }
+
+                        $dataNaoFaturada = $datasNaoFaturadas->where('data', $value)->first();
+    
+                        if (!is_null($dataNaoFaturada)) {
+                            $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
+                        }
+    
+                        ScheduleModel::create($dados);
+                        $dados['status'] = 'Ativo';
+                        $dados['finalizado_em'] = NULL;
+                        $dados['data_nao_faturada_id'] = NULL;
                     }
-
-                    $dataNaoFaturada = $datasNaoFaturadas->where('data', $value)->first();
-
-                    if (!is_null($dataNaoFaturada)) {
-                        $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
-                    }
-
-                    ScheduleModel::create($dados);
-                    $dados['status'] = 'Ativo';
-                    $dados['finalizado_em'] = NULL;
-                    $dados['data_nao_faturada_id'] = NULL;
+                    
                 }
 
                 foreach ($arrDaysNextMonth as $key => $value) {
@@ -645,18 +603,77 @@ class ScheduleController extends Controller
                         $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
                     }
 
-                    $dados['is_mirrored'] = 1;
-                    SchedulesNextMonthModel::create($dados);
-                    $dados['data_nao_faturada_id'] = NULL;
+                    $schedule_temp = SchedulesNextMonthModel::where([
+                        'user_id' => $schedule->user_id,
+                        'room_id' => $schedule->room_id,
+                        'hour_id' => $schedule->hour_id,
+                        'date' => $dados['date'],
+                        //'status' => $schedule->status,
+                        // 'tipo' => $schedule->tipo,
+                        //'data_nao_faturada_id' => $dados['data_nao_faturada_id'] ?? NULL
+                    ])->first();
+                    
+                    if (!empty($schedule_temp)) {
+                        $schedule_temp->update([
+                            'tipo' => $tipo
+                        ]);
+                    } else {
+                        $dados['is_mirrored'] = 1;
+                        SchedulesNextMonthModel::create($dados);
+                        $dados['data_nao_faturada_id'] = NULL;
+                    }
                 }
 
                 DB::commit();
-                return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento realizado com sucesso!']);
+                return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento atualizado com sucesso!']);
             }
 
-            $schedule->update([
-                'tipo' => $tipo
-            ]);
+            $arrDaysCurrentSchedule = getWeekDays($schedule->date);
+
+            foreach ($arrDaysCurrentSchedule as $date) {
+                
+                $dados['date'] = Carbon::parse($date)->format('Y-m-d');
+
+                $schedule_temp = ScheduleModel::where([
+                    'user_id' => $schedule->user_id,
+                    'room_id' => $schedule->room_id,
+                    'hour_id' => $schedule->hour_id,
+                    'date' => $dados['date'],
+                    // 'status' => $schedule->status,
+                    // 'tipo' => $schedule->tipo,
+                    // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
+                ])->first();
+
+                if (!empty($schedule_temp)) {
+
+                    $schedule_temp->update([
+                        'tipo' => $tipo
+                    ]);
+                }
+            }
+
+            $newDay = Carbon::parse(end($arrDaysCurrentSchedule))->addDays(7)->format('Y-m-d');
+            $arrDaysNextMonth = getWeekDaysNextMonth($newDay);
+
+            foreach ($arrDaysNextMonth as $date) {
+                
+                $schedule_temp = SchedulesNextMonthModel::where([
+                    'user_id' => $schedule->user_id,
+                    'room_id' => $schedule->room_id,
+                    'hour_id' => $schedule->hour_id,
+                    'date' => $date,
+                    // 'status' => $schedule->status,
+                    // 'tipo' => $schedule->tipo,
+                    // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
+                ])->first();
+
+                if (!empty($schedule_temp)) {
+
+                    $schedule_temp->update([
+                        'tipo' => $tipo
+                    ]);
+                }
+            }
 
             DB::commit();
 
@@ -808,13 +825,14 @@ class ScheduleController extends Controller
             unset($daysToBeDeletedInCurrentSchedule[array_search($schedule->date, $daysToBeDeletedInCurrentSchedule)]);
         }
 
+        $daysToBeDeletedInCurrentSchedule = array_values($daysToBeDeletedInCurrentSchedule);
+
         $otherWeekSchedules = NULL;
         $otherWeekSchedulesNextMonth = NULL;
         $nextMonthDays = NULL;
         if (count($daysToBeDeletedInCurrentSchedule) > 0) {
             $otherWeekSchedules = ScheduleModel::where('user_id', $schedule->user_id)
                                 ->whereIn('date', $daysToBeDeletedInCurrentSchedule)->where('date', '!=', $schedule->date)
-                                ->where('status', 'Ativo')
                                 ->where('tipo', 'Fixo')
                                 ->where('hour_id', $schedule->hour_id)
                                 ->where('room_id', $schedule->room_id)
