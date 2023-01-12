@@ -798,16 +798,21 @@ class ScheduleController extends Controller
         $action = $schedule->tipo == 'Fixo' ? '/app/schedule/cancelar-agendamento-fixo' : '/app/schedule/to-destroy-schedule';
         $nextWeekDays = getWeekDays($schedule->date);
 
-        if (in_array($schedule->date, $nextWeekDays) && count($nextWeekDays) > 1) {
-            unset($nextWeekDays[array_search($schedule->date, $nextWeekDays)]);
+        $newDay = Carbon::parse(end($nextWeekDays))->addDays(7)->format('Y-m-d');
+        $nextMonthDays = getWeekDaysNextMonth($newDay);
+
+        $daysToBeDeletedInCurrentSchedule = array_merge($nextWeekDays, $nextMonthDays);
+
+        if (in_array($schedule->date, $daysToBeDeletedInCurrentSchedule) && count($daysToBeDeletedInCurrentSchedule) > 1) {
+            unset($daysToBeDeletedInCurrentSchedule[array_search($schedule->date, $daysToBeDeletedInCurrentSchedule)]);
         }
 
         $otherWeekSchedules = NULL;
         $otherWeekSchedulesNextMonth = NULL;
         $nextMonthDays = NULL;
-        if (count($nextWeekDays) > 0) {
+        if (count($daysToBeDeletedInCurrentSchedule) > 0) {
             $otherWeekSchedules = ScheduleModel::where('user_id', $schedule->user_id)
-                                ->whereIn('date', $nextWeekDays)->where('date', '!=', $schedule->date)
+                                ->whereIn('date', $daysToBeDeletedInCurrentSchedule)->where('date', '!=', $schedule->date)
                                 ->where('status', 'Ativo')
                                 ->where('tipo', 'Fixo')
                                 ->where('hour_id', $schedule->hour_id)
