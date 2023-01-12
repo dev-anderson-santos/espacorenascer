@@ -51,7 +51,9 @@ class MonitorScheduleMirrorCron extends Command
             DB::beginTransaction();
 
             $message = null;
-            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))->where('is_mirrored', 1)->get();
+            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))
+                                ->where('is_mirrored', 1) // Está para ser espelhado
+                                ->get();
 
             if ($schedulesNextMonth->count() == 0) {
                 $message = 'Não há agendamentos para espelhar.';
@@ -109,7 +111,7 @@ class MonitorScheduleMirrorCron extends Command
                         ];
                     }
 
-                    $scheduleNext->update(['is_mirrored' => 0]);
+                    $scheduleNext->update(['is_mirrored' => 0]); // Foi espelhado
                 }
             }
 

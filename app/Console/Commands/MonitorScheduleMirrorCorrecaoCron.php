@@ -52,7 +52,7 @@ class MonitorScheduleMirrorCorrecaoCron extends Command
 
             $message = null;
             $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))
-                ->where('is_mirrored', 0)
+                ->where('is_mirrored', 0) // Já foi espelhado
                 ->get();
 
             if ($schedulesNextMonth->count() == 0) {
