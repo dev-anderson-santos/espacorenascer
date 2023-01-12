@@ -26,6 +26,7 @@ class ScheduleController extends Controller
             'user_id' => $id
         ])
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
+        ->whereYear('date', now()->year)
         ->orderBy('date', 'ASC')->get();
 
         $schedulesNextMonth = SchedulesNextMonthModel::where([
