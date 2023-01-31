@@ -39,6 +39,8 @@ class ScheduleController extends Controller
 
         $id_user = $id;
 
+        //$schedulesNext = ScheduleModel::whereMonth('date', now()->addMonth()->format('m'))->whereYear('date', now()->year)->get();
+
         return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user'));
     }
     /**

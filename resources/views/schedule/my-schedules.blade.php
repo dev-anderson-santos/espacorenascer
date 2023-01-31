@@ -125,11 +125,11 @@
             </tbody>
         </table>
         <div class="clearfix">&nbsp;</div>
-        @if (auth()->user()->is_admin == 1)
+        {{-- @if (auth()->user()->is_admin == 1)
         <fieldset>
             <legend>Horários fixos para o próximo mês</legend>
         
-            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div> --}}
             {{-- <div class="row">
                 <div class="col-md-12">
                     <input type="hidden" id="user_id_proximo_mes" value="{{ $id_user }}">
@@ -138,7 +138,7 @@
             </div>
             <div class="clearfix">&nbsp;</div> --}}
             
-            <table class="table table-striped table-hover" id="_tabela-horarios-usuario-proximo-mes" style="width:100%">
+            {{-- <table class="table table-striped table-hover" id="_tabela-horarios-usuario-proximo-mes" style="width:100%">
                 <thead>
                     <tr>
                         <th style="text-align: center">Data</th>
@@ -168,9 +168,9 @@
                                 </a>
                                 <div class="dropdown-menu">
                                     @if ($schedule->status == 'Ativo')
-                                        <a href="#" onclick="cancelarAgendamentoUserNextMonth('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a>
+                                        <a href="#" onclick="cancelarAgendamentoUserNextMonth('{{ csrf_token() }}', {{ $schedule->id }})" class="dropdown-item btn btn-sm" title="Cancelar agendamento"><i class="fas fa-trash text-danger"></i> Cancelar agendamento</a> --}}
                                         {{-- <a href="#" onclick="mudarTipo('{{ csrf_token() }}', {{ $schedule->id }}, '{{ $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo' }}', '{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}', '{{ $schedule->hour->hour }}')" class="dropdown-item btn btn-sm" title="{{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}"><i class="fas fa-exchange-alt text-secondary"></i> {{ $schedule->tipo == 'Fixo' ? 'Mudar para Avulso' : 'Mudar para Fixo' }}</a> --}}
-                                    @else
+                                    {{-- @else
                                         <a href="#" class="dropdown-item btn btn-sm" title="Nenhuma ação disponível"><i class="fas fa-ban text-secondary"></i> Nenhuma ação disponível</a>
                                     @endif
                                 </div>
@@ -185,7 +185,7 @@
                 </tbody>
             </table>
         </fieldset>
-        @endif
+        @endif--}}
     </div>
 </div>
 
