@@ -12,7 +12,6 @@ class SettingsModelLog extends Model
         'settings_id',
         'valor_fixo',
         'valor_avulso',
-        'hora_fechamento',
         'dia_fechamento',
         'data_vencimento',
     ];

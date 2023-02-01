@@ -38,14 +38,17 @@ class SettingsController extends Controller
      */
     public function update(Request $request)
     {
+        $dados = $request->all();
+        
         try {
             DB::beginTransaction();
 
-            $settings = SettingsModel::find($request->id)->update([
-                'valor_fixo' => $request->valor_fixo,
-                'valor_avulso' => $request->valor_avulso,
-                'hora_fechamento' => $request->hora_fechamento,
-                'dia_fechamento' => $request->dia_fechamento,
+            $settings = SettingsModel::find($dados['id']);
+            $settings->update([
+                'valor_fixo' => $dados['valor_fixo'],
+                'valor_avulso' => $dados['valor_avulso'],
+                'hora_fechamento' => $dados['hora_fechamento'],
+                'dia_fechamento' => $dados['dia_fechamento'],
             ]);
 
             SettingsModelLog::create([
@@ -53,7 +56,6 @@ class SettingsController extends Controller
                 'settings_id' => $settings->id,
                 'valor_fixo' => $settings->valor_fixo,
                 'valor_avulso' => $settings->valor_avulso,
-                'hora_fechamento' => $settings->hora_fechamento,
                 'dia_fechamento' => $settings->dia_fechamento,
             ]);
 
