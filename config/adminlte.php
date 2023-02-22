@@ -331,12 +331,19 @@ return [
             'icon' => 'fas fa-cog',
             'can'  => 'is_admin',
         ],
-        // [
-        //     'text' => 'Salas',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-home',
-        //     'can'  => 'is_admin',
-        // ],
+        [
+            'text' => 'Ajuda',
+            'icon' => 'fas fa-question-circle',
+            'can'  => 'is_admin',
+            'submenu' => [
+                [
+                    'text' => 'Atualizações',
+                    'url'  => '/app/admin/help/release-notes',
+                    'icon' => 'fas fa-file-code',
+                    'can'  => 'is_admin',
+                ],
+            ],
+        ],
         
         // [
         //     'text' => 'Configurações',

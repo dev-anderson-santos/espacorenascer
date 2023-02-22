@@ -182,4 +182,9 @@ class AdministratorController extends Controller
 
         return $clientes;
     }
+
+    public function releaseNotes()
+    {
+        return view('administrator.help.release-notes');
+    }
 }

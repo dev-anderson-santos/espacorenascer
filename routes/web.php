@@ -99,6 +99,10 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/modal-registrar-pagamento', 'FinanceController@modalRegitrarPagamento')->name('.finance.modal-registrar-pagamento');
                 Route::post('/registrar-pagamento', 'FinanceController@registrarPagamento')->name('.finance.registrar-pagaamento');
             });
+
+            Route::group(['prefix' => 'help'], function() {
+                Route::get('/release-notes', 'Admin\AdministratorController@releaseNotes')->name('help.release-notes');
+            });
         });
     });
 });
