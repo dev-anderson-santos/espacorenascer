@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Models\AddressModel;
 use App\Models\ChargeModel;
 use App\Models\UserHasAddressesModel;
 use Illuminate\Notifications\Notifiable;

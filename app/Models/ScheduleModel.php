@@ -4,11 +4,15 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ScheduleModel extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'schedules';
     protected $primaryKey = 'id';
+    public $dates = ['deleted_at'];
     protected $fillable = [
         'user_id', 
         'room_id', 
