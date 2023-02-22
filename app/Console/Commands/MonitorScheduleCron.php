@@ -50,10 +50,14 @@ class MonitorScheduleCron extends Command
             foreach ($schedules as $schedule) {
                 if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($schedule->date)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
                 // if (Carbon::parse($now)->diffInDays($schedule->date, false) <= 1 && now()->format('H:i') >= SettingsModel::first()->hora_fechamento) {
-                    $schedule->update([
-                        'status' => 'Finalizado',
-                        'finalizado_em' => now()->format('Y-m-d H:i:s')
-                    ]);
+                    ScheduleModel::withoutEvents(function() use ($schedule) {
+
+                        $s = ScheduleModel::find($schedule->id);
+                        $s->update([
+                            'status' => 'Finalizado',
+                            'finalizado_em' => now()->format('Y-m-d H:i:s')
+                        ]);    
+                    });
                 }        
             }
 

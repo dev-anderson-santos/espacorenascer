@@ -11,6 +11,7 @@ use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataNaoFaturadaModel;
+use App\Models\Historic;
 use App\Models\SchedulesNextMonthModel;
 
 class ScheduleController extends Controller
@@ -20,7 +21,8 @@ class ScheduleController extends Controller
     {
         $id = !is_null($user_id) ? $user_id : auth()->user()->id;
 
-        $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários Ativos - ' . User::find($id)->name : 'Meus horários Ativos';
+        $username = User::find($id)->name;
+        $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários Ativos - ' . $username : 'Meus horários Ativos';
 
         $schedules = ScheduleModel::where([
             'user_id' => $id
@@ -39,9 +41,10 @@ class ScheduleController extends Controller
 
         $id_user = $id;
 
+        $historic = Historic::where('user_id', $id)->orderBy('id', 'desc')->get();
         //$schedulesNext = ScheduleModel::whereMonth('date', now()->addMonth()->format('m'))->whereYear('date', now()->year)->get();
 
-        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user'));
+        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user', 'username', 'historic'));
     }
     /**
      * Display a listing of the resource.
@@ -683,7 +686,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            // dd($e);
+            //dd($e);
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao mudar o tipo de agendamento.']);
         }
     }
@@ -761,7 +764,7 @@ class ScheduleController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao cancelar o agendamento.']);
         }
     }
-
+    // Atualmente esta função não está sendo usada na view my-schedules.blade.php
     public function cancelAllFixedSchedules(Request $request, $user_id = NULL)
     {
         $id = !is_null($user_id) ? $user_id : auth()->user()->id;
@@ -786,6 +789,7 @@ class ScheduleController extends Controller
         }
     }
 
+    // Atualmente esta função não está sendo usada na view my-schedules.blade.php
     public function cancelAllFixedNextMonthSchedules(Request $request, $user_id = NULL)
     {
         $id = !is_null($user_id) ? $user_id : auth()->user()->id;
@@ -888,11 +892,17 @@ class ScheduleController extends Controller
             }
     
             if (isset($dados['otherWeekSchedules']) && count($dados['otherWeekSchedules']) > 0) {
-                ScheduleModel::whereIn('id', $dados['otherWeekSchedules'])->delete();
+                $agendamentos = ScheduleModel::whereIn('id', $dados['otherWeekSchedules'])->get();
+                foreach($agendamentos as $item) {
+                    $item->delete();
+                }
             }
 
             if (isset($dados['otherWeekSchedulesNextMonth']) && count($dados['otherWeekSchedulesNextMonth']) > 0) {
-                SchedulesNextMonthModel::whereIn('id', $dados['otherWeekSchedulesNextMonth'])->delete();
+                $agendamentos = SchedulesNextMonthModel::whereIn('id', $dados['otherWeekSchedulesNextMonth'])->get();
+                foreach($agendamentos as $item) {
+                    $item->delete();
+                }
             }
             
             $schedule->delete();

@@ -84,16 +84,40 @@ class MonitorScheduleMirrorCron extends Command
                 ])->first();
 
                 if (empty($schedule_temp)) { // Impedir espelhamento de agendamentos já existentes
-                    ScheduleModel::create([
-                        'user_id' => $scheduleNext->user_id,
-                        'room_id' => $scheduleNext->room_id,
-                        'created_by' => $scheduleNext->created_by,
-                        'hour_id' => $scheduleNext->hour_id,
-                        'date' => $scheduleNext->date,
-                        'status' => $scheduleNext->status,
-                        'tipo' => $scheduleNext->tipo,
-                        'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
-                    ]);
+                    // ScheduleModel::create([
+                    //     'user_id' => $scheduleNext->user_id,
+                    //     'room_id' => $scheduleNext->room_id,
+                    //     'created_by' => $scheduleNext->created_by,
+                    //     'hour_id' => $scheduleNext->hour_id,
+                    //     'date' => $scheduleNext->date,
+                    //     'status' => $scheduleNext->status,
+                    //     'tipo' => $scheduleNext->tipo,
+                    //     'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                    // ]);
+
+                    ScheduleModel::withoutEvents(function() use ($scheduleNext) {
+
+                        // $s = new ScheduleModel();
+                        // $s->user_id = $scheduleNext->user_id;
+                        // $s->room_id = $scheduleNext->room_id;
+                        // $s->created_by = $scheduleNext->created_by;
+                        // $s->hour_id = $scheduleNext->hour_id;
+                        // $s->date = $scheduleNext->date;
+                        // $s->status = $scheduleNext->status;
+                        // $s->tipo = $scheduleNext->tipo;
+                        // $s->data_nao_faturada_id = $scheduleNext->data_nao_faturada_id;
+                        // $s->save();
+                        ScheduleModel::create([
+                            'user_id' => $scheduleNext->user_id,
+                            'room_id' => $scheduleNext->room_id,
+                            'created_by' => $scheduleNext->created_by,
+                            'hour_id' => $scheduleNext->hour_id,
+                            'date' => $scheduleNext->date,
+                            'status' => $scheduleNext->status,
+                            'tipo' => $scheduleNext->tipo,
+                            'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                        ]);
+                    });
 
                     if (Carbon::parse($scheduleNext->date)->addDays(7) > Carbon::parse($scheduleNext->date)) {
                         $arr = getWeekDays($scheduleNext->date);
@@ -111,7 +135,12 @@ class MonitorScheduleMirrorCron extends Command
                         ];
                     }
 
-                    $scheduleNext->update(['is_mirrored' => 0]); // Foi espelhado
+                    // $scheduleNext->update(['is_mirrored' => 0]); // Foi espelhado
+                    SchedulesNextMonthModel::withoutEvents(function() use ($scheduleNext) {
+                        $s = SchedulesNextMonthModel::find($scheduleNext->id);
+                        $s->is_mirrored = 0; // Foi espelhado
+                        $s->update();
+                    });
                 }
             }
 
@@ -138,7 +167,20 @@ class MonitorScheduleMirrorCron extends Command
                     ])->first();
 
                     if (empty($scheduleNext)) {
-                        SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                        // SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+
+                        SchedulesNextMonthModel::withoutEvents(function() use ($arrDados, $keyExterno) {
+                            // $s = new SchedulesNextMonthModel();
+                            // $s->date = $arrDados[$keyExterno]['date'];
+                            // $s->user_id = $arrDados[$keyExterno]['user_id'];
+                            // $s->room_id = $arrDados[$keyExterno]['room_id'];
+                            // $s->created_by = $arrDados[$keyExterno]['created_by'];
+                            // $s->hour_id = $arrDados[$keyExterno]['hour_id'];
+                            // $s->status = $arrDados[$keyExterno]['status'];
+                            // $s->tipo = $arrDados[$keyExterno]['tipo'];
+                            // $s->save();
+                            SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                        });
                     }
                 }
             }

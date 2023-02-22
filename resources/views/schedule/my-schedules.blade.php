@@ -125,8 +125,64 @@
             </tbody>
         </table>
         <div class="clearfix">&nbsp;</div>
-        {{-- @if (auth()->user()->is_admin == 1)
-        <fieldset>
+        @if (auth()->user()->is_admin == 1)
+            <fieldset>
+                <legend>Histórico de ações de {{ $username }}</legend>
+
+                <table class="table table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($historic as $item)
+                        @php
+                            $acao = null; 
+                            if ($item->action == 'create') {
+                                $acao = "criou";
+                            } else if ($item->action == 'delete') {
+                                $acao = 'excluiu';
+                            } 
+                        @endphp
+
+                        <tr>
+                            <td>
+                                @if ($item->action == 'login')
+                                    <strong>{{ $item->user->name }}</strong> realizou <span style="font-weight: bold; color: green">login</span> em {{ $item->lastLogin }}
+                                @elseif(is_null($item->scheduleForNextMonth))
+                                    @if ($item->action == 'delete' && $item->user_id != $item->deleted_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @elseif($item->action == 'create' && $item->user_id != $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @elseif($item->action == 'update' && $item->user_id != $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: orange">atualizou</span> agendamento de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }} para <strong>{{ $item->tipo }}</strong>
+                                    @elseif($item->action == 'update' && $item->user_id == $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: orange">atualizou</span> agendamento para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }} para <strong>{{ $item->tipo }}</strong>
+                                    @else
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->user->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @endif
+                                @elseif($item->scheduleForNextMonth == 1)
+                                    @if ($item->action == 'delete' && $item->user_id != $item->deleted_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @elseif($item->action == 'create' && $item->user_id != $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @elseif($item->action == 'update' && $item->user_id != $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: orange">atualizou</span> agendamento de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }} para <strong>{{ $item->tipo }}</strong>
+                                    @elseif($item->action == 'update' && $item->user_id == $item->created_by)
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: orange">atualizou</span> agendamento para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }} para <strong>{{ $item->tipo }}</strong>
+                                    @else
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->user->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                    @endif
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        @endforelse
+                    </tbody>
+                </table>
+            </fieldset>
+        {{-- <fieldset>
             <legend>Horários fixos para o próximo mês</legend>
         
             <div class="clearfix">&nbsp;</div> --}}
@@ -184,8 +240,8 @@
                     @endforelse
                 </tbody>
             </table>
-        </fieldset>
-        @endif--}}
+        </fieldset>--}}
+        @endif
     </div>
 </div>
 

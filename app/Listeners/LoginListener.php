@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Historic;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -30,7 +31,11 @@ class LoginListener
             'last_login_ip' => request()->getClientIp(),
         ]);
 
-        // TODO: Armazenar no banco toda vez que o usuário realizar o login
-        // Pesquisar Activity Log
+        Historic::create([
+            'action' => 'login',
+            'user_id' => $event->user->id,
+            'last_login_time' => now(),
+            'last_login_ip' => request()->getClientIp(),
+        ]);
     }
 }
