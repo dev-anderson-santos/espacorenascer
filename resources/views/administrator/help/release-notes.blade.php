@@ -11,7 +11,7 @@
         <div class="box box-solid">
             <div class="box-body no-margin no-padding">
                 <div class="box-group" id="accordion">
-                    {{-- <div class="box box-default no-margin-bottom">
+                    <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#r1-1-0" aria-expanded="false" class="collapsed text-bold">
@@ -25,11 +25,12 @@
                         <div id="r1-1-0" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                             <div class="box-body no-border">
                                 <ul>
+                                    <li>Permitir agendamento em qualquer horário</li>
                                     <li>Histórico de atualizações</li>
                                 </ul>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">

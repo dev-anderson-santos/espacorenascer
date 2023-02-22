@@ -12,7 +12,7 @@
 </section>
 <div class="card">
     <div class="card-body">
-        @if ($mostrarAgendamento || auth()->user()->is_admin == 1)        
+        {{-- @if (!$mostrarAgendamento || auth()->user()->is_admin == 1)         --}}
             <div class="alert alert-secondary" style="font-size: 15pt" role="alert">
                 <i class="fas fa-info-circle"></i> Para realizar um agendamento, clique em um horário <b>Livre</b>.
             </div>
@@ -73,11 +73,11 @@
                     </tbody>
                 </table>
             @endif
-        @else
+        {{-- @else
             <div class="alert alert-info" style="font-size: 15pt" role="alert">
                 <i class="fas fa-info-circle"></i> Horário de agendamento de 07h às 22h.
             </div>
-        @endif
+        @endif --}}
     </div>
 </div>
 

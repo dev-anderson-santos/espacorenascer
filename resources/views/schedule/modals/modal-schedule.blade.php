@@ -149,6 +149,7 @@ $('#agendar').on('click', function () {
             if(response.status == 'success') {
                 $('#agendar').html('Agendado!');
                 bootbox.alert({
+                    title: 'Informação',
                     message: response.message,
                     callback: function () {
                         location.reload();
