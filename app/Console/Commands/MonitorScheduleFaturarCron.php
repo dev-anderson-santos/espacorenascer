@@ -53,7 +53,7 @@ class MonitorScheduleFaturarCron extends Command
             $totalSchedules = $schedules->get()->count();
   
             $faturado = false;
-            if (now()->format('d') == 1) {
+            if (now()->format('d') == 1 && $totalSchedules > 0) {
                 $schedules->update(['faturado' => 1]);
                 $faturado = true; 
             }
