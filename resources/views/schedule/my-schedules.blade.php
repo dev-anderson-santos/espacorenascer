@@ -152,7 +152,7 @@
                                     <strong>{{ $item->user->name }}</strong> realizou <span style="font-weight: bold; color: green">login</span> em {{ $item->lastLogin }}
                                 @elseif(is_null($item->scheduleForNextMonth))
                                     @if ($item->action == 'delete' && $item->user_id != $item->deleted_by)
-                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->roomDeleted->name }} às {{ $item->hour->hour }}
                                     @elseif($item->action == 'create' && $item->user_id != $item->created_by)
                                         Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
                                     @elseif($item->action == 'update' && $item->user_id != $item->created_by)
@@ -164,7 +164,7 @@
                                     @endif
                                 @elseif($item->scheduleForNextMonth == 1)
                                     @if ($item->action == 'delete' && $item->user_id != $item->deleted_by)
-                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
+                                        Em {{ $item->criadoEm }}, <strong>{{ $item->userHasDelete->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> de <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->roomDeleted->name }} às {{ $item->hour->hour }}
                                     @elseif($item->action == 'create' && $item->user_id != $item->created_by)
                                         Em {{ $item->criadoEm }}, <strong>{{ $item->userCreatedBy->name }}</strong> <span style="font-weight: bold; color: {{ $acao == 'criou' ? 'blue' : 'red' }}">{{ $acao }}</span> agendamento <strong>{{ $item->tipo }}</strong> para <strong>{{ $item->user->name }}</strong> para o dia {{ $item->data }} na {{ $item->room->name }} às {{ $item->hour->hour }}
                                     @elseif($item->action == 'update' && $item->user_id != $item->created_by)

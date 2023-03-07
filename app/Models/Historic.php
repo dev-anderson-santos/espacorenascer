@@ -27,6 +27,7 @@ class Historic extends Model
         'deleted_by',
         'scheduleForNextMonth'
     ];
+    public $with = ['userHasDelete', 'user'];
 
     public function user()
     {
@@ -46,6 +47,11 @@ class Historic extends Model
     public function room()
     {
         return $this->hasOne(RoomModel::class, 'id', 'room_id');
+    }
+
+    public function roomDeleted()
+    {
+        return $this->hasOne(RoomModel::class, 'id', 'room_id')->withTrashed();
     }
 
     public function hour()
