@@ -148,7 +148,8 @@ class RoomController extends Controller
             return response()->json(['status' => 'success', 'message' => 'Sala removida com sucesso!']);
 
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao remover a sala!']);
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao remover a sala!', 'msgDebug' => $e->getMessage()]);
         }
     }
 }
