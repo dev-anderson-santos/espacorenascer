@@ -29,6 +29,22 @@
                 @if (auth()->user()->is_admin == 1)                            
                     <div class="row">
                         <div class="col-md-4">
+                            <label for="status" class="col-form-label">Tornar administrador:</label>
+                            <select name="is_admin" id="is_admin" 
+                                data-old-status="{{!empty($user->is_admin) ? $user->is_admin : ''}}"
+                                class="form-control {{ $errors->has('is_admin') ? 'is-invalid' : '' }}" required>
+                                <option value="1" {{ (!empty($user) && $user->is_admin == '1') ? 'selected' : (old('is_admin') == '1' ? 'selected' : '') }}>Sim</option>
+                                <option value="0" {{ (!empty($user) && $user->is_admin == '0') ? 'selected' : (old('is_admin') == '0' ? 'selected' : '') }}>Não</option>
+                            </select>
+                            @if ($errors->has('status'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('status') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
                             <label for="status" class="col-form-label">Status:</label>
                             <select name="status" id="status" 
                                 data-old-status="{{!empty($user->status) ? $user->status : ''}}"
