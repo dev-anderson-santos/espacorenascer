@@ -43,6 +43,8 @@
             {{ __('adminlte::adminlte.send_password_reset_link') }}
         </button>
 
+        <a href="{{ route('login') }}" class="btn btn-block btn-default">Tentar realizar login</a>
+
     </form>
 
 @stop
