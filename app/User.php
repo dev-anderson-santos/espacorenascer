@@ -2,9 +2,12 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use App\Models\ChargeModel;
+use App\Jobs\QueuedPasswordResetJob;
 use App\Models\UserHasAddressesModel;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\Auth\ResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -62,5 +65,12 @@ class User extends Authenticatable
     public function charge()
     {
         return $this->hasOne(ChargeModel::class, 'user_id', 'id');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $when = Carbon::now()->addSeconds(10);
+
+        $this->notify((new ResetPassword($token))->delay($when));
     }
 }
