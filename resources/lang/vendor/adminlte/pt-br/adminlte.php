@@ -16,7 +16,7 @@ return [
     'toggle_navigation'           => 'Trocar navegação',
     'login_message'               => 'Entre para iniciar uma nova sessão',
     'register_message'            => 'Registrar-se',
-    'password_reset_message'      => 'Recuperar senha',
-    'reset_password'              => 'Recuperar senha',
-    'send_password_reset_link'    => 'Enviar link de recuperação de senha',
+    'password_reset_message'      => 'Redefinir sua senha',
+    'reset_password'              => 'Redefinir senha',
+    'send_password_reset_link'    => 'Enviar link para redefinição de senha',
 ];
