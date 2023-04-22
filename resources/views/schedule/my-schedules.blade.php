@@ -29,6 +29,13 @@
 <div class="card">
     <div class="card-body">
 
+        @if ($resetPassWord)
+            <div class="alert alert-success">
+                <i class="fas fa-info-circle"></i>
+                Senha redefinida com sucesso.
+            </div>
+        @endif
+
         @if (auth()->user()->is_admin != 1)
         <h4>Bem-vindo(a) <b>{{ auth()->user()->name }}</b></h4>
         @endif

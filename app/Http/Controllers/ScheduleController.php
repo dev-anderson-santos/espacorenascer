@@ -17,12 +17,14 @@ use App\Models\SchedulesNextMonthModel;
 class ScheduleController extends Controller
 {
 
-    public function userSchedules($user_id = NULL)
+    public function userSchedules(Request $request, $userId = NULL)
     {
-        $id = !is_null($user_id) ? $user_id : auth()->user()->id;
+        $dados = $request->all();
+
+        $id = !is_null($userId) ? $userId : auth()->user()->id;
 
         $username = User::find($id)->name;
-        $titulo = !is_null($user_id) && $user_id != auth()->user()->id ? 'Horários Ativos - ' . $username : 'Meus horários Ativos';
+        $titulo = !is_null($userId) && $userId != auth()->user()->id ? 'Horários Ativos - ' . $username : 'Meus horários Ativos';
 
         $schedules = ScheduleModel::where([
             'user_id' => $id
@@ -44,7 +46,12 @@ class ScheduleController extends Controller
         $historic = Historic::where('user_id', $id)->orderBy('id', 'desc')->get();
         //$schedulesNext = ScheduleModel::whereMonth('date', now()->addMonth()->format('m'))->whereYear('date', now()->year)->get();
 
-        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user', 'username', 'historic'));
+        $resetPassWord = false;
+        if (session()->has('reset_password')) {
+            $resetPassWord = true;
+            session()->forget('reset_password');
+        }
+        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user', 'username', 'historic', 'resetPassWord'));
     }
     /**
      * Display a listing of the resource.
@@ -58,7 +65,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < env('DAYS_TO_SHOW'); $i++) {
+        for ($i=0; $i < config('app.days_to_show'); $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
@@ -91,7 +98,7 @@ class ScheduleController extends Controller
 
         $dataSelect = [];
         $day = NULL;
-        for ($i=0; $i < env('DAYS_TO_SHOW'); $i++) {
+        for ($i=0; $i < config('app.days_to_show'); $i++) {
             if ($i == 0) {
                 $day = Carbon::now();
                 
