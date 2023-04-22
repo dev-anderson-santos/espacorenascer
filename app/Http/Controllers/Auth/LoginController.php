@@ -44,11 +44,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function authenticated(Request $request, $user) {
+    protected function authenticated(Request $request, $user)
+    {
         if ($user->is_admin == 1) {
             return redirect('/app/admin/dashboard');
-        }  else {
-            return redirect('/app/schedule/user-schedules');
         }
-   }
+        
+        return redirect('/app/schedule/user-schedules');
+    }
 }
