@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Espaço Juntos'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://espacojuntos.com'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'pt-BR',
 
     /*
     |--------------------------------------------------------------------------
@@ -228,5 +228,16 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Days to show in schedule view
+    |--------------------------------------------------------------------------
+    |
+    | This days to show, show the number of days to show in the schedule view.
+    |
+    */
+
+    'days_to_show' => env('DAYS_TO_SHOW', 7),
 
 ];
