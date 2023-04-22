@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\AdministratorController;
 
 // TODO: Remover o -- selecione -- após escolher uma data
 // TODO: Enviar e-mail após agendamento - NÃO PEDIU
-// TODO: Resetar senha por email - NÃO PEDIU
+// TODO: Resetar senha por email - Em andamento
 // TODO: Calcular os dias para espelhar os agendamentos (verificar se o dia de hoje + 6 dias é o próximo mês)
 
 // TODO: remover os agendamentos em sequencia e até os espelhados
@@ -82,10 +82,10 @@ Route::group(['prefix' => 'app'],function () {
             });
         });
 
-        Route::group(['prefix' => 'reports', 'middleware' => 'is_admin'], function () {
-            Route::get('/', 'ReportsController@index')->name('reports.index');
-            Route::post('/', 'ReportsController@showSpecificInvoicing')->name('reports.show-specific-invoicing');
-        });
+        // Route::group(['prefix' => 'reports', 'middleware' => 'is_admin'], function () {
+        //     Route::get('/', 'ReportsController@index')->name('reports.index');
+        //     Route::post('/', 'ReportsController@showSpecificInvoicing')->name('reports.show-specific-invoicing');
+        // });
 
         Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
             Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('.dashboard');
