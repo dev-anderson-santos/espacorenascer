@@ -14,6 +14,29 @@
                     <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#r1-3-1" aria-expanded="false" class="collapsed text-bold">
+                                    Release 1.3.1 - 04/05/2023
+                                </a>
+                            </h4>
+                            <div class="box-tools pull-right">
+                                <span data-toggle="tooltip" title="" class="badge bg-blue" data-original-title="Atualizações aplicadas"></span>
+                            </div>
+                        </div>
+                        <div id="r1-3-1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="box-body no-border">
+                                <ul>
+                                    <li>Exibir somente a quantidade de horários e valores dos agendamentos finalizados <br>do mês atual na tela Fechamentos do mês.</li>
+                                    <li>Correção na contagem de agendamentos do mês anterior na tela Fechamentos do mês.</li>
+                                    <li>Adição de um contador no modal de Ver Detalhes na tela Fechamentos do mês.</li>
+                                    <li>Exibir em valores a receber no mês atual somente os agendamentos finalizados na tela do Dashboard.</li>
+                                    <li>Adição do rodapé na parte interna do sistema.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box-default no-margin-bottom">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#r1-3-0" aria-expanded="false" class="collapsed text-bold">
                                     Release 1.3.0 - 22/04/2023
                                 </a>

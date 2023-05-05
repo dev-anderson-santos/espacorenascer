@@ -54,9 +54,9 @@
         </div>
 
         {{-- Footer --}}
-        @hasSection('footer')
+        {{-- @hasSection('footer') --}}
             @include('adminlte::partials.footer.footer')
-        @endif
+        {{-- @endif --}}
 
         {{-- Right Control Sidebar --}}
         @if(config('adminlte.right_sidebar'))

@@ -4,6 +4,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
+                    <span style="font-weight: 800;">Nº:</span> {{ $loop->index + 1 }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <span style="font-weight: 800;">Profissional:</span> {{ $item->user->name }}
                 </div>
             </div>
