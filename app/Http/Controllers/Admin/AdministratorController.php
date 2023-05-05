@@ -58,25 +58,25 @@ class AdministratorController extends Controller
 
         $clientes = User::where('is_admin', '!=', 1)->get()->map(function($cliente) use ($valorAvulso, $valorFixo) {
 
-            // $concluidosParcialAtivoFixo = ScheduleModel::where([
-            //                 'user_id' => $cliente->id,
-            //                 'status' => 'Ativo',
-            //                 'tipo' => 'Fixo'
-            //             ])
-            //             ->where('faturado', 0)
-            //             ->whereMonth('date', Carbon::now()->format('m'))
-            //             ->whereNull('data_nao_faturada_id')
-            //             ->get();
+            $concluidosParcialAtivoFixo = ScheduleModel::where([
+                            'user_id' => $cliente->id,
+                            'status' => 'Ativo',
+                            'tipo' => 'Fixo'
+                        ])
+                        ->where('faturado', 0)
+                        ->whereMonth('date', Carbon::now()->format('m'))
+                        ->whereNull('data_nao_faturada_id')
+                        ->get();
     
-            // $concluidosParcialAtivoAvulso = ScheduleModel::where([
-            //                 'user_id' => $cliente->id,
-            //                 'status' => 'Ativo',
-            //                 'tipo' => 'Avulso'
-            //             ])
-            //             ->where('faturado', 0)
-            //             ->whereMonth('date', Carbon::now()->format('m'))
-            //             ->whereNull('data_nao_faturada_id')
-            //             ->get();
+            $concluidosParcialAtivoAvulso = ScheduleModel::where([
+                            'user_id' => $cliente->id,
+                            'status' => 'Ativo',
+                            'tipo' => 'Avulso'
+                        ])
+                        ->where('faturado', 0)
+                        ->whereMonth('date', Carbon::now()->format('m'))
+                        ->whereNull('data_nao_faturada_id')
+                        ->get();
     
             $concluidosParcialFinalizadoFixo = ScheduleModel::where([
                             'user_id' => $cliente->id,
@@ -98,7 +98,7 @@ class AdministratorController extends Controller
                         ->whereNull('data_nao_faturada_id')
                         ->get();
     
-            $cliente->concluidosParcialAgendamentos = /* $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + */ $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
+            $cliente->concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
     
             // $totalParcialAgendamentos = ScheduleModel::where([
             //                 'user_id' => $cliente->id,                        
@@ -110,17 +110,17 @@ class AdministratorController extends Controller
             // é preciso calcular com o valor fixo e o valor avulso
             // Veirificar se algums horario foi escolhido como avulso
             $totalAvulso = 0;
-            // if ($concluidosParcialAtivoAvulso->count() > 0) {
-            //     $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
-            // }
+            if ($concluidosParcialAtivoAvulso->count() > 0) {
+                $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
+            }
             if ($concluidosParcialFinalizadoAvulso->count() > 0) {
                 $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
             }
     
             $totalFixo = 0;
-            // if ($concluidosParcialAtivoFixo->count() > 0) {
-            //     $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
-            // }
+            if ($concluidosParcialAtivoFixo->count() > 0) {
+                $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
+            }
             if ($concluidosParcialFinalizadoFixo->count() > 0) {
                 $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
             }

@@ -31,15 +31,17 @@ class ScheduleController extends Controller
         ])
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->whereYear('date', now()->year)
-        ->orderBy('date', 'ASC')->get();
+        ->orderBy('date', 'ASC')
+        ->orderBy('hour_id', 'ASC')
+        ->get();
 
-        $schedulesNextMonth = SchedulesNextMonthModel::where([
-            'user_id' => $id,
-            //'faturado' => 0,
-        ])
-        ->where('is_mirrored', 1)
-        ->where('date', '>=', Carbon::now()->format('Y-m-d'))
-        ->orderBy('date', 'ASC')->get();
+        // $schedulesNextMonth = SchedulesNextMonthModel::where([
+        //     'user_id' => $id,
+        //     //'faturado' => 0,
+        // ])
+        // ->where('is_mirrored', 1)
+        // ->where('date', '>=', Carbon::now()->format('Y-m-d'))
+        // ->orderBy('date', 'ASC')->get();
 
         $id_user = $id;
 
@@ -51,7 +53,7 @@ class ScheduleController extends Controller
             $resetPassWord = true;
             session()->forget('reset_password');
         }
-        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user', 'username', 'historic', 'resetPassWord'));
+        return view('schedule.my-schedules', compact('schedules', 'titulo', 'id_user', 'username', 'historic', 'resetPassWord'));
     }
     /**
      * Display a listing of the resource.
@@ -399,25 +401,25 @@ class ScheduleController extends Controller
         $valorFixo = $setting->valor_fixo;
         $valorAvulso = $setting->valor_avulso;
 
-        // $concluidosParcialAtivoFixo = ScheduleModel::where([
-        //                 'user_id' => $id,
-        //                 'status' => 'Finalizado',
-        //                 'tipo' => 'Fixo'
-        //             ])
-        //             ->where('faturado', 0)
-        //             ->whereMonth('date', Carbon::now()->format('m'))
-        //             ->whereNull('data_nao_faturada_id')
-        //             ->get();
+        $concluidosParcialAtivoFixo = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Ativo',
+                        'tipo' => 'Fixo'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
+                    ->get();
 
-        // $concluidosParcialAtivoAvulso = ScheduleModel::where([
-        //                 'user_id' => $id,
-        //                 'status' => 'Finalizado',
-        //                 'tipo' => 'Avulso'
-        //             ])
-        //             ->where('faturado', 0)
-        //             ->whereMonth('date', Carbon::now()->format('m'))
-        //             ->whereNull('data_nao_faturada_id')
-        //             ->get();
+        $concluidosParcialAtivoAvulso = ScheduleModel::where([
+                        'user_id' => $id,
+                        'status' => 'Ativo',
+                        'tipo' => 'Avulso'
+                    ])
+                    ->where('faturado', 0)
+                    ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereNull('data_nao_faturada_id')
+                    ->get();
 
         $concluidosParcialFinalizadoFixo = ScheduleModel::where([
                         'user_id' => $id,
@@ -439,7 +441,7 @@ class ScheduleController extends Controller
                     ->whereNull('data_nao_faturada_id')
                     ->get();
 
-        $concluidosParcialAgendamentos = /* $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() +  */$concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
+        $concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
 
         // $totalParcialAgendamentos = ScheduleModel::where([
         //                 'user_id' => $id,                        
@@ -451,17 +453,17 @@ class ScheduleController extends Controller
         // é preciso calcular com o valor fixo e o valor avulso
         // Veirificar se algums horario foi escolhido como avulso
         $totalAvulso = 0;
-        // if ($concluidosParcialAtivoAvulso->count() > 0) {
-        //     $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
-        // }
+        if ($concluidosParcialAtivoAvulso->count() > 0) {
+            $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
+        }
         if ($concluidosParcialFinalizadoAvulso->count() > 0) {
             $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
         }
 
         $totalFixo = 0;
-        // if ($concluidosParcialAtivoFixo->count() > 0) {
-        //     $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
-        // }
+        if ($concluidosParcialAtivoFixo->count() > 0) {
+            $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
+        }
         if ($concluidosParcialFinalizadoFixo->count() > 0) {
             $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
         }
@@ -740,7 +742,7 @@ class ScheduleController extends Controller
         $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->whereNotNull('finalizado_em')->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
 
         if ($dados['schedule_type'] == 'MES_ATUAL') {
-            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereNotNull('finalizado_em')->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
+            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
         }
 
         return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));

@@ -42,7 +42,7 @@
                     <span class="info-box-icon bg-warning"><i class="fas fa-hand-holding-usd"></i></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">A receber em - {{ now()->isoFormat('MMMM') }}</span>
-                        <span class="info-box-number">R$ {{ number_format($clientesMesAtual->sum('totalParcialValor'), 2, ',', '.') }} (Finalizados)</span>
+                        <span class="info-box-number">R$ {{ number_format($clientesMesAtual->sum('totalParcialValor'), 2, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
