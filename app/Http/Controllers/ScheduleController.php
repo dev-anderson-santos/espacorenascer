@@ -31,15 +31,34 @@ class ScheduleController extends Controller
         ])
         ->whereMonth('date', '>=', Carbon::now()->format('m'))
         ->whereYear('date', now()->year)
-        ->orderBy('date', 'ASC')->get();
+        ->orderBy('date', 'ASC')
+        ->orderBy('hour_id', 'ASC')
+        ->get();
 
-        $schedulesNextMonth = SchedulesNextMonthModel::where([
-            'user_id' => $id,
-            //'faturado' => 0,
-        ])
-        ->where('is_mirrored', 1)
-        ->where('date', '>=', Carbon::now()->format('Y-m-d'))
-        ->orderBy('date', 'ASC')->get();
+        foreach ($schedules as $item) {
+
+            $schedule_temp = ScheduleModel::where([
+                'user_id' => $item->user_id,
+                'room_id' => $item->room_id,
+                'hour_id' => $item->hour_id,
+                'date' => $item->date,
+                'status' => $item->status,
+                'tipo' => $item->tipo,
+                'data_nao_faturada_id' => $item->data_nao_faturada_id
+            ])->orderBy('id', 'desc')->get();
+
+            if ($schedule_temp->count() > 1 && !empty($schedule_temp->first())) {
+                $schedule_temp->first()->delete();
+            }
+        }
+
+        // $schedulesNextMonth = SchedulesNextMonthModel::where([
+        //     'user_id' => $id,
+        //     //'faturado' => 0,
+        // ])
+        // ->where('is_mirrored', 1)
+        // ->where('date', '>=', Carbon::now()->format('Y-m-d'))
+        // ->orderBy('date', 'ASC')->get();
 
         $id_user = $id;
 
@@ -51,7 +70,7 @@ class ScheduleController extends Controller
             $resetPassWord = true;
             session()->forget('reset_password');
         }
-        return view('schedule.my-schedules', compact('schedules', 'titulo', 'schedulesNextMonth', 'id_user', 'username', 'historic', 'resetPassWord'));
+        return view('schedule.my-schedules', compact('schedules', 'titulo', 'id_user', 'username', 'historic', 'resetPassWord'));
     }
     /**
      * Display a listing of the resource.

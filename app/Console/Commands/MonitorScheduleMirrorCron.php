@@ -51,6 +51,9 @@ class MonitorScheduleMirrorCron extends Command
             DB::beginTransaction();
 
             $message = null;
+            $messageDebug = 0;
+            $schedulesNextMonthId = [];
+            $mirroredSchedules = 0;
             $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))
                                 ->where('is_mirrored', 1) // Está para ser espelhado
                                 ->get();
@@ -65,7 +68,9 @@ class MonitorScheduleMirrorCron extends Command
 
                 DB::commit();
                 
-                return $this->info($message);
+                $this->info($message);
+
+                return;
             }
 
             $arrLastDays = [];
@@ -81,9 +86,9 @@ class MonitorScheduleMirrorCron extends Command
                     'status' => $scheduleNext->status,
                     'tipo' => $scheduleNext->tipo,
                     'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id
-                ])->first();
+                ]);
 
-                if (empty($schedule_temp)) { // Impedir espelhamento de agendamentos já existentes
+                if (empty($schedule_temp->first())) { // Impedir espelhamento de agendamentos já existentes
                     // ScheduleModel::create([
                     //     'user_id' => $scheduleNext->user_id,
                     //     'room_id' => $scheduleNext->room_id,
@@ -141,52 +146,73 @@ class MonitorScheduleMirrorCron extends Command
                         $s->is_mirrored = 0; // Foi espelhado
                         $s->update();
                     });
-                }
+
+                    $mirroredSchedules++;
+                } elseif (!empty($schedule_temp)) {
+                    $schedulesNextMonthId[] = $scheduleNext->id;
+                    $messageDebug += 1;
+                } 
             }
 
-            foreach ($arrLastDays as $keyExterno => $datas) {
-                foreach ($datas as $data) {
+            if (count($arrLastDays) > 0) {
+                foreach ($arrLastDays as $keyExterno => $datas) {
+                    foreach ($datas as $data) {
 
-                    $dataNaoFaturada = DataNaoFaturadaModel::where('data', $data)->first();
-                    if (!is_null($dataNaoFaturada)) {
-                        $arrDados[$keyExterno]['data_nao_faturada_id'] = $dataNaoFaturada->id;
-                    }
+                        $dataNaoFaturada = DataNaoFaturadaModel::where('data', $data)->first();
+                        if (!is_null($dataNaoFaturada)) {
+                            $arrDados[$keyExterno]['data_nao_faturada_id'] = $dataNaoFaturada->id;
+                        }
 
-                    $arrDados[$keyExterno]['date'] = $data;
-                    $arrDados[$keyExterno]['data_nao_faturada_id'] = NULL;
-                    
-                    $scheduleNext = SchedulesNextMonthModel::where([
-                        'date' => $arrDados[$keyExterno]['date'],
-                        'user_id' => $arrDados[$keyExterno]['user_id'],
-                        'room_id' => $arrDados[$keyExterno]['room_id'],
-                        'created_by' => $arrDados[$keyExterno]['created_by'],
-                        'hour_id' => $arrDados[$keyExterno]['hour_id'],
-                        'status' => $arrDados[$keyExterno]['status'],
-                        'tipo' => $arrDados[$keyExterno]['tipo'],
-                        'is_mirrored' => 1,
-                    ])->first();
+                        $arrDados[$keyExterno]['date'] = $data;
+                        $arrDados[$keyExterno]['data_nao_faturada_id'] = NULL;
+                        
+                        $scheduleNext = SchedulesNextMonthModel::where([
+                            'date' => $arrDados[$keyExterno]['date'],
+                            'user_id' => $arrDados[$keyExterno]['user_id'],
+                            'room_id' => $arrDados[$keyExterno]['room_id'],
+                            'created_by' => $arrDados[$keyExterno]['created_by'],
+                            'hour_id' => $arrDados[$keyExterno]['hour_id'],
+                            'status' => $arrDados[$keyExterno]['status'],
+                            'tipo' => $arrDados[$keyExterno]['tipo'],
+                            'is_mirrored' => 1,
+                        ])->first();
 
-                    if (empty($scheduleNext)) {
-                        // SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                        if (empty($scheduleNext)) {
+                            // SchedulesNextMonthModel::create($arrDados[$keyExterno]);
 
-                        SchedulesNextMonthModel::withoutEvents(function() use ($arrDados, $keyExterno) {
-                            // $s = new SchedulesNextMonthModel();
-                            // $s->date = $arrDados[$keyExterno]['date'];
-                            // $s->user_id = $arrDados[$keyExterno]['user_id'];
-                            // $s->room_id = $arrDados[$keyExterno]['room_id'];
-                            // $s->created_by = $arrDados[$keyExterno]['created_by'];
-                            // $s->hour_id = $arrDados[$keyExterno]['hour_id'];
-                            // $s->status = $arrDados[$keyExterno]['status'];
-                            // $s->tipo = $arrDados[$keyExterno]['tipo'];
-                            // $s->save();
-                            SchedulesNextMonthModel::create($arrDados[$keyExterno]);
-                        });
+                            SchedulesNextMonthModel::withoutEvents(function() use ($arrDados, $keyExterno) {
+                                // $s = new SchedulesNextMonthModel();
+                                // $s->date = $arrDados[$keyExterno]['date'];
+                                // $s->user_id = $arrDados[$keyExterno]['user_id'];
+                                // $s->room_id = $arrDados[$keyExterno]['room_id'];
+                                // $s->created_by = $arrDados[$keyExterno]['created_by'];
+                                // $s->hour_id = $arrDados[$keyExterno]['hour_id'];
+                                // $s->status = $arrDados[$keyExterno]['status'];
+                                // $s->tipo = $arrDados[$keyExterno]['tipo'];
+                                // $s->save();
+                                SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                            });
+                        }
                     }
                 }
+
+                $userIds = array_unique($schedulesNextMonth->pluck('user_id')->toArray());
+                $message = $mirroredSchedules . ' agendamentos espelhados com sucesso!. user IDs: ' . implode(',', $userIds);
+
+                ScheduleNextMonthMirrorLog::create([
+                    'message' => $message,
+                    'email' => 'dev.anderson.santos@gmail.com',
+                ]);
+
+                DB::commit();
+                
+                $this->info($message);
+
+                return;
             }
 
-            $message = 'Agendamentos espelhados com sucesso!';
-
+            SchedulesNextMonthModel::whereIn('id', $schedulesNextMonthId)->delete();
+            $message = 'Nenhum agendamento foi espelhado. ' . $messageDebug . ' agendamentos para espelhar estavam duplicados e foram removidos.';
             ScheduleNextMonthMirrorLog::create([
                 'message' => $message,
                 'email' => 'dev.anderson.santos@gmail.com',
