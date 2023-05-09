@@ -35,6 +35,23 @@ class ScheduleController extends Controller
         ->orderBy('hour_id', 'ASC')
         ->get();
 
+        foreach ($schedules as $item) {
+
+            $schedule_temp = ScheduleModel::where([
+                'user_id' => $item->user_id,
+                'room_id' => $item->room_id,
+                'hour_id' => $item->hour_id,
+                'date' => $item->date,
+                'status' => $item->status,
+                'tipo' => $item->tipo,
+                'data_nao_faturada_id' => $item->data_nao_faturada_id
+            ])->orderBy('id', 'desc')->get();
+
+            if ($schedule_temp->count() > 1 && !empty($schedule_temp->first())) {
+                $schedule_temp->first()->delete();
+            }
+        }
+
         // $schedulesNextMonth = SchedulesNextMonthModel::where([
         //     'user_id' => $id,
         //     //'faturado' => 0,
