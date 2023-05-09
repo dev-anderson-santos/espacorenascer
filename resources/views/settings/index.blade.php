@@ -89,8 +89,9 @@
 
             <div class="clearfix">&nbsp;</div>
 
-            {{--
+            
             <div class="row">
+                {{--
                 <div class="col-md-12 mb-2">
                     <button class="btn btn-primary btn-secondary col-md-4" id="btn-adicionar-data-nao-faturada" type="button">Incluir Data Não Faturada</button>
                 </div>
@@ -102,8 +103,12 @@
                 </div>
                 <div class="col-md-12 mb-2">
                     <a href="{{ route('settings.generate-invoicing') }}" class="btn btn-primary btn-primary col-md-4" type="button">Gerar faturamento do mês</a>
+                </div> 
+                --}}
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary btn-warning col-md-4" id="btn-excluir-agendamentos-duplicados" type="button">Excluir agendamentos duplicados</button>
                 </div>
-            </div> --}}
+            </div>
 
             <div class="clearfix">&nbsp;</div>
             {{-- <div class="row"> --}}

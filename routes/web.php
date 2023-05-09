@@ -4,15 +4,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdministratorController;
 
-// TODO: Remover o -- selecione -- após escolher uma data
-// TODO: Enviar e-mail após agendamento - NÃO PEDIU
-// TODO: Resetar senha por email - Em andamento
-// TODO: Calcular os dias para espelhar os agendamentos (verificar se o dia de hoje + 6 dias é o próximo mês)
-
-// TODO: remover os agendamentos em sequencia e até os espelhados
-// TODO: espelhar automatico
-// TODO: remover os agendamentos espelhados
-
 Route::get('/', function () {
     return view('index.index');
 })->name('index');
@@ -69,6 +60,7 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/espelhar-agendamentos', 'SettingsController@mirror')->name('settings.mirror');
                 Route::get('/excluir-agendamentos-espelhados', 'SettingsController@deleteMirroredSchedules')->name('settings.removerDataNaoFaturada');
                 Route::get('/generate-invoicing', 'SettingsController@generateInvoicing')->name('settings.generate-invoicing');
+                Route::get('/delete-duplicated-schedules', 'SettingsController@deleteDuplicatedSchedules')->name('settings.delete-duplicated-schedules');
             });
 
             Route::group(['prefix' => 'rooms'], function() {

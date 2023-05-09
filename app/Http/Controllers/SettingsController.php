@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\DataNaoFaturadaModel;
 use App\Models\RoomModel;
 use App\Models\SchedulesNextMonthModel;
+use App\User;
 
 class SettingsController extends Controller
 {
@@ -322,6 +323,52 @@ class SettingsController extends Controller
             
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos!']);
         }
+    }
+
+    public function deleteDuplicatedSchedules()
+    {
+        try {
+            DB::beginTransaction();
+
+            $duplicatedSchedules = 0;
+            $usersId = User::all()->pluck('id')->toArray();
+
+            $schedules = ScheduleModel::whereIn('user_id', $usersId)
+            ->whereMonth('date', '>=', Carbon::now()->format('m'))
+            ->whereYear('date', now()->year)
+            ->orderBy('date', 'ASC')
+            ->orderBy('hour_id', 'ASC')
+            ->get();
+
+            foreach ($schedules as $item) {
+
+                $scheduleTemp = ScheduleModel::where([
+                    'user_id' => $item->user_id,
+                    'room_id' => $item->room_id,
+                    'hour_id' => $item->hour_id,
+                    'date' => $item->date,
+                    'status' => $item->status,
+                    'tipo' => $item->tipo,
+                    'data_nao_faturada_id' => $item->data_nao_faturada_id
+                ])->orderBy('id', 'desc')->get();
+
+                if ($scheduleTemp->count() > 1 && !empty($scheduleTemp->first())) {
+                    $scheduleTemp->first()->delete();
+                    $duplicatedSchedules++;
+                }
+            }
+
+            $message = $duplicatedSchedules == 0 ? 'Não há agendamento duplicado para excluir.' : $duplicatedSchedules . ' agendamentos duplicados foram excluídos com sucesso!';
+
+            DB::commit();
+
+            return response()->json(['success' => 'success', 'message' => $message]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(['error' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos duplicados!', 'messageDebug' => $th->getMessage()]);
+        }
+        
     }
 
     // public function generateInvoicing()

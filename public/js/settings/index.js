@@ -146,6 +146,42 @@ $(function() {
         });
     });
 
+    $('#btn-excluir-agendamentos-duplicados').on('click', function (event) {
+        bootbox.confirm({
+            title: "Excluir Agendamentos duplicados",
+            message: "Deseja realmente excluir todos os agendamentos duplicados?<br/><br/> <span class='text-danger'><b>Esta ação não poderá ser desfeita.</b></span>",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+
+                if (result) {
+                    $.get('/app/settings/delete-duplicated-schedules', {}, function(response) {
+                        if (response.status == 'success') {
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            bootbox.alert(response.message)
+                            console.log(response.messageDebug);
+                        }
+                    });
+                }
+            }
+        });
+    });
+
 })
 
 function removerDataNaoFaturada(data_nao_faturada_id) {

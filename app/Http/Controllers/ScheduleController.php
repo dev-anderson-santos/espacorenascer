@@ -52,14 +52,6 @@ class ScheduleController extends Controller
             }
         }
 
-        // $schedulesNextMonth = SchedulesNextMonthModel::where([
-        //     'user_id' => $id,
-        //     //'faturado' => 0,
-        // ])
-        // ->where('is_mirrored', 1)
-        // ->where('date', '>=', Carbon::now()->format('Y-m-d'))
-        // ->orderBy('date', 'ASC')->get();
-
         $id_user = $id;
 
         $historic = Historic::where('user_id', $id)->orderBy('id', 'desc')->get();
