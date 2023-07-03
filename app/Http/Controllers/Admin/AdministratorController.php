@@ -146,8 +146,8 @@ class AdministratorController extends Controller
                 'tipo' => 'Avulso',
                 'faturado' => 1
             ])
-            ->whereIn('tipo', ['Fixo', 'Avulso'])
             ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+            ->whereYear('date', Carbon::now()->firstOfMonth()->subMonths()->format('Y'))
             ->whereNull('data_nao_faturada_id')
             ->whereNotNull('finalizado_em')
             ->get();
@@ -159,6 +159,7 @@ class AdministratorController extends Controller
                         'faturado' => 1
                     ])
                     ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+                    ->whereYear('date', Carbon::now()->firstOfMonth()->subMonths()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->whereNotNull('finalizado_em')
                     ->get();
