@@ -417,6 +417,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereYear('date', Carbon::now()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->get();
 
@@ -427,6 +428,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereYear('date', Carbon::now()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->get();
 
@@ -437,6 +439,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereYear('date', Carbon::now()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->get();
 
@@ -447,6 +450,7 @@ class ScheduleController extends Controller
                     ])
                     ->where('faturado', 0)
                     ->whereMonth('date', Carbon::now()->format('m'))
+                    ->whereYear('date', Carbon::now()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->get();
 
@@ -489,6 +493,7 @@ class ScheduleController extends Controller
         ])
         ->whereIn('tipo', ['Fixo', 'Avulso'])
         ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+        ->whereYear('date', Carbon::now()->firstOfMonth()->subMonths()->format('Y'))
         ->whereNull('data_nao_faturada_id')
         ->whereNotNull('finalizado_em')
         ->get();
@@ -500,6 +505,7 @@ class ScheduleController extends Controller
                     'faturado' => 1
                 ])
                 ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+                ->whereYear('date', Carbon::now()->firstOfMonth()->subMonths()->format('Y'))
                 ->whereNull('data_nao_faturada_id')
                 ->whereNotNull('finalizado_em')
                 ->get();
@@ -748,10 +754,25 @@ class ScheduleController extends Controller
 
         $schedulesToShow = null;
 
-        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->whereNotNull('finalizado_em')->where('faturado', 1)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
+        $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])
+                            ->whereNotNull('finalizado_em')->where('faturado', 1)
+                            ->whereIn('status', ['Ativo', 'Finalizado'])
+                            ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+                            ->whereYear('date', Carbon::now()->firstOfMonth()->subMonths()->format('Y'))
+                            ->whereNull('data_nao_faturada_id')
+                            ->orderBy('date', 'ASC')
+                            ->orderBy('hour_id', 'ASC')
+                            ->get();
 
         if ($dados['schedule_type'] == 'MES_ATUAL') {
-            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])->whereMonth('date', Carbon::now()->format('m'))->whereNull('data_nao_faturada_id')->orderBy('date', 'ASC')->orderBy('hour_id', 'ASC')->get();
+            $schedulesToShow = ScheduleModel::where('user_id', $dados['user_id'])
+                                ->where('faturado', 0)->whereIn('status', ['Ativo', 'Finalizado'])
+                                ->whereMonth('date', Carbon::now()->format('m'))
+                                ->whereYear('date', Carbon::now()->format('Y'))
+                                ->whereNull('data_nao_faturada_id')
+                                ->orderBy('date', 'ASC')
+                                ->orderBy('hour_id', 'ASC')
+                                ->get();
         }
 
         return view('schedule.modals.modal-detalhes-mes', compact('schedulesToShow'));
