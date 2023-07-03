@@ -17,12 +17,17 @@ class AdministratorController extends Controller
         $totalSchedulesInMonth = ScheduleModel::whereHas('user', function($query) {
             $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
         })
+        ->whereNull('data_nao_faturada_id')
         ->whereBetween('date', [
             now()->startOfMonth()->format('Y-m-d'),
             now()->endOfMonth()->format('Y-m-d')
-        ])->get()->count();
+        ])
+        ->get()->count();
 
-        $activeUsers = ScheduleModel::distinct()->select('user_id')
+        $activeUsers = ScheduleModel::whereHas('user', function($query) {
+            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
+        })
+        ->distinct()->select('user_id')
         ->whereBetween('date', [
             now()->startOfMonth()->format('Y-m-d'),
             now()->endOfMonth()->format('Y-m-d')
@@ -30,21 +35,24 @@ class AdministratorController extends Controller
 
         $users = User::all();
 
-        $schedules = ScheduleModel::where([
-            'faturado' => 1,
-        ])
-        // ->leftJoin('users', 'users.id', 'schedules.user_id')
-        ->whereBetween('date', [
-            now()->subMonth()->startOfMonth()->format('Y-m-d'),
-            now()->subMonth()->endOfMonth()->format('Y-m-d')
-        ])
-        ->get();
+        // $schedules = ScheduleModel::whereHas('user', function($query) {
+        //     $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
+        // })
+        // ->where([
+        //     'faturado' => 1,
+        // ])
+        // // ->leftJoin('users', 'users.id', 'schedules.user_id')
+        // ->whereBetween('date', [
+        //     now()->subMonth()->startOfMonth()->format('Y-m-d'),
+        //     now()->subMonth()->endOfMonth()->format('Y-m-d')
+        // ])
+        // ->get();
 
         return view('administrator.dashboard', [
             'totalSchedulesInMonth' => $totalSchedulesInMonth,
             'activeUsers' => $activeUsers,
             'users' => $users,
-            'schedules' => $schedules,
+            // 'schedules' => $schedules,
             'clientesMesAnterior' => $this->fechamentosDoMesAnterior(),
             'clientesMesAtual' => $this->fechamentosParcialDoMes()
         ]);
@@ -60,45 +68,47 @@ class AdministratorController extends Controller
 
             $concluidosParcialAtivoFixo = ScheduleModel::where([
                             'user_id' => $cliente->id,
-                            'status' => 'Ativo',
+                            // 'status' => 'Ativo',
                             'tipo' => 'Fixo'
                         ])
                         ->where('faturado', 0)
                         ->whereMonth('date', Carbon::now()->format('m'))
+                        ->whereYear('date', now()->format('Y'))
                         ->whereNull('data_nao_faturada_id')
                         ->get();
     
             $concluidosParcialAtivoAvulso = ScheduleModel::where([
                             'user_id' => $cliente->id,
-                            'status' => 'Ativo',
+                            // 'status' => 'Ativo',
                             'tipo' => 'Avulso'
                         ])
                         ->where('faturado', 0)
                         ->whereMonth('date', Carbon::now()->format('m'))
+                        ->whereYear('date', now()->format('Y'))
                         ->whereNull('data_nao_faturada_id')
                         ->get();
     
-            $concluidosParcialFinalizadoFixo = ScheduleModel::where([
-                            'user_id' => $cliente->id,
-                            'status' => 'Finalizado',
-                            'tipo' => 'Fixo'
-                        ])
-                        ->where('faturado', 0)
-                        ->whereMonth('date', Carbon::now()->format('m'))
-                        ->whereNull('data_nao_faturada_id')
-                        ->get();
+            // $concluidosParcialFinalizadoFixo = ScheduleModel::where([
+            //                 'user_id' => $cliente->id,
+            //                 'status' => 'Finalizado',
+            //                 'tipo' => 'Fixo'
+            //             ])
+            //             ->where('faturado', 0)
+            //             ->whereMonth('date', Carbon::now()->format('m'))
+            //             ->whereNull('data_nao_faturada_id')
+            //             ->get();
     
-            $concluidosParcialFinalizadoAvulso = ScheduleModel::where([
-                            'user_id' => $cliente->id,
-                            'status' => 'Finalizado',
-                            'tipo' => 'Avulso'
-                        ])
-                        ->where('faturado', 0)
-                        ->whereMonth('date', Carbon::now()->format('m'))
-                        ->whereNull('data_nao_faturada_id')
-                        ->get();
+            // $concluidosParcialFinalizadoAvulso = ScheduleModel::where([
+            //                 'user_id' => $cliente->id,
+            //                 'status' => 'Finalizado',
+            //                 'tipo' => 'Avulso'
+            //             ])
+            //             ->where('faturado', 0)
+            //             ->whereMonth('date', Carbon::now()->format('m'))
+            //             ->whereNull('data_nao_faturada_id')
+            //             ->get();
     
-            $cliente->concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count();
+            $cliente->concluidosParcialAgendamentos = $concluidosParcialAtivoFixo->count() + $concluidosParcialAtivoAvulso->count() /* + $concluidosParcialFinalizadoFixo->count() + $concluidosParcialFinalizadoAvulso->count() */;
     
             // $totalParcialAgendamentos = ScheduleModel::where([
             //                 'user_id' => $cliente->id,                        
@@ -113,17 +123,17 @@ class AdministratorController extends Controller
             if ($concluidosParcialAtivoAvulso->count() > 0) {
                 $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
             }
-            if ($concluidosParcialFinalizadoAvulso->count() > 0) {
-                $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
-            }
+            // if ($concluidosParcialFinalizadoAvulso->count() > 0) {
+            //     $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
+            // }
     
             $totalFixo = 0;
             if ($concluidosParcialAtivoFixo->count() > 0) {
                 $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
             }
-            if ($concluidosParcialFinalizadoFixo->count() > 0) {
-                $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
-            }
+            // if ($concluidosParcialFinalizadoFixo->count() > 0) {
+            //     $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
+            // }
     
             $cliente->totalParcialValor = $totalAvulso + $totalFixo;
 
@@ -146,8 +156,8 @@ class AdministratorController extends Controller
                 'tipo' => 'Avulso',
                 'faturado' => 1
             ])
-            ->whereIn('tipo', ['Fixo', 'Avulso'])
             ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+            ->whereYear('date', now()->firstOfMonth()->subMonths()->format('Y'))
             ->whereNull('data_nao_faturada_id')
             ->whereNotNull('finalizado_em')
             ->get();
@@ -159,6 +169,7 @@ class AdministratorController extends Controller
                         'faturado' => 1
                     ])
                     ->whereMonth('date', Carbon::now()->firstOfMonth()->subMonths()->format('m'))
+                    ->whereYear('date', now()->firstOfMonth()->subMonths()->format('Y'))
                     ->whereNull('data_nao_faturada_id')
                     ->whereNotNull('finalizado_em')
                     ->get();
