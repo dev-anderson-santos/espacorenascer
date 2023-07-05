@@ -146,6 +146,42 @@ $(function() {
         });
     });
 
+    $('#btn-update-schedules-price-manually').on('click', function (event) {
+        bootbox.confirm({
+            title: "Atualizar Valor dos Agendamentos",
+            message: "Deseja realmente atualizar os valores de todos os agendamentos?<br/><br/> <span class='text-danger'></span>",
+            buttons: {
+                confirm: {
+                    label: 'Sim',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'Não',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+
+                if (result) {
+                    $.get('/app/settings/update-schedules-price-manually', {valorFixo: 19.00, valorAvulso: 19.00}, function(response) {
+                        if (response.status == 'success') {
+                            bootbox.alert({
+                                title: 'Informação',
+                                message: response.message,
+                                callback: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            bootbox.alert(response.message)
+                            console.log('DEBUG: '+ response.messageDebug);
+                        }
+                    });
+                }
+            }
+        });
+    });
+
     $('#btn-excluir-agendamentos-duplicados').on('click', function (event) {
         bootbox.confirm({
             title: "Excluir Agendamentos duplicados",
