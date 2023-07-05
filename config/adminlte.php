@@ -313,10 +313,15 @@ return [
         //     'can'  => 'is_admin',
         //     'submenu' => [
         //         [
-        //             'text' => 'Pagamentos',
-        //             'url'  => '/app/reports/',
+        //             'text' => 'Rendimento por sala',
+        //             'url'  => '/app/admin/reports/yield-per-room',
         //             'icon' => 'fas fa-file-invoice-dollar',
         //         ],
+        //         // [
+        //         //     'text' => 'Pagamentos',
+        //         //     'url'  => '/app/reports/',
+        //         //     'icon' => 'fas fa-file-invoice-dollar',
+        //         // ],
         //     ],
         // ],
         [
