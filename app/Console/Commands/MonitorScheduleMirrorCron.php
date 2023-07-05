@@ -85,7 +85,8 @@ class MonitorScheduleMirrorCron extends Command
                     'date' => $scheduleNext->date,
                     'status' => $scheduleNext->status,
                     'tipo' => $scheduleNext->tipo,
-                    'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id
+                    'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                    'valor' => $scheduleNext->valor
                 ]);
 
                 if (empty($schedule_temp->first())) { // Impedir espelhamento de agendamentos já existentes
@@ -121,6 +122,7 @@ class MonitorScheduleMirrorCron extends Command
                             'status' => $scheduleNext->status,
                             'tipo' => $scheduleNext->tipo,
                             'data_nao_faturada_id' => $scheduleNext->data_nao_faturada_id,
+                            'valor' => $scheduleNext->valor
                         ]);
                     });
 
@@ -137,6 +139,7 @@ class MonitorScheduleMirrorCron extends Command
                             'status' => $scheduleNext->status,
                             'tipo' => $scheduleNext->tipo,
                             'is_mirrored' => 1,
+                            'valor' => $scheduleNext->valor,
                         ];
                     }
 
@@ -175,6 +178,7 @@ class MonitorScheduleMirrorCron extends Command
                             'status' => $arrDados[$keyExterno]['status'],
                             'tipo' => $arrDados[$keyExterno]['tipo'],
                             'is_mirrored' => 1,
+                            'valor' => $arrDados[$keyExterno]['valor'],
                         ])->first();
 
                         if (empty($scheduleNext)) {
