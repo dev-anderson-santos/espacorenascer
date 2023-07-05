@@ -61,6 +61,7 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/excluir-agendamentos-espelhados', 'SettingsController@deleteMirroredSchedules')->name('settings.removerDataNaoFaturada');
                 Route::get('/generate-invoicing', 'SettingsController@generateInvoicing')->name('settings.generate-invoicing');
                 Route::get('/delete-duplicated-schedules', 'SettingsController@deleteDuplicatedSchedules')->name('settings.delete-duplicated-schedules');
+                Route::get('/update-schedules-price-manually', 'SettingsController@updateSchedulesPriceManually')->name('settings.update-schedules-price-manually');
             });
 
             Route::group(['prefix' => 'rooms'], function() {
@@ -79,13 +80,14 @@ Route::group(['prefix' => 'app'],function () {
         //     Route::post('/', 'ReportsController@showSpecificInvoicing')->name('reports.show-specific-invoicing');
         // });
 
+        // Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
+        //     Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('.dashboard');
+        // });
+
         Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
             Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('.dashboard');
-        });
 
-        Route::group(['prefix' => 'admin', 'middleware' => 'is_admin', 'as' => 'admin'], function () {
             Route::group(['prefix' => 'finance'], function() {
-
                 Route::get('/charge', 'FinanceController@index')->name('finance.charge');
                 Route::post('/search-charges', 'FinanceController@searchChargesByMonth')->name('.finance.search-charges');
                 Route::get('/modal-registrar-pagamento', 'FinanceController@modalRegitrarPagamento')->name('.finance.modal-registrar-pagamento');
@@ -94,6 +96,12 @@ Route::group(['prefix' => 'app'],function () {
 
             Route::group(['prefix' => 'help'], function() {
                 Route::get('/release-notes', 'Admin\AdministratorController@releaseNotes')->name('help.release-notes');
+            });
+
+            Route::group(['prefix' => 'reports'], function () {
+                Route::get('/yield-per-room', 'Admin\ReportsController@index')->name('.reports.index');
+                Route::post('/yield-per-room', 'Admin\ReportsController@byRooms')->name('.reports.yield-per-room');
+                // Route::post('/', 'Admin\ReportsController@showSpecificInvoicing')->name('reports.show-specific-invoicing');
             });
         });
     });
