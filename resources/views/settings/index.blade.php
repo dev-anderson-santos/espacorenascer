@@ -16,6 +16,11 @@
 
         @include('componentes.alerts')
 
+        @include('componentes.alerts', [
+            'type' => 'alert-info',
+            'text' => 'Ao alterar os valores dos agendamentos, o valor informado será aplicado em todos os agendamentos do mês atual em diante.'
+        ])
+
         <form action="{{ route('settings.update') }}" method="post" id="form-settings">
             @csrf
             <input type="hidden" name="id" value="{{ $setting->id ?? '' }}">
