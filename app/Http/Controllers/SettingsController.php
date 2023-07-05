@@ -13,6 +13,7 @@ use App\Models\DataNaoFaturadaModel;
 use App\Models\RoomModel;
 use App\Models\SchedulesNextMonthModel;
 use App\User;
+use Illuminate\Support\Arr;
 
 class SettingsController extends Controller
 {
@@ -26,6 +27,7 @@ class SettingsController extends Controller
         $setting = SettingsModel::first();
         $datas_nao_faturadas = DataNaoFaturadaModel::all();
         $rooms = RoomModel::all();
+        // $duplicatedSchedules = Arr::flatten($this->duplicatedSchedules());
 
         return view('settings.index', compact('setting', 'datas_nao_faturadas', 'rooms'));
     }
@@ -51,6 +53,8 @@ class SettingsController extends Controller
                 'hora_fechamento' => $dados['hora_fechamento'],
                 'dia_fechamento' => $dados['dia_fechamento'],
             ]);
+
+            $this->updateSchedulesPrice($settings);
 
             SettingsModelLog::create([
                 'user_id' => auth()->user()->id,
@@ -81,6 +85,8 @@ class SettingsController extends Controller
                 'hora_fechamento' => $request->hora_fechamento,
                 'dia_fechamento' => $request->dia_fechamento,
             ]);
+
+            $this->updateSchedulesPrice($settings);
 
             SettingsModelLog::create([
                 'user_id' => auth()->user()->id,
@@ -362,13 +368,139 @@ class SettingsController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => 'success', 'message' => $message]);
+            return response()->json(['status' => 'success', 'message' => $message]);
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            return response()->json(['error' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos duplicados!', 'messageDebug' => $th->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao excluir os agendamentos duplicados!', 'messageDebug' => $th->getMessage()]);
         }
         
+    }
+
+    public function updateSchedulesPriceManually(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $countFixo = 0;
+            $countAvulso = 0;
+
+            $schedules = ScheduleModel::all();
+        
+            foreach($schedules as $item) {
+                if ($item->tipo == 'Fixo') {
+                    $countFixo++;
+
+                    $item->update([
+                        'valor' => $request->valorFixo
+                    ]);
+                }
+                if ($item->tipo == 'Avulso') {
+                    $countAvulso++;
+
+                    $item->update([
+                        'valor' => $request->valorAvulso
+                    ]);
+                }
+            }
+
+            $schedulesNextMonth = SchedulesNextMonthModel::all();
+
+            foreach($schedulesNextMonth as $item) {
+                if ($item->tipo == 'Fixo') {
+                    $item->update([
+                        'valor' => $request->valorFixo
+                    ]);
+                }
+                if ($item->tipo == 'Avulso') {
+                    $item->update([
+                        'valor' => $request->valorAvulso
+                    ]);
+                }
+            }            
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'message' => 'Valores atualizados com sucesso. Fixos: ' . $countFixo . ' Avulsos: ' . $countAvulso]);
+        } catch (\Exception $th) {
+            DB::rollBack();
+
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao atualizar os valores!', 'messageDebug' => $th->getMessage()]);
+        }
+    }
+
+    private function updateSchedulesPrice(SettingsModel $settings)
+    {
+        $schedules = ScheduleModel::whereMonth('date', '>=', Carbon::now()->firstOfMonth()->format('m'))
+                        ->whereYear('date', '>=', Carbon::now()->firstOfMonth()->format('Y'))
+                        ->get();
+
+        foreach($schedules as $item) {
+            if ($item->tipo == 'Fixo') {
+                $item->update([
+                    'valor' => $settings->valor_fixo
+                ]);
+            }
+            if ($item->tipo == 'Avulso') {
+                $item->update([
+                    'valor' => $settings->valor_avulso
+                ]);
+            }
+        }
+
+        $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', '>=', Carbon::now()->firstOfMonth()->format('m'))
+                                ->whereYear('date', '>=', Carbon::now()->firstOfMonth()->format('Y'))
+                                ->get();
+
+        foreach($schedulesNextMonth as $item) {
+            if ($item->tipo == 'Fixo') {
+                $item->update([
+                    'valor' => $settings->valor_fixo
+                ]);
+            }
+            if ($item->tipo == 'Avulso') {
+                $item->update([
+                    'valor' => $settings->valor_avulso
+                ]);
+            }
+        }
+    }
+
+    private function duplicatedSchedules()
+    {
+        $duplicatedSchedules = [];
+        $usersId = User::all()->pluck('id')->toArray();
+
+        $schedules = ScheduleModel::whereIn('user_id', $usersId)
+        ->whereMonth('date', '>=', Carbon::now()->format('m'))
+        ->whereYear('date', now()->year)
+        ->orderBy('date', 'ASC')
+        ->orderBy('hour_id', 'ASC')
+        ->get();
+
+        foreach ($schedules as $item) {
+
+            $scheduleTemp = ScheduleModel::where([
+                'room_id' => $item->room_id,
+                'hour_id' => $item->hour_id,
+                'date' => $item->date,
+                'data_nao_faturada_id' => $item->data_nao_faturada_id
+            ])->orderBy('id', 'desc')->first();
+            
+            // if ($scheduleTemp->count() > 1 && !empty($scheduleTemp->first())) {
+            if ($scheduleTemp->room_id == $item->room_id
+                && $scheduleTemp->hour_id == $item->hour_id
+                && $scheduleTemp->date == $item->date
+                && $scheduleTemp->data_nao_faturada_id == $item->data_nao_faturada_id
+                && $scheduleTemp->user_id != $item->user_id
+            ) {
+
+                $duplicatedSchedules[] = $scheduleTemp;
+                $duplicatedSchedules[] = $item;
+            }
+        }
+
+        // return $duplicatedSchedules;
     }
 
     // public function generateInvoicing()

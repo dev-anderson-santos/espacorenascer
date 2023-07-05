@@ -151,6 +151,7 @@ class ScheduleController extends Controller
 
             $dados['status'] = 'Ativo';
 
+            $settings = SettingsModel::first();
             $datasNaoFaturadas = DataNaoFaturadaModel::all();
             foreach($datasNaoFaturadas as $data) {
                 if (Carbon::parse($data->data)->format('Y-m-d') == Carbon::parse($dia)->format('Y-m-d')) {
@@ -183,6 +184,7 @@ class ScheduleController extends Controller
 
                 $arrDataEmUso = [];
                 $horariosEmUso = false;
+                $dados['valor'] = $settings->valor_fixo;
                 foreach ($arrDays as $key => $value) {
                     
                     $dados['date'] = $value;
@@ -234,6 +236,7 @@ class ScheduleController extends Controller
                 return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento realizado com sucesso!']);
 
             } else {
+                $dados['valor'] = $settings->valor_avulso;
                 ScheduleModel::create($dados);
             }
 
@@ -465,23 +468,24 @@ class ScheduleController extends Controller
         
         // é preciso calcular com o valor fixo e o valor avulso
         // Veirificar se algums horario foi escolhido como avulso
-        $totalAvulso = 0;
-        if ($concluidosParcialAtivoAvulso->count() > 0) {
-            $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
-        }
-        if ($concluidosParcialFinalizadoAvulso->count() > 0) {
-            $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
-        }
+        // $totalAvulso = 0;
+        // if ($concluidosParcialAtivoAvulso->count() > 0) {
+        //     $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
+        // }
+        // if ($concluidosParcialFinalizadoAvulso->count() > 0) {
+        //     $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
+        // }
 
-        $totalFixo = 0;
-        if ($concluidosParcialAtivoFixo->count() > 0) {
-            $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
-        }
-        if ($concluidosParcialFinalizadoFixo->count() > 0) {
-            $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
-        }
+        // $totalFixo = 0;
+        // if ($concluidosParcialAtivoFixo->count() > 0) {
+        //     $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
+        // }
+        // if ($concluidosParcialFinalizadoFixo->count() > 0) {
+        //     $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
+        // }
 
-        $totalParcialValor = $totalAvulso + $totalFixo;
+        $totalParcialValor = $concluidosParcialAtivoFixo->sum('valor') + $concluidosParcialAtivoAvulso->sum('valor') + $concluidosParcialFinalizadoFixo->sum('valor') + $concluidosParcialFinalizadoAvulso->sum('valor');;
+        // $totalParcialValor = $totalAvulso + $totalFixo;
 
         //---- Mês anterior
 
@@ -514,17 +518,18 @@ class ScheduleController extends Controller
 
         // é preciso calcular com o valor fixo e o valor avulso
         // Veirificar se algums horario foi escolhido como avulso
-        $totalAvulsoMesAnterior = 0;
-        if ($concluidosMesAnteriorAvulso->count() > 0) {
-        $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
-        }
+        // $totalAvulsoMesAnterior = 0;
+        // if ($concluidosMesAnteriorAvulso->count() > 0) {
+        // $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
+        // }
 
-        $totalFixoMesAnterior = 0;
-        if ($concluidosMesAnteriorFixo->count() > 0) {
-        $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
-        }
+        // $totalFixoMesAnterior = 0;
+        // if ($concluidosMesAnteriorFixo->count() > 0) {
+        // $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
+        // }
 
-        $totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
+        $totalMesAnterior = $concluidosMesAnteriorAvulso->sum('valor') + $concluidosMesAnteriorFixo->sum('valor');
+        // $totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
 
         return view('fechamentos-mes.index', 
             compact(

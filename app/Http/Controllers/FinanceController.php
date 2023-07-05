@@ -54,17 +54,18 @@ class FinanceController extends Controller
 
             // é preciso calcular com o valor fixo e o valor avulso
             // Veirificar se algums horario foi escolhido como avulso
-            $totalAvulsoMesAnterior = 0;
-            if ($concluidosMesAnteriorAvulso->count() > 0) {
-            $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
-            }
+            // $totalAvulsoMesAnterior = 0;
+            // if ($concluidosMesAnteriorAvulso->count() > 0) {
+            // $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
+            // }
 
-            $totalFixoMesAnterior = 0;
-            if ($concluidosMesAnteriorFixo->count() > 0) {
-            $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
-            }
+            // $totalFixoMesAnterior = 0;
+            // if ($concluidosMesAnteriorFixo->count() > 0) {
+            // $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
+            // }
 
-            $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
+            $cliente->totalMesAnterior = $concluidosMesAnteriorAvulso->sum('valor') + $concluidosMesAnteriorFixo->sum('valor');
+            // $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
 
             $faturaCliente = ChargeModel::where([
                 'user_id' => $cliente->id,

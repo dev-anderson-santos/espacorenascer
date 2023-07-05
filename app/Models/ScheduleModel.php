@@ -24,6 +24,7 @@ class ScheduleModel extends Model
         'faturado',
         'finalizado_em',
         'data_nao_faturada_id',
+        'valor'
     ];
 
     public function user()

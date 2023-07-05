@@ -17,7 +17,8 @@ class SchedulesNextMonthModel extends Model
         'status',
         'tipo',
         'data_nao_faturada_id',
-        'is_mirrored'
+        'is_mirrored',
+        'valor'
     ];
 
     public function user()
