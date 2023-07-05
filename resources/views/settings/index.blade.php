@@ -58,7 +58,7 @@
                 <legend>Datas não faturadas</legend>
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-stripped table-hover table-sm" id="tabela-datas-nao-faturadas" style="width:100%">
+                        <table class="table table-striped table-hover table-sm" id="tabela-datas-nao-faturadas" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -89,7 +89,41 @@
 
             <div class="clearfix">&nbsp;</div>
 
+            {{-- <fieldset>
+                <legend>Agendamentos duplicados</legend>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-hover table-sm" id="tabela-agendamentos-duplicados" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Data</th>
+                                    <th>Horário</th>
+                                    <th>Sala</th>
+                                    <th>Tipo de agendamento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($duplicatedSchedules as $item)
+                                    <tr>
+                                        <td>{{ $item->user->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
+                                        <td>{{ $item->hour->hour }}</td>
+                                        <td>{{ $item->room->name }}</td>
+                                        <td>{{ $item->tipo }}</td>
+                                    </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix">&zwnj;</div>
+                    <div class="clearfix">&zwnj;</div>
+                </div>
+            </fieldset>
             
+            <div class="clearfix">&nbsp;</div> --}}
+
             <div class="row">
                 {{--
                 <div class="col-md-12 mb-2">
@@ -105,8 +139,11 @@
                     <a href="{{ route('settings.generate-invoicing') }}" class="btn btn-primary btn-primary col-md-4" type="button">Gerar faturamento do mês</a>
                 </div> 
                 --}}
-                <div class="col-md-12 mb-2">
+                <div class="col-md-12 mb-2" style="display: none">
                     <button class="btn btn-primary btn-warning col-md-4" id="btn-excluir-agendamentos-duplicados" type="button">Excluir agendamentos duplicados</button>
+                </div>
+                <div class="col-md-12 mb-2" style="display: none">
+                    <button class="btn btn-primary btn-primary col-md-4" id="btn-update-schedules-price-manually" type="button">Atualizar valor dos agendamentos</button>
                 </div>
             </div>
 
