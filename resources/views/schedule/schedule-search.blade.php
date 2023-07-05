@@ -35,8 +35,9 @@
                 <thead>
                     <tr>
                         <th style="text-align: center" scope="col"></th>
-                        <th style="text-align: center" scope="col">Sala 101</th>
-                        <th style="text-align: center" scope="col">Sala 102</th>
+                        @foreach ($rooms as $room) 
+                        <th style="text-align: center" scope="col">{{ $room->name }}</th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
