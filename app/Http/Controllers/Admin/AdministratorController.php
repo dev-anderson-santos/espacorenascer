@@ -14,24 +14,20 @@ class AdministratorController extends Controller
 {
     public function dashboard()
     {
-        $totalSchedulesInMonth = ScheduleModel::whereHas('user', function($query) {
-            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
-        })
+        $totalSchedulesInMonth = ScheduleModel::whereNotIn('user_id', [1, 2, 5])
         ->whereNull('data_nao_faturada_id')
-        ->whereBetween('date', [
-            now()->startOfMonth()->format('Y-m-d'),
-            now()->endOfMonth()->format('Y-m-d')
-        ])
+        ->whereMonth('date', Carbon::now()->firstOfMonth()->format('m'))
+        ->whereYear('date', Carbon::now()->firstOfMonth()->format('Y'))
+        ->where('faturado', 0)
         ->get()->count();
 
         $activeUsers = ScheduleModel::whereHas('user', function($query) {
             $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
         })
         ->distinct()->select('user_id')
-        ->whereBetween('date', [
-            now()->startOfMonth()->format('Y-m-d'),
-            now()->endOfMonth()->format('Y-m-d')
-        ])->get()->count();
+        ->whereMonth('date', Carbon::now()->firstOfMonth()->format('m'))
+        ->whereYear('date', Carbon::now()->firstOfMonth()->format('Y'))
+        ->get()->count();
 
         $users = User::all();
 
@@ -119,23 +115,24 @@ class AdministratorController extends Controller
             
             // é preciso calcular com o valor fixo e o valor avulso
             // Veirificar se algums horario foi escolhido como avulso
-            $totalAvulso = 0;
-            if ($concluidosParcialAtivoAvulso->count() > 0) {
-                $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
-            }
+            // $totalAvulso = 0;
+            // if ($concluidosParcialAtivoAvulso->count() > 0) {
+            //     $totalAvulso = $concluidosParcialAtivoAvulso->count() * $valorAvulso;
+            // }
             // if ($concluidosParcialFinalizadoAvulso->count() > 0) {
             //     $totalAvulso += $concluidosParcialFinalizadoAvulso->count() * $valorAvulso;
             // }
     
-            $totalFixo = 0;
-            if ($concluidosParcialAtivoFixo->count() > 0) {
-                $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
-            }
+            // $totalFixo = 0;
+            // if ($concluidosParcialAtivoFixo->count() > 0) {
+            //     $totalFixo = $concluidosParcialAtivoFixo->count() * $valorFixo;
+            // }
             // if ($concluidosParcialFinalizadoFixo->count() > 0) {
             //     $totalFixo += $concluidosParcialFinalizadoFixo->count() * $valorFixo;
             // }
     
-            $cliente->totalParcialValor = $totalAvulso + $totalFixo;
+            $cliente->totalParcialValor = $concluidosParcialAtivoFixo->sum('valor') + $concluidosParcialAtivoAvulso->sum('valor');
+            // $cliente->totalParcialValor = $totalAvulso + $totalFixo;
 
             return $cliente;
         });
@@ -178,17 +175,18 @@ class AdministratorController extends Controller
 
             // é preciso calcular com o valor fixo e o valor avulso
             // Veirificar se algums horario foi escolhido como avulso
-            $totalAvulsoMesAnterior = 0;
-            if ($concluidosMesAnteriorAvulso->count() > 0) {
-            $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
-            }
+            // $totalAvulsoMesAnterior = 0;
+            // if ($concluidosMesAnteriorAvulso->count() > 0) {
+            // $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
+            // }
 
-            $totalFixoMesAnterior = 0;
-            if ($concluidosMesAnteriorFixo->count() > 0) {
-            $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
-            }
+            // $totalFixoMesAnterior = 0;
+            // if ($concluidosMesAnteriorFixo->count() > 0) {
+            // $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
+            // }
 
-            $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
+            $cliente->totalMesAnterior = $concluidosMesAnteriorAvulso->sum('valor') + $concluidosMesAnteriorFixo->sum('valor');
+            // $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
 
             return $cliente;
         });
