@@ -14,20 +14,13 @@ class AdministratorController extends Controller
 {
     public function dashboard()
     {
-        $totalSchedulesInMonth = ScheduleModel::whereNotIn('user_id', [1, 2, 5])
-        ->whereNull('data_nao_faturada_id')
-        ->whereMonth('date', Carbon::now()->firstOfMonth()->format('m'))
-        ->whereYear('date', Carbon::now()->firstOfMonth()->format('Y'))
-        ->where('faturado', 0)
-        ->get()->count();
-
         $activeUsers = ScheduleModel::whereHas('user', function($query) {
-            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
-        })
-        ->distinct()->select('user_id')
-        ->whereMonth('date', Carbon::now()->firstOfMonth()->format('m'))
-        ->whereYear('date', Carbon::now()->firstOfMonth()->format('Y'))
-        ->get()->count();
+                            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
+                        })
+                        ->distinct()->select('user_id')
+                        ->whereMonth('date', Carbon::now()->firstOfMonth()->format('m'))
+                        ->whereYear('date', Carbon::now()->firstOfMonth()->format('Y'))
+                        ->get()->count();
 
         $users = User::all();
 
@@ -45,7 +38,7 @@ class AdministratorController extends Controller
         // ->get();
 
         return view('administrator.dashboard', [
-            'totalSchedulesInMonth' => $totalSchedulesInMonth,
+            'totalSchedulesInMonth' => $this->fechamentosParcialDoMes()->sum('concluidosParcialAgendamentos'),
             'activeUsers' => $activeUsers,
             'users' => $users,
             // 'schedules' => $schedules,
