@@ -26,6 +26,7 @@
                             <div class="box-body no-border">
                                 <ul>
                                     <li>Ajuste na contagem de agendamentos parciais no dashboard.</li>
+                                    <li>Totais de agendamento e valores no final da tabela de registro de cobrança.</li>
                                 </ul>
                             </div>
                         </div>
