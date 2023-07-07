@@ -66,8 +66,7 @@
                     <th style="text-align: center" scope="col">Ações</th>
                 </tr>
             </thead>
-            <tbody {{-- class="display: table;
-            width: 100%;" --}}>
+            <tbody>
                 @if(!empty($clientes))
                 @forelse ($clientes as $cliente)
                 <tr>
@@ -101,6 +100,13 @@
                 </tr>
                 @empty
                 @endforelse
+                <tr>
+                    <td class="text-center text-bold">Totais:</td>
+                    <td class="text-center text-bold">{{ $clientes->sum('concluidosAgendamentosMesAnterior') }}</td>
+                    <td class="text-center text-bold">{{ number_format($clientes->sum('totalMesAnterior'), 2, ',', '.') }}</td>
+                    <td class="text-center text-bold">{{ number_format($clientes->sum('fatura_cliente'), 2, ',', '.') }}</td>
+                    <td colspan="2"></td>
+                </tr>
                 @endif
             </tbody>
         </table>
