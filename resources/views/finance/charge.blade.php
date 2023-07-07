@@ -103,8 +103,8 @@
                 <tr>
                     <td class="text-center text-bold">Totais:</td>
                     <td class="text-center text-bold">{{ $clientes->sum('concluidosAgendamentosMesAnterior') }}</td>
-                    <td class="text-center text-bold">{{ number_format($clientes->sum('totalMesAnterior'), 2, ',', '.') }}</td>
-                    <td class="text-center text-bold">{{ number_format($clientes->sum('fatura_cliente'), 2, ',', '.') }}</td>
+                    <td class="text-center text-bold">R$ {{ number_format($clientes->sum('totalMesAnterior'), 2, ',', '.') }}</td>
+                    <td class="text-center text-bold">R$ {{ number_format($clientes->sum('fatura_cliente'), 2, ',', '.') }}</td>
                     <td colspan="2"></td>
                 </tr>
                 @endif
