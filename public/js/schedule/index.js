@@ -221,9 +221,10 @@ function cancelarAgendamentoUser (token, scheduleID) {
 }
 
 function mudarTipo(token, scheduleID, tipo, data, hora) {
+    var observacao = tipo == 'Avulso' ? ' <br>Os agendamentos <strong>Fixos</strong> das semanas seguintes serão cancelados. <br><br><span style="color: #f00; font-weight:800">Esta ação não poderá ser desfeita.</span>' : ''; 
     bootbox.confirm({
         title: 'Mudar tipo do Agendamento',
-        message: "Tem certeza que quer mudar para <b>" + tipo + "</b> o tipo do agendamento reservado para " + data + " às " + hora + "?",
+        message: "Tem certeza que deseja mudar para <b>" + tipo + "</b> o tipo do agendamento reservado para <strong>" + data + " às " + hora + "</strong>?" + observacao,
         buttons: {
             confirm: {
                 label: 'Sim',
@@ -261,7 +262,7 @@ function mudarTipo(token, scheduleID, tipo, data, hora) {
                                     dados += '<tr><td>' + horario.hora + '</td><td>' + horario.data + '</td></tr>'
                                 })
                                 bootbox.alert({
-                                    title: 'Agendamento realizado com sucesso!',
+                                    title: 'Mudar tipo de agendamento',
                                     message: `
                                     <div class="alert alert-info" style="font-size: 15pt" role="alert">
                                         <i class="fas fa-info-circle"></i> Os seguintes horários não foram agendados pois já estavam ocupados.
