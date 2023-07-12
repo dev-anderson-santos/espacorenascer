@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <p>Deseja realmente cancelar o agendamento reservado para <strong>{{ \Carbon\Carbon::parse($schedule->date)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</strong>?
         @if ($schedule->tipo == 'Fixo')
-        <p>Os agendamentos fixos das semanas seguintes serão cancelados.</p>
+        <p>Os agendamentos <b>fixos</b> subsequentes a este das semanas seguintes serão cancelados.</p>
         @endif
         <br><span style="color: #f00; font-weight:800">Esta ação não poderá ser desfeita.</span>
     </div>

@@ -221,7 +221,7 @@ function cancelarAgendamentoUser (token, scheduleID) {
 }
 
 function mudarTipo(token, scheduleID, tipo, data, hora) {
-    var observacao = tipo == 'Avulso' ? ' <br>Os agendamentos <strong>Fixos</strong> das semanas seguintes serão cancelados. <br><br><span style="color: #f00; font-weight:800">Esta ação não poderá ser desfeita.</span>' : ''; 
+    var observacao = tipo == 'Avulso' ? ' <br><br><p>Os agendamentos <strong>Fixos</strong> subsequentes a este das semanas seguintes serão cancelados. </p><span style="color: #f00; font-weight:800">Esta ação não poderá ser desfeita.</span>' : ''; 
     bootbox.confirm({
         title: 'Mudar tipo do Agendamento',
         message: "Tem certeza que deseja mudar para <b>" + tipo + "</b> o tipo do agendamento reservado para <strong>" + data + " às " + hora + "</strong>?" + observacao,
