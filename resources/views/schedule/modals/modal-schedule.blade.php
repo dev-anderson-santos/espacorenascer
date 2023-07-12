@@ -168,7 +168,7 @@ $('#agendar').on('click', function () {
                         // console.log(horario.data);
                         dados += '<tr><td>' + horario.hora + '</td><td>' + horario.data + '</td></tr>'
                     })
-                    bootbox.confirm({
+                    bootbox.alert({
                         title: 'Agendamento realizado com sucesso!',
                         message: `
                         <div class="alert alert-info" style="font-size: 15pt" role="alert">
@@ -191,28 +191,13 @@ $('#agendar').on('click', function () {
                                 </table>
                             </div>
                         </div>`,
-                        buttons: {
-                            confirm: {
-                                label: 'Sim',
-                                className: 'btn-success'
-                            },
-                            cancel: {
-                                label: 'Não',
-                                className: 'btn-danger'
-                            }
-                        },
-                        callback: function (result) {
-                            if (result) {
-                                location.reload();
-                            } else {
-                                $('#agendar').html('Agendar');
-                                $('#agendar').prop('disabled', false);
-                                $('#agendar').remove('i');
-                            }
+                        callback: function () {
+                            location.reload();
                         }
                     });
                 } else {
                     bootbox.alert({
+                        title: 'Informação',
                         message: response.message,
                         callback: function () {
                             location.reload();
