@@ -193,7 +193,7 @@ class ScheduleController extends Controller
                         'date' => $dados['date'],
                         'hour_id' => $dados['hour_id'],
                         'room_id' => $dados['room_id'],
-                        'user_id' => $dados['user_id']
+                        // 'user_id' => $dados['user_id']
                     ])->first();
 
                     if($scheduleInUse) {
@@ -224,8 +224,19 @@ class ScheduleController extends Controller
                         $dados['data_nao_faturada_id'] = $dataNaoFaturada->id;
                     }
 
-                    // TODO: Verificar se o dia a ser espelhado, já foi cadastrado por alguém e
-                    // mostrar uma mensagem dizendo que a data tal não pode ser reservada
+                    $scheduleInUse = ScheduleModel::where([
+                        'date' => $dados['date'],
+                        'hour_id' => $dados['hour_id'],
+                        'room_id' => $dados['room_id'],
+                        // 'user_id' => $dados['user_id']
+                    ])->first();
+
+                    if($scheduleInUse) {
+                        $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
+                        $arrDataEmUso[$key]['hora'] = HourModel::where('id', $dados['hour_id'])->first()->hour;
+                        $horariosEmUso = true;
+                        continue;
+                    }
 
                     $dados['is_mirrored'] = 1;
                     SchedulesNextMonthModel::create($dados);
@@ -549,9 +560,7 @@ class ScheduleController extends Controller
         try {
             DB::beginTransaction();
             $schedule = ScheduleModel::findOrFail($dados['schedule_id']);
-
-            $tipo = $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo';
-            
+            $tipo = $schedule->tipo == 'Fixo' ? 'Avulso' : 'Fixo';            
             $dia = $schedule->date;
 
             $datasNaoFaturadas = DataNaoFaturadaModel::all();
@@ -561,11 +570,11 @@ class ScheduleController extends Controller
                 }
             }
 
-            $now = Carbon::now()->format('Y-m-d');
-            if (Carbon::parse($now)->diffInDays($dia, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($dia)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
-                $dados['status'] = 'Finalizado';
-                $dados['finalizado_em'] = now()->format('Y-m-d H:i:s');
-            } 
+            // $now = Carbon::now()->format('Y-m-d');
+            // if (Carbon::parse($now)->diffInDays($dia, false) <= 1 && now()->format('Y-m-d H:i') > Carbon::parse(Carbon::parse($dia)->format('Y-m-d') . ' ' . SettingsModel::first()->hora_fechamento)->subDays()->format('Y-m-d H:i')) {
+            //     $dados['status'] = 'Finalizado';
+            //     $dados['finalizado_em'] = now()->format('Y-m-d H:i:s');
+            // } 
 
             if ($tipo == 'Fixo') {
 
@@ -573,6 +582,7 @@ class ScheduleController extends Controller
                 $dados['created_by'] = auth()->user()->id;
                 $dados['hour_id'] = $schedule->hour_id;
                 $dados['room_id'] = $schedule->room_id;
+                $dados['valor'] = $schedule->valor;
                 $dados['tipo'] = $tipo;
 
                 $arrDays = getWeekDays($dia);
@@ -590,10 +600,7 @@ class ScheduleController extends Controller
                         'user_id' => $schedule->user_id,
                         'room_id' => $schedule->room_id,
                         'hour_id' => $schedule->hour_id,
-                        'date' => $dados['date'],
-                        // 'status' => $schedule->status,
-                        // 'tipo' => $schedule->tipo,
-                        // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
+                        'date' => $dados['date']
                     ])->first();
 
                     if (!empty($schedule_temp)) {
@@ -627,8 +634,7 @@ class ScheduleController extends Controller
                         $dados['status'] = 'Ativo';
                         $dados['finalizado_em'] = NULL;
                         $dados['data_nao_faturada_id'] = NULL;
-                    }
-                    
+                    }                    
                 }
 
                 foreach ($arrDaysNextMonth as $key => $value) {
@@ -645,9 +651,7 @@ class ScheduleController extends Controller
                         'room_id' => $schedule->room_id,
                         'hour_id' => $schedule->hour_id,
                         'date' => $dados['date'],
-                        //'status' => $schedule->status,
-                        // 'tipo' => $schedule->tipo,
-                        //'data_nao_faturada_id' => $dados['data_nao_faturada_id'] ?? NULL
+                        'valor' => $schedule->valor
                     ])->first();
                     
                     if (!empty($schedule_temp)) {
@@ -655,6 +659,19 @@ class ScheduleController extends Controller
                             'tipo' => $tipo
                         ]);
                     } else {
+                        $schedule_temp_other_user = ScheduleModel::where([
+                            'date' => $dados['date'],
+                            'hour_id' => $dados['hour_id'],
+                            'room_id' => $dados['room_id'],
+                        ])->first();
+
+                        if($schedule_temp_other_user) {
+                            $arrDataEmUso[$key]['data'] = Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y');
+                            $arrDataEmUso[$key]['hora'] = HourModel::where('id', $dados['hour_id'])->first()->hour;
+                            $horariosEmUso = true;
+                            continue;
+                        }
+
                         $dados['is_mirrored'] = 1;
                         SchedulesNextMonthModel::create($dados);
                         $dados['data_nao_faturada_id'] = NULL;
@@ -665,6 +682,13 @@ class ScheduleController extends Controller
                 return response()->json(['status' => 'well-done', 'horariosEmUso' => $horariosEmUso, 'arrDataEmUso' => $arrDataEmUso, 'message' => 'Agendamento atualizado com sucesso!']);
             }
 
+            // Quando for atualizar para Avulso,
+            // Atualiza a data escolhida para Avulso e
+            // Remove as demais datas a frente
+            $schedule->update([
+                'tipo' => $tipo
+            ]);
+            
             $arrDaysCurrentSchedule = getWeekDays($schedule->date);
 
             foreach ($arrDaysCurrentSchedule as $date) {
@@ -676,39 +700,83 @@ class ScheduleController extends Controller
                     'room_id' => $schedule->room_id,
                     'hour_id' => $schedule->hour_id,
                     'date' => $dados['date'],
-                    // 'status' => $schedule->status,
-                    // 'tipo' => $schedule->tipo,
-                    // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
+                    'tipo' => 'Fixo'
                 ])->first();
-
+                
                 if (!empty($schedule_temp)) {
 
-                    $schedule_temp->update([
-                        'tipo' => $tipo
-                    ]);
-                }
+                    $schedule_temp_next_month = SchedulesNextMonthModel::where([
+                        'user_id' => $schedule_temp->user_id,
+                        'room_id' => $schedule_temp->room_id,
+                        'hour_id' => $schedule_temp->hour_id,
+                        'date' => $date
+                    ])->first();
+    
+                    // Removendo as demais datas dos próximos meses que estavam reservadas para espelhar
+                    if (!empty($schedule_temp_next_month)) {
+                        $schedule_temp_next_month->delete();
+                    }
+
+                    // Removendo as demais datas do mês atual  
+                    if ($schedule_temp->id != $schedule->id) {
+                        $schedule_temp->delete();                    
+                    }                  
+                }                
             }
 
             $newDay = Carbon::parse(end($arrDaysCurrentSchedule))->addDays(7)->format('Y-m-d');
             $arrDaysNextMonth = getWeekDaysNextMonth($newDay);
 
             foreach ($arrDaysNextMonth as $date) {
-                
-                $schedule_temp = SchedulesNextMonthModel::where([
+                $schedule_temp = ScheduleModel::where([
                     'user_id' => $schedule->user_id,
                     'room_id' => $schedule->room_id,
                     'hour_id' => $schedule->hour_id,
                     'date' => $date,
-                    // 'status' => $schedule->status,
-                    // 'tipo' => $schedule->tipo,
-                    // 'data_nao_faturada_id' => $schedule->data_nao_faturada_id
+                    'tipo' => 'Fixo'
                 ])->first();
+                // Removendo as demais datas do dos próximos meses
+                if (!empty($schedule_temp) && $schedule_temp->id != $schedule->id) {
+                    $schedule_temp->delete();
+                }
+                
+                $schedule_temp_next_month = SchedulesNextMonthModel::where([
+                    'user_id' => $schedule->user_id,
+                    'room_id' => $schedule->room_id,
+                    'hour_id' => $schedule->hour_id,
+                    'date' => $date
+                ])->first();
+                // Removendo as demais datas dos próximos meses que estavam reservadas para espelhar
+                if (!empty($schedule_temp_next_month)) {
+                    $schedule_temp_next_month->delete();
+                }
+            }
 
-                if (!empty($schedule_temp)) {
+            $newDay = Carbon::parse(end($arrDaysNextMonth))->addDays(7)->format('Y-m-d');
+            $arrDaysNextMonth = getWeekDaysNextMonth($newDay);
 
-                    $schedule_temp->update([
-                        'tipo' => $tipo
-                    ]);
+            foreach ($arrDaysNextMonth as $date) {
+                $schedule_temp = ScheduleModel::where([
+                    'user_id' => $schedule->user_id,
+                    'room_id' => $schedule->room_id,
+                    'hour_id' => $schedule->hour_id,
+                    'date' => $date,
+                    'tipo' => 'Fixo'
+                ])->first();
+                // Removendo as demais datas do dos próximos meses
+                if (!empty($schedule_temp) && $schedule_temp->id != $schedule->id) {
+                    $schedule_temp->delete();
+                }
+                
+                $schedule_temp_next_month = SchedulesNextMonthModel::where([
+                    'user_id' => $schedule->user_id,
+                    'room_id' => $schedule->room_id,
+                    'hour_id' => $schedule->hour_id,
+                    'date' => $date
+                ])->first();
+                // Removendo as demais datas dos próximos meses que estavam reservadas para espelhar
+                if (!empty($schedule_temp_next_month)) {
+                    $schedule_temp_next_month->delete();
                 }
             }
 
@@ -718,7 +786,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            //dd($e);
+            dd($e);
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao mudar o tipo de agendamento.']);
         }
     }
