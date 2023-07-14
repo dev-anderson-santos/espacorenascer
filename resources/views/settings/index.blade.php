@@ -94,7 +94,7 @@
 
             <div class="clearfix">&nbsp;</div>
 
-            {{-- <fieldset>
+            <fieldset>
                 <legend>Agendamentos duplicados</legend>
                 <div class="row">
                     <div class="col-md-12">
@@ -127,7 +127,7 @@
                 </div>
             </fieldset>
             
-            <div class="clearfix">&nbsp;</div> --}}
+            <div class="clearfix">&nbsp;</div>
 
             <div class="row">
                 {{--

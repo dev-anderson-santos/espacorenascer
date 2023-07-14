@@ -27,9 +27,9 @@ class SettingsController extends Controller
         $setting = SettingsModel::first();
         $datas_nao_faturadas = DataNaoFaturadaModel::all();
         $rooms = RoomModel::all();
-        // $duplicatedSchedules = Arr::flatten($this->duplicatedSchedules());
+        $duplicatedSchedules = Arr::flatten($this->duplicatedSchedules());
 
-        return view('settings.index', compact('setting', 'datas_nao_faturadas', 'rooms'));
+        return view('settings.index', compact('setting', 'datas_nao_faturadas', 'rooms', 'duplicatedSchedules'));
     }
 
     /**
@@ -500,7 +500,7 @@ class SettingsController extends Controller
             }
         }
 
-        // return $duplicatedSchedules;
+        return $duplicatedSchedules;
     }
 
     // public function generateInvoicing()
