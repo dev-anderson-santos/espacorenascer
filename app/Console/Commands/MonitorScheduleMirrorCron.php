@@ -3,16 +3,12 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
-use App\Models\HourModel;
 use App\Models\ScheduleModel;
-use App\Mail\NotifyMirrorEvent;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\ScheduleNextMonthMirrorLog;
 use App\Models\DataNaoFaturadaModel;
-use Illuminate\Support\Facades\Mail;
 use App\Models\SchedulesNextMonthModel;
-use Illuminate\Console\Scheduling\Schedule;
 
 class MonitorScheduleMirrorCron extends Command
 {
@@ -75,6 +71,7 @@ class MonitorScheduleMirrorCron extends Command
 
             $arrLastDays = [];
             $arrDados = [];
+            $jsonDados = [];
             foreach ($schedulesNextMonth as $scheduleNext) {
 
                 $schedule_temp = ScheduleModel::where([
@@ -125,6 +122,10 @@ class MonitorScheduleMirrorCron extends Command
                             'valor' => $scheduleNext->valor
                         ]);
                     });
+
+                    $jsonDados[$scheduleNext->user_id]['schedule_date'][] = $scheduleNext->date;
+                    $jsonDados[$scheduleNext->user_id]['schedule_hour_id'][] = $scheduleNext->hour_id;
+                    $jsonDados[$scheduleNext->user_id]['schedule_room_id'][] = $scheduleNext->room_id;
 
                     if (Carbon::parse($scheduleNext->date)->addDays(7) > Carbon::parse($scheduleNext->date)) {
                         $arr = getWeekDays($scheduleNext->date);
@@ -206,6 +207,7 @@ class MonitorScheduleMirrorCron extends Command
                 ScheduleNextMonthMirrorLog::create([
                     'message' => $message,
                     'email' => 'dev.anderson.santos@gmail.com',
+                    'log' => json_encode($jsonDados)
                 ]);
 
                 DB::commit();
