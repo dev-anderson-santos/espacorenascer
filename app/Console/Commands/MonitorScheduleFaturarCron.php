@@ -15,7 +15,7 @@ class MonitorScheduleFaturarCron extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:faturar';
+    protected $signature = 'schedule:faturar {--now}';
 
     /**
      * The console command description.
@@ -42,6 +42,7 @@ class MonitorScheduleFaturarCron extends Command
     public function handle()
     {
         try {
+            $faturarAgora = $this->option('now');
             DB::beginTransaction();
 
             $schedules = ScheduleModel::where('status', 'Finalizado')
@@ -53,10 +54,12 @@ class MonitorScheduleFaturarCron extends Command
             $totalSchedules = $schedules->get()->count();
   
             $faturado = false;
-            if (now()->format('d') == 1 && $totalSchedules > 0) {
+            if ((now()->format('d') == 1 && $totalSchedules > 0) || $faturarAgora) {
                 $schedules->update(['faturado' => 1]);
                 $faturado = true; 
             }
+
+            $faturado = $faturarAgora;
 
             if ($totalSchedules > 0 && $faturado) {
 
