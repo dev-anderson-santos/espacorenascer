@@ -1,6 +1,9 @@
 <?php
 
+use App\User;
 use Carbon\Carbon;
+use App\Models\ScheduleModel;
+use Illuminate\Support\Facades\DB;
 // use App\Models\DenunciaAtendimentoModel;
 
 if(!function_exists('removeCaracteresEspeciais')) {
@@ -446,5 +449,53 @@ if (!function_exists('getWeekDaysNextMonth')) {
         }
 
         return $arrDays;
+    }
+}
+
+if (!function_exists('getUsers')) {
+    function getUsers()
+    {
+        return (new User())::orderBy('name', 'ASC')->get();
+    }
+}
+
+if (!function_exists('faturar')) {
+    function faturar()
+    {
+        try {
+            DB::beginTransaction();
+
+            $totalSchedules = 0;
+
+            if ((now()->format('d') == 1)) {
+                $schedules = ScheduleModel::where('status', 'Finalizado')
+                    ->where('faturado', '!=', 1)
+                    ->whereBetween('date', [
+                        now()->subMonth()->startOfMonth()->format('Y-m-d'),
+                        now()->subMonth()->endOfMonth()->format('Y-m-d')
+                    ]);
+    
+                $totalSchedules = $schedules->get()->count();
+                $schedules->update(['faturado' => 1]);
+            }
+
+            if ($totalSchedules > 0) {
+
+                DB::commit();
+
+                // dd('Agendamentos faturados com sucesso! Data atual: ' . now()->format('d/m/Y H:i:s'));
+            }/*  else if ($totalSchedules == 0) {
+                DB::rollback();
+                dd('Não há agendamentos para faturar. Data atual: ' . now()->format('d/m/Y H:i:s'));
+            } else if (now()->format('d') != 1 && $totalSchedules > 0) {
+                DB::rollback();
+                dd('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y H:i:s'));
+            } */
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            // $e->getMessage();
+            // $this->error('Ocorreu um erro ao faturar os agendamentos.');
+        }
     }
 }
