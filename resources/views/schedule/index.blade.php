@@ -20,8 +20,8 @@
                 @csrf
                 <div class="form-row">
                     <div class="col-md-4">
-                        <label for="">Data:</label>
-                        <select class="form-control" name="day" id="data-agendamento" onchange="$(this).parents('form').submit()"">
+                        <label for="data-agendamento">Data:</label>
+                        <select class="form-control" name="day" id="data-agendamento" onchange="$(this).parents('form').submit()">
                             <option value="">-- Selecione --</option>
                             @foreach ($dataSelect as $d)
                             <option value="{{ $d->format('Y-m-d') }}" {{ !empty($_day) && $_day == $d->format('Y-m-d') ? 'selected' : '' }}>{{ $d->isoFormat('dddd, DD \d\e MMMM \d\e Y') }} </option>
@@ -50,11 +50,9 @@
                                         $schedule = \App\Models\ScheduleModel::where(['hour_id' => $hour->id, 'date' => $_day, 'room_id' => $room->id])->orderBy('hour_id', 'ASC')->first();
                                     @endphp                               
                                     <td style="text-align: center; {{ (!empty($schedule) && $schedule->tipo == 'Avulso') ? 'background:#17a2b8!important' : '' }}">
-                                        {{-- @if (empty($schedule) && $hour->hour < \Carbon\Carbon::now()->format('H:i:s') && $_day == \Carbon\Carbon::now()->format('Y-m-d'))
-                                            Indisponível
-                                        @elseif (!empty($schedule)) --}}
                                         @if (!empty($schedule))
-                                            <a href="javascript:void(0)" style="{{ $schedule->tipo == 'Avulso' ? 'color:black!important' : '' }}" onclick="modalGlobalOpen('{{ route('schedule.modal-schedule', ['room_id' => $room->id, 'hour_id' => $hour->id, 'user_id' => auth()->user()->id, 'data' => $_day]) }}', 'Agendamento')">
+                                            <a href="javascript:void(0)" style="{{ $schedule->tipo == 'Avulso' ? 'color:black!important' : '' }}" 
+                                                onclick="modalGlobalOpen('{{ route('schedule.modal-schedule', ['room_id' => $room->id, 'hour_id' => $hour->id, 'user_id' => auth()->user()->id, 'data' => $_day]) }}', 'Agendamento')">
                                                 {{ $schedule->user->name }}
                                             </a>
                                         @else

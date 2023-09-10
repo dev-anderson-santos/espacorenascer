@@ -98,9 +98,15 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/release-notes', 'Admin\AdministratorController@releaseNotes')->name('help.release-notes');
             });
 
+            
+        });
+
+        Route::group(['prefix' => 'admin', 'middleware' => 'is_super_admin', 'as' => 'admin'], function () {
             Route::group(['prefix' => 'reports'], function () {
-                Route::get('/yield-per-room', 'Admin\ReportsController@index')->name('.reports.index');
-                Route::post('/yield-per-room', 'Admin\ReportsController@byRooms')->name('.reports.yield-per-room');
+                Route::get('/yield-per-period', 'Admin\ReportsController@yeldsPerPeriodIndex')->name('.reports.yelds-per-period-index');
+                Route::post('/yield-per-period', 'Admin\ReportsController@yeldsPerPeriod')->name('.reports.yield-per-period');
+                Route::get('/yield-per-customer', 'Admin\ReportsController@yeldsPerCustomerIndex')->name('.reports.yield-per-customer-index');
+                Route::post('/yield-per-customer', 'Admin\ReportsController@yeldsPerCustomer')->name('.reports.yield-per-customer');
                 // Route::post('/', 'Admin\ReportsController@showSpecificInvoicing')->name('reports.show-specific-invoicing');
             });
         });

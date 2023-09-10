@@ -14,6 +14,11 @@ class AdministratorController extends Controller
 {
     public function dashboard()
     {
+        // TODO: 
+        // Colocar usuários online
+        // Total de agendamentos de 5 meses
+        // Total recebido no ano e no ano passado
+        // Usuários ativos em 5 meses
         $activeUsers = ScheduleModel::whereHas('user', function($query) {
                             $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
                         })

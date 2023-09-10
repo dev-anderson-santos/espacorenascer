@@ -2,83 +2,89 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
+use App\User;
 use Illuminate\Http\Request;
 use App\Models\ScheduleModel;
-use App\Models\SettingsModel;
 use App\Http\Controllers\Controller;
 
 class ReportsController extends Controller
 {
-    public function index()
+
+    public function yeldsPerPeriodIndex()
     {
-        return view('administrator.reports.index');
+        return view('administrator.reports.yelds.per-period');
     }
 
-    public function byRooms(Request $request)
+    public function yeldsPerPeriod(Request $request)
     {
         $dados = $request->all();
 
-        // dd($dados);
+        $clientes = User::whereNotIn('id', [1, 2, 5])->orderBy('name')->get()->map(function($cliente) use ($dados) {
+            $concluidosMesSelecionadoAvulso = ScheduleModel::selectRaw('user_id, date, count(*), sum(valor)')->where([
+                'user_id' => $cliente->id,
+                'status' => 'Finalizado',
+                'tipo' => 'Avulso'
+            ])
+            ->whereBetween('date', [$dados['data01'], $dados['data02']])
+            ->whereNull('data_nao_faturada_id')
+            ->groupBy('user_id','date')
+            ->get();
 
-        $setting = SettingsModel::first();
-        $valorFixo = $setting->valor_fixo;
-        $valorAvulso = $setting->valor_avulso;
+            $concluidosMesSelecionadoFixo = ScheduleModel::selectRaw('user_id, date, count(*) as total_agendamento, sum(valor) as total_valor')->where([
+                'user_id' => $cliente->id,
+                'status' => 'Finalizado',
+                'tipo' => 'Fixo'
+            ])
+            ->whereBetween('date', [$dados['data01'], $dados['data02']])
+            ->whereNull('data_nao_faturada_id')
+            ->groupBy('user_id', 'date')
+            ->get();
 
-        // TODO: agrupar por mês e sala
+            if ($concluidosMesSelecionadoAvulso->count() > 0 || $concluidosMesSelecionadoFixo->count() > 0) {
+                $cliente->concluidosAgendamentosMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_agendamento') + $concluidosMesSelecionadoFixo->sum('total_agendamento');
+                $cliente->totalMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_valor') + $concluidosMesSelecionadoFixo->sum('total_valor');
+            }
 
-        $concluidosMesAnteriorAvulso = ScheduleModel::whereHas('user', function($query) {
-            $query->where('email', '!=', 'danielamontechiaregentil@gmail.com');
-        })
-        ->select('room_id')
-        ->where([
-            // 'user_id' => $id,
+            return $cliente;
+        })->filter(function($cliente) {
+            return $cliente->concluidosAgendamentosMesSelecionado > 0;
+        });
+
+        return view('administrator.reports.yelds.per-period', [
+            'clientes' => $clientes,
+            '_data01' => $dados['data01'],
+            '_data02' => $dados['data02'],
+        ]);
+    }
+
+    public function yeldsPerCustomerIndex()
+    {
+        return view('administrator.reports.yelds.per-customer');
+    }
+
+    public function yeldsPerCustomer(Request $request)
+    {
+        $dados = $request->all();
+
+        $concluidosMesSelecionado = ScheduleModel::where([
+            'user_id' => $dados['user_id'],
             'status' => 'Finalizado',
-            // 'tipo' => 'Avulso',
             // 'faturado' => 1
         ])
-        ->whereIn('tipo', ['Fixo', 'Avulso'])
-        ->whereMonth('date', $dados['month'] ?? now()->format('m'))
-        ->whereYear('date', Carbon::parse($dados['year'])->format('Y') ?? now()->format('y'))
-        ->whereNull('data_nao_faturada_id')
-        ->get()
-        ->groupBy('room_id');
-
-        dd($concluidosMesAnteriorAvulso);
-        foreach($concluidosMesAnteriorAvulso as $item) {
-            dd($item);
-        }
-
-        $concluidosMesAnteriorFixo = ScheduleModel::where([
-            // 'user_id' => $id,
-            'status' => 'Finalizado',
-            'tipo' => 'Fixo',
-            'faturado' => 1
-        ])
-        ->whereMonth('date', Carbon::parse($dados['month'])->format('m'))
-        ->whereYear('date', Carbon::parse($dados['year'])->format('Y'))
+        ->whereBetween('date', [$dados['data01'], $dados['data02']])
         ->whereNull('data_nao_faturada_id')
         ->get();
 
-        $concluidosAgendamentosMesAnterior = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();
+        $qtdAgendamentos = $concluidosMesSelecionado->count();
+        $totalValorMesSelecionado = $concluidosMesSelecionado->sum('valor');
 
-        // é preciso calcular com o valor fixo e o valor avulso
-        // Veirificar se algums horario foi escolhido como avulso
-        $totalAvulsoMesAnterior = 0;
-        if ($concluidosMesAnteriorAvulso->count() > 0) {
-        $totalAvulsoMesAnterior = $concluidosMesAnteriorAvulso->count() * $valorAvulso;
-        }
-
-        $totalFixoMesAnterior = 0;
-        if ($concluidosMesAnteriorFixo->count() > 0) {
-        $totalFixoMesAnterior = $concluidosMesAnteriorFixo->count() * $valorFixo;
-        }
-
-        $totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
-
-        return view('administrator.reports.income-per-room', [
-            '_month' => $dados['month'],
-            '_year' => $dados['year'],
+        return view('administrator.reports.yelds.per-customer', [
+            'user_id' => $dados['user_id'],
+            'cliente' => (new User())::find($dados['user_id']),
+            'qtdAgendamentos' => $qtdAgendamentos,
+            'totalValorMesSelecionado' => $totalValorMesSelecionado,
+            '_data01' => $dados['data01'],
+            '_data02' => $dados['data02'],
         ]);
     }
 }

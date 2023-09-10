@@ -310,11 +310,16 @@ return [
         // [
         //     'text' => 'Relatórios',
         //     'icon' => 'fas fa-chart-line',
-        //     'can'  => 'is_admin',
+        //     'can'  => 'is_super_admin',
         //     'submenu' => [
         //         [
-        //             'text' => 'Rendimento por sala',
-        //             'url'  => '/app/admin/reports/yield-per-room',
+        //             'text' => 'Rendimento por período',
+        //             'url'  => '/app/admin/reports/yield-per-period',
+        //             'icon' => 'fas fa-file-invoice-dollar',
+        //         ],
+        //         [
+        //             'text' => 'Rendimento por cliente',
+        //             'url'  => '/app/admin/reports/yield-per-customer',
         //             'icon' => 'fas fa-file-invoice-dollar',
         //         ],
         //         // [
@@ -468,16 +473,16 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                 ],
             ],

@@ -98,7 +98,7 @@
         <script src="{{ asset('js/user/index.js') }}"></script>
         <script src="{{ asset('js/settings/index.js') }}"></script>
         <script src="{{ asset('js/rooms/index.js') }}"></script>
-        {{-- <script src="{{ asset('js/reports/index.js') }}"></script> --}}
+        <script src="{{ asset('js/reports/index.js') }}"></script>
         <script src="{{ asset('js/admin/index.js') }}"></script>
 
         {{-- Configured Scripts --}}

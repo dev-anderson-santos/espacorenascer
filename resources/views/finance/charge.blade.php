@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="">Ano:</label>
-                    <input type="number" min="2018" max="2099" name="year" class="form-control" required step="1" value="{{ now()->format('Y') }}" />
+                    <input type="number" min="2018" max="2099" name="year" class="form-control" required step="1" value="{{ !empty($_year) ? $_year : now()->format('Y') }}" />
                 </div>
                 <div class="col-md-2">
                     <label for="">&nbsp;</label>
