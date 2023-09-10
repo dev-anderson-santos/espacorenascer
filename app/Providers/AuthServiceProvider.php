@@ -29,5 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is_admin', function (User $user) {
             return $user->is_admin == 1;
         });
+
+        Gate::define('is_super_admin', function (User $user) {
+            return $user->is_admin == 1 && ($user->email == 'danielamontechiaregentil@gmail.com' || $user->email == 'dev.anderson.santos@gmail.com');
+        });
     }
 }
