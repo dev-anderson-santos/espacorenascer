@@ -57,7 +57,9 @@
                 As datas abaixo não serão faturadas:
                 <ul>
                 @foreach ($arrDatas as $value)
+                    @if(\Carbon\Carbon::parse($value)->format('Y') == now()->format('Y'))
                     <li>{{ \Carbon\Carbon::parse($value)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</li>
+                    @endif
                 @endforeach
                 </ul>
             </div>
