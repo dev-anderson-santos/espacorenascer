@@ -14,6 +14,28 @@
                     <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#r1-6-1" aria-expanded="false" class="collapsed text-bold">
+                                    Release 1.6.1 - 10/09/2023
+                                </a>
+                            </h4>
+                            <div class="box-tools pull-right">
+                                <span data-toggle="tooltip" title="" class="badge bg-blue" data-original-title="Atualizações aplicadas"></span>
+                            </div>
+                        </div>
+                        <div id="r1-6-1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="box-body no-border">
+                                <ul>
+                                    <li>Rendimento por período e por pessoa.</li>
+                                    <li>Foi adicionado o super administrador.</li>
+                                    <li>Ajuste ao exibir a data não faturada.</li>
+                                    <li>Faturar de forma automática.</li>                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box-default no-margin-bottom">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#r1-5-0" aria-expanded="false" class="collapsed text-bold">
                                     Release 1.5.0 - 04/08/2023
                                 </a>
