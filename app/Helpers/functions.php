@@ -470,32 +470,21 @@ if (!function_exists('faturar')) {
             if ((now()->format('d') == 1)) {
                 $schedules = ScheduleModel::where('status', 'Finalizado')
                     ->where('faturado', '!=', 1)
+                    ->whereNull('data_nao_faturada_id')
                     ->whereBetween('date', [
                         now()->subMonth()->startOfMonth()->format('Y-m-d'),
                         now()->subMonth()->endOfMonth()->format('Y-m-d')
                     ]);
     
                 $totalSchedules = $schedules->get()->count();
-                $schedules->update(['faturado' => 1]);
+                if ($totalSchedules > 0) {
+                    $schedules->update(['faturado' => 1]);
+                    DB::commit();
+                }
             }
-
-            if ($totalSchedules > 0) {
-
-                DB::commit();
-
-                // dd('Agendamentos faturados com sucesso! Data atual: ' . now()->format('d/m/Y H:i:s'));
-            }/*  else if ($totalSchedules == 0) {
-                DB::rollback();
-                dd('Não há agendamentos para faturar. Data atual: ' . now()->format('d/m/Y H:i:s'));
-            } else if (now()->format('d') != 1 && $totalSchedules > 0) {
-                DB::rollback();
-                dd('Agendamento não pode ser faturado pois não é o primeiro dia do mês. Data atual: ' . now()->format('d/m/Y H:i:s'));
-            } */
-            
         } catch (\Exception $e) {
             DB::rollback();
             // $e->getMessage();
-            // $this->error('Ocorreu um erro ao faturar os agendamentos.');
         }
     }
 }

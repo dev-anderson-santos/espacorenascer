@@ -46,6 +46,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        faturar();
         if ($user->is_admin == 1) {
             return redirect('/app/admin/dashboard');
         }
