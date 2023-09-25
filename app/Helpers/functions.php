@@ -492,10 +492,10 @@ if (!function_exists('faturar')) {
 
 if(!function_exists('excel')) {
 
-    function excel(string $view, string $fileName, $data = null)
-    {
-        return \Excel::download(new \App\Exports\ExcelExport($view, $data), "{$fileName}.xlsx");
-    }
+    // function excel(string $view, string $fileName, $data = null)
+    // {
+    //     return \Excel::download(new \App\Exports\ExcelExport($view, $data), "{$fileName}.xlsx");
+    // }
 }
 
 if(!function_exists('pdf')) {
