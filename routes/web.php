@@ -98,6 +98,10 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/release-notes', 'Admin\AdministratorController@releaseNotes')->name('help.release-notes');
             });
 
+            Route::group(['prefix' => 'reports'], function() {
+                Route::get('/cobranca', 'FinanceController@relatorioCobranca')->name('.reports.cobranca');
+            });
+
             
         });
 

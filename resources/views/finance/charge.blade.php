@@ -8,9 +8,16 @@
 </style>
 <section class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
+        <div style="display: flex; justify-content: space-between">
+            <div>
                 <h1>Cobrança</h1>
+            </div>
+            <div>
+                {{-- <div class="float-right"> --}}
+                    @if(!empty($clientes))
+                    <a href="{{ route('admin.reports.cobranca', ['month' => $_month ?? null, 'year' => $_year ?? null]) }}" class="btn btn-info btn-circle" title="Gerar Relátorio"><i class="fas fa-print" aria-hidden="true"></i></a>
+                    @endif
+                {{-- </div> --}}
             </div>
         </div>
     </div>
@@ -60,7 +67,7 @@
                 <tr>
                     <th style="text-align: center" scope="col">Profissional</th>
                     <th style="text-align: center" scope="col">Agendamentos</th>
-                    <th style="text-align: center" scope="col">Valor a pagar</th>
+                    <th style="text-align: center" scope="row">Valor a pagar</th>
                     <th style="text-align: center" scope="col">Valor pago</th>
                     <th style="text-align: center" scope="col">Status</th>
                     <th style="text-align: center" scope="col">Ações</th>

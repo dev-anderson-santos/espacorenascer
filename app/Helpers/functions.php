@@ -4,6 +4,7 @@ use App\User;
 use Carbon\Carbon;
 use App\Models\ScheduleModel;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\DenunciaAtendimentoModel;
 
 if(!function_exists('removeCaracteresEspeciais')) {
@@ -486,5 +487,24 @@ if (!function_exists('faturar')) {
             DB::rollback();
             // $e->getMessage();
         }
+    }
+}
+
+if(!function_exists('excel')) {
+
+    function excel(string $view, string $fileName, $data = null)
+    {
+        return \Excel::download(new \App\Exports\ExcelExport($view, $data), "{$fileName}.xlsx");
+    }
+}
+
+if(!function_exists('pdf')) {
+
+    function pdf($view, string $paper = 'a4', string $format = 'landscape', bool $showPagination)
+    {
+        return Pdf::loadHtml($view)->setPaper($paper, $format)->setOption(['enable_php' => $showPagination]);
+            // ->setOptions([
+            //     'isRemoteEnabled' => true
+            // ]);
     }
 }

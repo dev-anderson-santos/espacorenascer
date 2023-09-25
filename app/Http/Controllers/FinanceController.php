@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Models\ScheduleModel;
 use App\Models\SettingsModel;
 use Illuminate\Support\Facades\DB;
+use App\Services\ReportsService;
+use Illuminate\Support\Collection;
 
 class FinanceController extends Controller
 {
@@ -164,5 +166,11 @@ class FinanceController extends Controller
 
             return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao salvar a cobrança.', 'messageError' => $e->getMessage()]);
         }
+    }
+
+    public function relatorioCobranca(Request $request)
+    {
+        $clientes = self::searchChargesByMonth($request);
+        return ReportsService::gerarRelatorioCobranca($clientes);
     }
 }
