@@ -14,6 +14,7 @@
                 <th style="text-align: center" scope="col">Valor a pagar</th>
                 <th style="text-align: center" scope="col">Valor pago</th>
                 <th style="text-align: center" scope="col">Status</th>
+                <th style="text-align: center" scope="col">Status Atual</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@
                             {{ $status['descricao'] }}
                         </span>
                     </td>
+                    <td></td>
                 </tr>
                 @empty
                 @endforelse
