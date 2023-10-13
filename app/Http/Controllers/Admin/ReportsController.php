@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Models\ScheduleModel;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -19,35 +20,65 @@ class ReportsController extends Controller
     {
         $dados = $request->all();
 
-        $clientes = User::whereNotIn('id', [1, 2, 5])->orderBy('name')->get()->map(function($cliente) use ($dados) {
-            $concluidosMesSelecionadoAvulso = ScheduleModel::selectRaw('user_id, date, count(*), sum(valor)')->where([
+        // $clientes = User::whereNotIn('id', [1, 2, 5])->orderBy('name')->get()->map(function($cliente) use ($dados) {
+        //     $concluidosMesSelecionadoAvulso = ScheduleModel::selectRaw('user_id, date, count(*), sum(valor)')->where([
+        //         'user_id' => $cliente->id,
+        //         'status' => 'Finalizado',
+        //         'tipo' => 'Avulso'
+        //     ])
+        //     ->whereBetween('date', [$dados['data01'], $dados['data02']])
+        //     ->whereNull('data_nao_faturada_id')
+        //     ->groupBy('user_id','date')
+        //     ->get();
+
+        //     $concluidosMesSelecionadoFixo = ScheduleModel::selectRaw('user_id, date, count(*) as total_agendamento, sum(valor) as total_valor')->where([
+        //         'user_id' => $cliente->id,
+        //         'status' => 'Finalizado',
+        //         'tipo' => 'Fixo'
+        //     ])
+        //     ->whereBetween('date', [$dados['data01'], $dados['data02']])
+        //     ->whereNull('data_nao_faturada_id')
+        //     ->groupBy('user_id', 'date')
+        //     ->get();
+
+        //     if ($concluidosMesSelecionadoAvulso->count() > 0 || $concluidosMesSelecionadoFixo->count() > 0) {
+        //         $cliente->concluidosAgendamentosMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_agendamento') + $concluidosMesSelecionadoFixo->sum('total_agendamento');
+        //         $cliente->totalMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_valor') + $concluidosMesSelecionadoFixo->sum('total_valor');
+        //     }
+
+        //     return $cliente;
+        // })->filter(function($cliente) {
+        //     return $cliente->concluidosAgendamentosMesSelecionado > 0;
+        // });
+
+        $clientes = User::where('is_admin', '!=', 1)->get()->map(function($cliente) use ($dados) {
+            $concluidosMesAnteriorAvulso = ScheduleModel::where([
                 'user_id' => $cliente->id,
                 'status' => 'Finalizado',
                 'tipo' => 'Avulso'
             ])
             ->whereBetween('date', [$dados['data01'], $dados['data02']])
             ->whereNull('data_nao_faturada_id')
-            ->groupBy('user_id','date')
+            ->whereNotNull('finalizado_em')
             ->get();
 
-            $concluidosMesSelecionadoFixo = ScheduleModel::selectRaw('user_id, date, count(*) as total_agendamento, sum(valor) as total_valor')->where([
+            $concluidosMesAnteriorFixo = ScheduleModel::where([
                 'user_id' => $cliente->id,
                 'status' => 'Finalizado',
                 'tipo' => 'Fixo'
             ])
             ->whereBetween('date', [$dados['data01'], $dados['data02']])
             ->whereNull('data_nao_faturada_id')
-            ->groupBy('user_id', 'date')
+            ->whereNotNull('finalizado_em')
             ->get();
 
-            if ($concluidosMesSelecionadoAvulso->count() > 0 || $concluidosMesSelecionadoFixo->count() > 0) {
-                $cliente->concluidosAgendamentosMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_agendamento') + $concluidosMesSelecionadoFixo->sum('total_agendamento');
-                $cliente->totalMesSelecionado = $concluidosMesSelecionadoAvulso->sum('total_valor') + $concluidosMesSelecionadoFixo->sum('total_valor');
-            }
+            $cliente->concluidosAgendamentosMesSelecionado = $concluidosMesAnteriorAvulso->count() + $concluidosMesAnteriorFixo->count();
+
+            $cliente->totalMesSelecionado = $concluidosMesAnteriorAvulso->sum('valor') + $concluidosMesAnteriorFixo->sum('valor');
+
+            $cliente->totalClientes = $cliente->totalMesSelecionado > 0 ? 1 : 0;
 
             return $cliente;
-        })->filter(function($cliente) {
-            return $cliente->concluidosAgendamentosMesSelecionado > 0;
         });
 
         return view('administrator.reports.yelds.per-period', [
