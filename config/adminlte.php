@@ -307,28 +307,28 @@ return [
             ],
         ],
         
-        // [
-        //     'text' => 'Relatórios',
-        //     'icon' => 'fas fa-chart-line',
-        //     'can'  => 'is_super_admin',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Rendimento por período',
-        //             'url'  => '/app/admin/reports/yield-per-period',
-        //             'icon' => 'fas fa-file-invoice-dollar',
-        //         ],
-        //         [
-        //             'text' => 'Rendimento por cliente',
-        //             'url'  => '/app/admin/reports/yield-per-customer',
-        //             'icon' => 'fas fa-file-invoice-dollar',
-        //         ],
-        //         // [
-        //         //     'text' => 'Pagamentos',
-        //         //     'url'  => '/app/reports/',
-        //         //     'icon' => 'fas fa-file-invoice-dollar',
-        //         // ],
-        //     ],
-        // ],
+        [
+            'text' => 'Relatórios',
+            'icon' => 'fas fa-chart-line',
+            'can'  => 'is_super_admin',
+            'submenu' => [
+                [
+                    'text' => 'Rendimento por período',
+                    'url'  => '/app/admin/reports/yield-per-period',
+                    'icon' => 'fas fa-file-invoice-dollar',
+                ],
+                [
+                    'text' => 'Rendimento por cliente',
+                    'url'  => '/app/admin/reports/yield-per-customer',
+                    'icon' => 'fas fa-file-invoice-dollar',
+                ],
+                // [
+                //     'text' => 'Pagamentos',
+                //     'url'  => '/app/reports/',
+                //     'icon' => 'fas fa-file-invoice-dollar',
+                // ],
+            ],
+        ],
         [
             'text' => 'Salas',
             'url'  => '/app/rooms',
