@@ -75,7 +75,7 @@
                 width: 100%;" --}}>
                     @if(!empty($clientes))
                     <tr>
-                        <td class="text-center text-bold">{{ $clientes->count() }}</td>
+                        <td class="text-center text-bold">{{ $clientes->sum('totalClientes') }}</td>
                         <td class="text-center text-bold">{{ $clientes->sum('concluidosAgendamentosMesSelecionado') }}</td>
                         <td class="text-center text-bold">R$ {{ number_format($clientes->sum('totalMesSelecionado'), 2, ',', '.') }}</td>
                     </tr>
