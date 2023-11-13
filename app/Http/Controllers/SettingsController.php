@@ -25,7 +25,7 @@ class SettingsController extends Controller
     public function index()
     {
         $setting = SettingsModel::first();
-        $datas_nao_faturadas = DataNaoFaturadaModel::all();
+        $datas_nao_faturadas = DataNaoFaturadaModel::orderBy('data', 'desc')->get();
         $rooms = RoomModel::all();
         $duplicatedSchedules = Arr::flatten($this->duplicatedSchedules());
 
@@ -116,10 +116,12 @@ class SettingsController extends Controller
 
     public function adicionarDataNaoFaturada(Request $request)
     {
+        $dados = $request->all();
+        
         try {
             DB::beginTransaction();
 
-            $dataNaoFaturada = DataNaoFaturadaModel::create($request->all());
+            $dataNaoFaturada = DataNaoFaturadaModel::create(['data' => $dados['data']]);
             $schedules = ScheduleModel::all();
             $schedulesNextMonth = SchedulesNextMonthModel::all();
 
@@ -141,11 +143,11 @@ class SettingsController extends Controller
 
             DB::commit();
 
-            return redirect()->route('settings.index')->with(['success' => true, 'message' => 'Data adicionada com sucesso!']);
+            return response()->json(['status' => 'success', 'message' => 'Data adicionada com sucesso!']);
         } catch (\Exception $e) {
             DB::rollback();
             
-            return redirect()->route('settings.index')->with(['error' => true, 'message' => 'Ocorreu um erro ao adicionar a data não faturada!']);
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao adicionar a data não faturada!', 'messageDebug' => $e->getMessage()]);
         }
     }
 

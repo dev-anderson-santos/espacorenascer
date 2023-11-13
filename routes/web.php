@@ -54,7 +54,7 @@ Route::group(['prefix' => 'app'],function () {
                 Route::post('/', 'SettingsController@update')->name('settings.update');
                 Route::get('/update-settings-ajax', 'SettingsController@updateSettingsAjax')->name('settings.update-settings-ajax');
                 Route::get('/modal-adicionar-data-nao-faturada', 'SettingsController@modalAdicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
-                Route::post('/adicionar-data-nao-faturada', 'SettingsController@adicionarDataNaoFaturada')->name('settings.adicionarDataNaoFaturada');
+                Route::post('/salvar-data-nao-faturada', 'SettingsController@adicionarDataNaoFaturada')->name('settings.salvarDataNaoFaturada');
                 Route::get('/remover-data-nao-faturada', 'SettingsController@removerDataNaoFaturada')->name('settings.removerDataNaoFaturada');
                 Route::get('/faturar-agendamentos', 'SettingsController@faturar')->name('settings.faturar');
                 Route::get('/espelhar-agendamentos', 'SettingsController@mirror')->name('settings.mirror');
