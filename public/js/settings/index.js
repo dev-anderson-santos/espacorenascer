@@ -1,7 +1,7 @@
 $(function() {
 
     $('#tabela-datas-nao-faturadas').DataTable({
-        // "order": [[ 0, "asc" ]],
+        "order": [[ 0, "desc" ]],
         "bLengthChange": false, // Oculta o campo Show [10, 15,...] entries
         "paging":   true,
         "filter": false,

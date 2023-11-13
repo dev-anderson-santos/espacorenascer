@@ -66,6 +66,7 @@
                         <table class="table table-striped table-hover table-sm" id="tabela-datas-nao-faturadas" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th style="display: none;">#</th>
                                     <th>Data</th>
                                     <th>Ações</th>
                                 </tr>
@@ -74,6 +75,7 @@
                                 @if (!empty($datas_nao_faturadas))
                                     @foreach ($datas_nao_faturadas as $item)
                                         <tr>
+                                            <td style="display: none;">{{ $item->data }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->data)->isoFormat('dddd, DD \d\e MMMM \d\e Y') }}</td>
                                             <td>
                                                 <a href="javascript:void(0)" onclick="removerDataNaoFaturada({{ $item->id }})" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
