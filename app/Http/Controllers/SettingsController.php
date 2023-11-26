@@ -157,7 +157,7 @@ class SettingsController extends Controller
             DB::beginTransaction();
 
             $dataNaoFaturada = DataNaoFaturadaModel::find($request->data_nao_faturada_id);
-            $schedules = ScheduleModel::all();
+            $schedules = ScheduleModel::withTrashed()->get();
             $schedulesNextMonth = SchedulesNextMonthModel::all();
 
             foreach($schedules as $schedule) {
@@ -184,7 +184,7 @@ class SettingsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             
-            return response()->json(['type' => 'error', 'message' => 'Ocorreu um erro ao remover a data!']);
+            return response()->json(['type' => 'error', 'message' => 'Ocorreu um erro ao remover a data!', 'msgDebug' => $e->getMessage()]);
         }
     }
 
