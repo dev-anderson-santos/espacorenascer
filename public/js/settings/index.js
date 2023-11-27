@@ -218,6 +218,29 @@ $(function() {
         });
     });
 
+    $('#btn-sync-dates').on('click', function () {
+        $(this).prop('disabled', true);
+        $(this).html('Sincronizando <i class="fa fa-spinner fa-spin"></i>');
+        $.get($(this).data('url'), function (response) {
+            if (response.status == 'success') {
+                // $('#btn-sync-dates').remove('<i class="fa fa-spinner fa-spin"></i>')
+                $('#btn-sync-dates').html('Datas sincronizadas');
+                bootbox.alert({
+                    title: 'Informação',
+                    message: response.message,
+                    callback: function() {
+                        location.reload();
+                    }
+                });
+            } else {
+                bootbox.alert({
+                    title: 'Informação',
+                    message: response.message
+                });
+            }
+        })
+    });
+
 })
 
 function removerDataNaoFaturada(data_nao_faturada_id) {
