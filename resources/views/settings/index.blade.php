@@ -61,6 +61,9 @@
 
             <fieldset>
                 <legend>Datas não faturadas</legend>
+                <div class="col-md-8 mb-2">
+                    <button data-url="{{ route('settings.sync-dates') }}" id="btn-sync-dates" class="btn btn-primary btn-warning col-md-4" type="button">Sincronizar datas não faturadas</button>
+                </div> 
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-striped table-hover table-sm" id="tabela-datas-nao-faturadas" style="width:100%">

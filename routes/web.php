@@ -62,6 +62,7 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/generate-invoicing', 'SettingsController@generateInvoicing')->name('settings.generate-invoicing');
                 Route::get('/delete-duplicated-schedules', 'SettingsController@deleteDuplicatedSchedules')->name('settings.delete-duplicated-schedules');
                 Route::get('/update-schedules-price-manually', 'SettingsController@updateSchedulesPriceManually')->name('settings.update-schedules-price-manually');
+                Route::get('/sync-dates', 'SettingsController@syncDates')->name('settings.sync-dates');
             });
 
             Route::group(['prefix' => 'rooms'], function() {

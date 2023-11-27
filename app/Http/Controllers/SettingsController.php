@@ -505,6 +505,45 @@ class SettingsController extends Controller
         return $duplicatedSchedules;
     }
 
+    public function syncDates(Request $request)
+    {        
+        try {
+            DB::beginTransaction();
+
+            $datasNaoFaturadas = DataNaoFaturadaModel::all();
+            $schedules = ScheduleModel::whereNull('data_nao_faturada_id')->get();
+            $schedulesNextMonth = SchedulesNextMonthModel::whereNull('data_nao_faturada_id')->get();
+
+            foreach($schedules as $schedule) {
+                foreach($datasNaoFaturadas as $datasNaoFaturada) {
+                    if (Carbon::parse($schedule->date)->format('Y-m-d') == Carbon::parse($datasNaoFaturada->data)->format('Y-m-d')) {
+                        $schedule->update([
+                            'data_nao_faturada_id' => $datasNaoFaturada->id,
+                        ]);
+                    }
+                }
+            }
+
+            foreach($schedulesNextMonth as $schedule) {
+                foreach($datasNaoFaturadas as $datasNaoFaturada) {
+                    if (Carbon::parse($schedule->date)->format('Y-m-d') == Carbon::parse($datasNaoFaturada->data)->format('Y-m-d')) {
+                        $schedule->update([
+                            'data_nao_faturada_id' => $datasNaoFaturada->id,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json(['status' => 'success', 'message' => 'Datas sincronizadas com sucesso!']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json(['status' => 'error', 'message' => 'Ocorreu um erro ao sincronizar as datas não faturadas.', 'messageDebug' => $e->getMessage()]);
+        }
+    }
+
     // public function generateInvoicing()
     // {
     //     $setting = SettingsModel::first();
