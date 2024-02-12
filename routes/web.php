@@ -1,11 +1,20 @@
 <?php
 
+use App\User;
+use App\Models\ImagemSalaModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Admin\AdministratorController;
 
 Route::get('/', function () {
-    return view('index.index');
+    $imagensSala = ImagemSalaModel::orderBy('order_image', 'ASC')->get()->map(function($image) {
+        $image->filepath = Storage::disk('local')->url('images-room-institutional/'.$image->filename);
+        return $image;
+    });
+
+    // dd(ImagemSalaModel::find(2));
+    return view('index.index', ['imagensSala' => $imagensSala]);
 })->name('index');
 
 Auth::routes();
@@ -63,6 +72,14 @@ Route::group(['prefix' => 'app'],function () {
                 Route::get('/delete-duplicated-schedules', 'SettingsController@deleteDuplicatedSchedules')->name('settings.delete-duplicated-schedules');
                 Route::get('/update-schedules-price-manually', 'SettingsController@updateSchedulesPriceManually')->name('settings.update-schedules-price-manually');
                 Route::get('/sync-dates', 'SettingsController@syncDates')->name('settings.sync-dates');
+
+                Route::group(['prefix' => 'institutional'], function() {
+                    Route::get('/', 'InstitutionalController@index')->name('.institutional.index');
+                    Route::get('/modal-adicionar-imagem-institucional', 'InstitutionalController@modalAdicionarImagem')->name('.institutional.modal-adicionar-imagem-institucional');
+                    Route::post('/save-image', 'InstitutionalController@store')->name('.institutional.save-image');
+                    Route::post('/edit-image', 'InstitutionalController@edit')->name('.institutional.edit-image');
+                    Route::get('/delete-institutional-image', 'InstitutionalController@deleteInstitutionalImage')->name('.institutional.delete-institutional-image');
+                });
             });
 
             Route::group(['prefix' => 'rooms'], function() {
