@@ -14,6 +14,25 @@
                     <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#r1-8-0" aria-expanded="false" class="collapsed text-bold">
+                                    Release 1.8.0 - 12/02/2024
+                                </a>
+                            </h4>
+                            <div class="box-tools pull-right">
+                                <span data-toggle="tooltip" title="" class="badge bg-blue" data-original-title="Atualizações aplicadas"></span>
+                            </div>
+                        </div>
+                        <div id="r1-8-0" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="box-body no-border">
+                                <ul>
+                                    <li>Módulo Institucional - Manter imagens das salas.</li>                             
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box-default no-margin-bottom">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#r1-7-4" aria-expanded="false" class="collapsed text-bold">
                                     Release 1.7.4 - 27/11/2023
                                 </a>

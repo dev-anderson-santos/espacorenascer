@@ -114,6 +114,20 @@
         <div id="portfolio">
             <div class="container-fluid p-0">
                 <div class="row g-0">
+                    @if ($imagensSala->count() > 0)
+                        @foreach ($imagensSala as $item)
+                        <div class="col-lg-4 col-sm-6">
+                            <a class="portfolio-box" href="{{ asset($item->filepath) }}" title="{{ $item->description }}">
+                                <img class="img-fluid" src="{{ asset($item->filepath) }}" alt="{{ $item->description }}" />
+                                <div class="portfolio-box-caption">
+                                    <div class="project-category text-white-50">{{ $item->desscription }}</div>
+                                    {{-- <div class="project-name">Juntos</div> --}}
+                                </div>
+                            </a>
+                        </div>
+                            
+                        @endforeach
+                    @else
                     <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/01.jpeg') }}" title="Espaço Juntos">
                             <img class="img-fluid" src="{{ asset('images/salas/01.jpeg') }}" alt="..." />
@@ -168,6 +182,7 @@
                             </div>
                         </a>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

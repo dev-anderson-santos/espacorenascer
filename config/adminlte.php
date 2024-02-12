@@ -337,9 +337,22 @@ return [
         ],
         [
             'text' => 'Configurações',
-            'url'  => '/app/settings',
             'icon' => 'fas fa-cog',
             'can'  => 'is_admin',
+            'submenu' => [
+                [
+                    'text' => 'Gerais',
+                    'url'  => '/app/settings',
+                    'icon' => 'fas fa-file-code',
+                    'can'  => 'is_admin',
+                ],
+                [
+                    'text' => 'Área Institucional',
+                    'url'  => '/app/settings/institutional',
+                    'icon' => 'fas fa-file-code',
+                    'can'  => 'is_admin',
+                ],
+            ],
         ],
         [
             'text' => 'Ajuda',

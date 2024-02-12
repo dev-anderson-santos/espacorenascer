@@ -100,6 +100,7 @@
         <script src="{{ asset('js/rooms/index.js') }}"></script>
         <script src="{{ asset('js/reports/index.js') }}"></script>
         <script src="{{ asset('js/admin/index.js') }}"></script>
+        <script src="{{ asset('js/settings/institutional/index.js') }}"></script>
 
         {{-- Configured Scripts --}}
         @include('adminlte::plugins', ['type' => 'js'])
