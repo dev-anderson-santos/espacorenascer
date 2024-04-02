@@ -7,7 +7,7 @@
         @elseif ($novoAgendamento && auth()->user()->is_admin == 1)
         <span style="font-weight: 800;">Profissional:</span>
         <select class="form-control" name="user" id="user-id">
-            @foreach (\App\User::all() as $item)
+            @foreach (\App\User::orderBy('name',  'asc')->get() as $item)
                 <option value="{{ $item->id }}">{{ $item->name }}</option>
             @endforeach
         </select>
