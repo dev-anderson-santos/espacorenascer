@@ -100,11 +100,11 @@ class RoomController extends Controller
             
             DB::commit();
             
-            return redirect()->route('settings.index')->with(['type' => true, 'message' => 'Sala atualizada com sucesso!']);
+            return redirect()->route('room.index')->with(['type' => true, 'message' => 'Sala atualizada com sucesso!']);
         } catch (Exception $e) {
             DB::rollback();
             
-            return redirect()->route('settings.index')->with(['type' => false, 'message' => 'Ocorreu um erro ao atualizar a sala!']);
+            return redirect()->route('room.index')->with(['type' => false, 'message' => 'Ocorreu um erro ao atualizar a sala!']);
         }
     }
 

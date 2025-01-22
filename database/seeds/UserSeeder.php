@@ -13,6 +13,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('users')->insert([
+            'name' => '',
+            'username' => '',
+            'email' => '',
+            'password' => '',
+            'phone' => '',
+            'is_admin' => '',
+            'status' => ''
+        ]);
     }
 }
