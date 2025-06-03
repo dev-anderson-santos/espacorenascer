@@ -14,6 +14,25 @@
                     <div class="box box-default no-margin-bottom">
                         <div class="box-header with-border">
                             <h4 class="box-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#r1-8-2" aria-expanded="false" class="collapsed text-bold">
+                                    Release 1.8.2 - 03/06/2025
+                                </a>
+                            </h4>
+                            <div class="box-tools pull-right">
+                                <span data-toggle="tooltip" title="" class="badge bg-blue" data-original-title="Atualizações aplicadas"></span>
+                            </div>
+                        </div>
+                        <div id="r1-8-2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="box-body no-border">
+                                <ul>
+                                    <li>Ajuste no relatório de cobranças.</li>                             
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box-default no-margin-bottom">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#r1-8-1" aria-expanded="false" class="collapsed text-bold">
                                     Release 1.8.1 - 02/04/2024
                                 </a>
