@@ -111,7 +111,7 @@ class GerarRelatorio
         if ($type === "pdf") {
             $view = view($pathToRender, $data);
             $tipo  = 'portrait';
-            if($relatorioId == 101)
+            if(in_array($relatorioId, [101, 2]))
                 $tipo  = 'landscape';
 
             return pdf($view, 'A4', $tipo, true)->download("{$fileName}.pdf");

@@ -8,6 +8,7 @@ class UserHasAddressesModel extends Model
 {
     protected $table = 'users_has_addresses';
     protected $fillable = ['user_id', 'address_id'];
+    public $with = ['address'];
 
     public function user()
     {

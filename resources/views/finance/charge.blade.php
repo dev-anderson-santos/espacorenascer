@@ -65,6 +65,7 @@
             <thead {{-- class="display: table;
             width: 100%;" --}}>
                 <tr>
+                    <th style="text-align: center" scope="col">#</th>
                     <th style="text-align: center" scope="col">Profissional</th>
                     <th style="text-align: center" scope="col">Agendamentos</th>
                     <th style="text-align: center" scope="row">Valor a pagar</th>
@@ -77,6 +78,7 @@
                 @if(!empty($clientes))
                 @forelse ($clientes as $cliente)
                 <tr>
+                    <td>{{ $loop->index + 1 }}</td>
                     <td>{{ $cliente->name }}</td>
                     <td class="text-center">{{ $cliente->concluidosAgendamentosMesAnterior }}</td>
                     <td class="text-center">R$ {{ number_format($cliente->totalMesAnterior, 2, ',', '.') }}</td>
@@ -108,11 +110,10 @@
                 @empty
                 @endforelse
                 <tr>
-                    <td class="text-center text-bold">Totais:</td>
+                    <td colspan="2" class="text-center text-bold">Totais:</td>
                     <td class="text-center text-bold">{{ $clientes->sum('concluidosAgendamentosMesAnterior') }}</td>
                     <td class="text-center text-bold">R$ {{ number_format($clientes->sum('totalMesAnterior'), 2, ',', '.') }}</td>
                     <td class="text-center text-bold">R$ {{ number_format($clientes->sum('fatura_cliente'), 2, ',', '.') }}</td>
-                    <td colspan="2"></td>
                 </tr>
                 @endif
             </tbody>

@@ -28,8 +28,9 @@ class FinanceController extends Controller
         $setting = SettingsModel::first();
         $valorFixo = $setting->valor_fixo;
         $valorAvulso = $setting->valor_avulso;
+        $taxa = 20; // taxa de 20 reais
 
-        $clientes = User::where('is_admin', '!=', 1)->orderBy('name')->get()->map(function($cliente) use ($valorAvulso, $valorFixo, $dados) {
+        $clientes = User::where('is_admin', '!=', 1)->with('hasAddress')->orderBy('name')->get()->map(function($cliente) use ($valorAvulso, $valorFixo, $dados, $taxa) {
             $concluidosMesAnteriorAvulso = ScheduleModel::where([
                 'user_id' => $cliente->id,
                 'status' => 'Finalizado',
@@ -67,6 +68,7 @@ class FinanceController extends Controller
             // }
 
             $cliente->totalMesAnterior = $concluidosMesAnteriorAvulso->sum('valor') + $concluidosMesAnteriorFixo->sum('valor');
+            $cliente->totalMesAnteriorComTaxa = $cliente->totalMesAnterior + $taxa;
             // $cliente->totalMesAnterior = $totalAvulsoMesAnterior + $totalFixoMesAnterior;
 
             $faturaCliente = ChargeModel::where([
@@ -84,7 +86,7 @@ class FinanceController extends Controller
 
             return $cliente;
         })->filter(function($cliente) {
-            return $cliente->totalMesAnterior > 0;
+            return $cliente->totalMesAnterior > 0 && $cliente->concluidosAgendamentosMesAnterior > 0;
         });
 
         // dd($clientes);
