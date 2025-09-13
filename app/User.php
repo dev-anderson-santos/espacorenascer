@@ -12,14 +12,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     use Notifiable, SoftDeletes;
 
     protected $table = 'users';
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
-        'id',
         'name',
         'email',
         'password',
@@ -49,13 +53,41 @@ class User extends Authenticatable
     ];
 
     /**
+     * Para Laravel 7 - datas que devem ser tratadas como Carbon
+     *
+     * @var array
+     */
+    protected $dates = [
+        'deleted_at',
+        'email_verified_at',
+        'birth_date',
+        'last_login_time',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'id' => 'string'
     ];
+
+    /**
+     * Gera automaticamente um UUID quando o usuário é criado
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        });
+    }
 
     public function hasAddress(): HasOne
     {
