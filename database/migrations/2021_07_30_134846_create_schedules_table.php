@@ -14,11 +14,11 @@ class CreateSchedulesTable extends Migration
     public function up()
     {
         Schema::create('schedules', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('room_id')->nullable(false);
-            $table->unsignedBigInteger('created_by')->nullable(false);
-            $table->unsignedBigInteger('hour_id')->nullable(false);
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable(false);
+            $table->uuid('room_id')->nullable(false);
+            $table->uuid('created_by')->nullable(false);
+            $table->uuid('hour_id')->nullable(false);
             $table->dateTime('date');
             $table->enum('status', ['Ativo', 'Finalizado'])->default('Ativo');
             $table->enum('tipo', ['Avulso', 'Fixo'])->default('Avulso');

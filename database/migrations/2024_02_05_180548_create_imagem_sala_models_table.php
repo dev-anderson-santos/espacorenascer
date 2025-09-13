@@ -14,7 +14,7 @@ class CreateImagemSalaModelsTable extends Migration
     public function up()
     {
         Schema::create('imagem_sala', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->text('filename');
             $table->string('description', 300);
             $table->timestamps();

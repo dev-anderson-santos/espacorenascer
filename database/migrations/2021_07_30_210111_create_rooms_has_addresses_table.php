@@ -14,9 +14,9 @@ class CreateRoomsHasAddressesTable extends Migration
     public function up()
     {
         Schema::create('rooms_has_addresses', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('room_id')->nullable(false);
-            $table->unsignedBigInteger('addresses_id')->nullable(false);
+            $table->uuid('id')->primary();
+            $table->uuid('room_id')->nullable(false);
+            $table->uuid('addresses_id')->nullable(false);
             $table->timestamps();
 
             $table->foreign('room_id')->references('id')->on('rooms');

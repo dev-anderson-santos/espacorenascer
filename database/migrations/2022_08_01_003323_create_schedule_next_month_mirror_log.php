@@ -14,7 +14,7 @@ class CreateScheduleNextMonthMirrorLog extends Migration
     public function up()
     {
         Schema::create('schedule_next_month_mirror_log', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('message');
             $table->timestamps();
         });

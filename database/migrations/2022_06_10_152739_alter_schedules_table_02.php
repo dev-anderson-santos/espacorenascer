@@ -14,7 +14,7 @@ class AlterSchedulesTable02 extends Migration
     public function up()
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->unsignedBigInteger('data_nao_faturada_id')->nullable();
+            $table->uuid('data_nao_faturada_id')->nullable();
 
             $table->foreign('data_nao_faturada_id')->references('id')->on('data_nao_faturada');
         });

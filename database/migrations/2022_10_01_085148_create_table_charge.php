@@ -14,13 +14,13 @@ class CreateTableCharge extends Migration
     public function up()
     {
         Schema::create('charge', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->decimal('amount', 9, 2);
             $table->dateTime('payday');
             $table->string('status', 1);
-            $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('created_by')->nullable(false);
-            $table->unsignedBigInteger('updated_by')->nullable(false);
+            $table->uuid('user_id')->nullable(false);
+            $table->uuid('created_by')->nullable(false);
+            $table->uuid('updated_by')->nullable(false);
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users');

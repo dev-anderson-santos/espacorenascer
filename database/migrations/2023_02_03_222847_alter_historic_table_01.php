@@ -14,7 +14,7 @@ class AlterHistoricTable01 extends Migration
     public function up()
     {
         Schema::table('historic', function (Blueprint $table) {
-            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->uuid('deleted_by')->nullable();
         });
     }
 

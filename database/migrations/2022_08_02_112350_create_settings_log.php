@@ -14,9 +14,9 @@ class CreateSettingsLog extends Migration
     public function up()
     {
         Schema::create('settings_log', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('settings_id')->nullable(false);
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable(false);
+            $table->uuid('settings_id')->nullable(false);
             $table->double('valor_fixo')->nullable();
             $table->double('valor_avulso')->nullable();
             $table->smallInteger('dia_fechamento')->nullable();

@@ -14,18 +14,18 @@ class CreateTableHistoric extends Migration
     public function up()
     {
         Schema::create('historic', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('action')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('room_id')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('hour_id')->nullable();
+            $table->uuid('user_id')->nullable();
+            $table->uuid('room_id')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->uuid('hour_id')->nullable();
             $table->dateTime('date')->nullable();
             $table->string('status')->nullable();
             $table->string('tipo')->nullable();
             $table->smallInteger('faturado')->nullable();
             $table->dateTime('finalizado_em')->nullable();
-            $table->unsignedBigInteger('data_nao_faturada_id')->nullable();
+            $table->uuid('data_nao_faturada_id')->nullable();
             $table->timestamp('last_login_time')->nullable();
             $table->string('last_login_ip')->nullable();
             $table->timestamps();

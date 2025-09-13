@@ -14,7 +14,7 @@ class CreateDataNaoFaturada extends Migration
     public function up()
     {
         Schema::create('data_nao_faturada', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->dateTime('data');
             $table->timestamps();
         });

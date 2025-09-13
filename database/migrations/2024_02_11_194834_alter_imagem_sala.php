@@ -15,7 +15,7 @@ class AlterImagemSala extends Migration
     {
         Schema::table('imagem_sala', function (Blueprint $table) {
             $table->integer('order_image');
-            $table->unsignedBigInteger('created_by')->nullable(false);
+            $table->uuid('created_by')->nullable(false);
 
             $table->foreign('created_by')->references('id')->on('users');
         });

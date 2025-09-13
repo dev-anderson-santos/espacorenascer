@@ -14,7 +14,7 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->double('valor_fixo')->default(15);
             $table->double('valor_avulso')->default(15);
             $table->timestamps();

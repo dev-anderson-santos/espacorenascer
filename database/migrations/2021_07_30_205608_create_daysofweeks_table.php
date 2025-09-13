@@ -14,7 +14,7 @@ class CreateDaysofweeksTable extends Migration
     public function up()
     {
         Schema::create('daysofweeks', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->dateTime('date');
             $table->softDeletes();
             $table->timestamps();

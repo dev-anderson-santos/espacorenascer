@@ -14,7 +14,7 @@ class CreateHoursTable extends Migration
     public function up()
     {
         Schema::create('hours', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->time('hour');
             $table->softDeletes();
             $table->timestamps();

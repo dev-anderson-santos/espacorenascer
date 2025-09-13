@@ -14,9 +14,9 @@ class CreateUsersHasAddressesTable extends Migration
     public function up()
     {
         Schema::create('users_has_addresses', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(false);
-            $table->unsignedBigInteger('address_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable(false);
+            $table->uuid('address_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
