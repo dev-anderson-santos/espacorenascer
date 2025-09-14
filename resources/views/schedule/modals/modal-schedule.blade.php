@@ -133,11 +133,11 @@ $('#agendar').on('click', function () {
         url: '{{ route('schedule.store') }}',
         method: 'POST',
         data: {
-            room_id: {{ $room->id }},
-            hour_id: {{ $hour->id }},
+            room_id: '{{ $room->id }}',
+            hour_id: '{{ $hour->id }}',
             user_id: $('#user-id').val() || $('#user-not-admin-id').val(),
             date: $('#data-agendamento').val(),
-            created_by: {{ auth()->user()->id }},
+            created_by: '{{ auth()->user()->id }}',
             tipo: $('#type-schedule').val(),
             _token: '{{ csrf_token() }}'
         },

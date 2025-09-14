@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Espaço Juntos'),
+    'name' => env('APP_NAME', 'Espaço Cultivar'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://espacojuntos.com'),
+    'url' => env('APP_URL', 'https://espacocultivar.com'),
 
     'asset_url' => env('ASSET_URL', null),
 

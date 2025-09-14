@@ -135,3 +135,37 @@ Route::group(['prefix' => 'app'],function () {
     });
 });
 
+Route::get('/client-theme.css', function () {
+    $hex = config('client.primary_hex', '#7A4A2F');
+    $hexSecondary = config('client.secondary_hex', '#e2d3c0');
+
+    $css = <<<CSS
+    :root { 
+        --client-color: {$hex}; 
+        --client-color-secondary: {$hexSecondary};
+    }
+
+    /* Card na cor do cliente */
+    .card-outline.card-client { border-top: 3px solid var(--client-color) !important; }
+    .card-client .card-title,
+    .card-client .card-header a,
+    .card-client .card-tools .btn-link { color: var(--client-color) !important; }
+
+    /* Botão na cor do cliente */
+    .btn-client {
+    background-color: var(--client-color-secondary) !important;
+    border-color: var(--client-color-secondary) !important;
+    color: var(--client-color) !important;
+    }
+    .btn-client:hover,
+    .btn-client:focus { filter: brightness(0.92); color: #fff !important; }
+
+    /* Utilitários (opcional) */
+    .bg-client   { background-color: var(--client-color) !important; color:#fff !important; }
+    .text-client { color: var(--client-color) !important; }
+    .border-client { border-color: var(--client-color) !important; }
+    CSS;
+
+    return response($css, 200)->header('Content-Type', 'text/css');
+})->name('client-theme-css');
+

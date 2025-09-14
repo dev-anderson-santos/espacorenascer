@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => env('APP_NAME', 'Espaço Juntos'),
+    'title' => env('APP_NAME', 'Cultivar Espaço'),
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'logo' => '<b>ESPAÇO</b>JUNTOS',
+    'logo' => '<strong>Cultivar</strong> Espaço',
     'logo_img' => 'vendor/adminlte/dist/img/logo.jpeg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -102,12 +102,12 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-primary',
+    'classes_auth_card' => 'card-outline card-client',
     'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary',
+    'classes_auth_btn' => 'btn-flat btn-client',
 
     /*
     |--------------------------------------------------------------------------
@@ -533,6 +533,12 @@ return [
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
                 ],
+            ],
+        ],
+        'ClientTheme' => [
+            'active' => true,
+            'files' => [
+                ['type' => 'css', 'asset' => false, 'location' => '/client-theme.css'],
             ],
         ],
     ],

@@ -33,8 +33,8 @@
                                 <tr>
                                     <td>{{ $item->name }}</td>
                                     <td>
-                                        <a href="javascript:void(0)" onclick="editarSala({{ $item->id }})" class="btn btn-warning btn-sm btn-circle"><i class="fas fa-pencil-alt"></i></a>
-                                        <a href="javascript:void(0)" onclick="removerSala({{ $item->id }})" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
+                                        <a href="javascript:void(0)" onclick="editarSala('{{ $item->id }}')" class="btn btn-warning btn-sm btn-circle"><i class="fas fa-pencil-alt"></i></a>
+                                        <a href="javascript:void(0)" onclick="removerSala('{{ $item->id }}')" class="btn btn-danger btn-sm btn-circle"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

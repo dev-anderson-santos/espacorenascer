@@ -1,0 +1,53 @@
+/* -------- Card na cor do cliente -------- */
+.card-outline.card-client {
+  border-top: 3px solid var(--client-color) !important;
+}
+.card-client .card-header {
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.card-client .card-title,
+.card-client .card-header a,
+.card-client .card-tools .btn-link {
+  color: var(--client-color) !important;
+}
+
+/* -------- Botão na cor do cliente -------- */
+.btn-client {
+  background-color: var(--client-color-secondary) !important;
+  border-color: var(--client-color-secondary) !important;
+  color: var(--client-color) !important;
+}
+.btn-client:hover,
+.btn-client:focus {
+  filter: brightness(0.92);
+  color: #fff !important;
+}
+
+/* -------- Utilitários -------- */
+.bg-client   { background-color: var(--client-color) !important; color:#fff !important; }
+.text-client { color: var(--client-color) !important; }
+.border-client { border-color: var(--client-color) !important; }
+
+/* ======== LINKS: apenas DENTRO DOS CARDS ======== */
+/* corpo e rodapé do card; não mexe em navbar, sidebar, header do card, paginação, etc. */
+.content-wrapper .card .card-body a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link),
+.content-wrapper .card .card-footer a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link) {
+  color: var(--client-link) !important;
+  text-decoration: underline;
+}
+.content-wrapper .card .card-body a:hover:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link),
+.content-wrapper .card .card-footer a:hover:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link) {
+  color: var(--client-link-hover) !important;
+  text-decoration: underline;
+}
+
+/* Proteções explícitas para manter cores originais fora dos cards */
+.main-sidebar .nav-link,
+.navbar a,
+.brand-link,
+.nav-treeview .nav-link,
+.page-link,
+.breadcrumb-item a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
