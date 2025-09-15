@@ -538,7 +538,7 @@ return [
         'ClientTheme' => [
             'active' => true,
             'files' => [
-                ['type' => 'css', 'asset' => false, 'location' => '/client-theme.css'],
+                ['type' => 'css', 'asset' => false, 'location' => '/client-theme.css?v=6'],
             ],
         ],
     ],

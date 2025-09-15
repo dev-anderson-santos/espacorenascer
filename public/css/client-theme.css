@@ -22,6 +22,16 @@
   filter: brightness(0.92);
   color: #fff !important;
 }
+.btn-client-secondary {
+  background-color: var(--client-color) !important;
+  border-color: var(--client-color) !important;
+  color: var(--client-color-secondary) !important;
+}
+.btn-client-secondary:hover,
+.btn-client-secondary:focus {
+  filter: brightness(0.92);
+  color: #fff !important;
+}
 
 /* -------- Utilitários -------- */
 .bg-client   { background-color: var(--client-color) !important; color:#fff !important; }
@@ -49,5 +59,33 @@
 .page-link,
 .breadcrumb-item a {
   color: inherit !important;
+  text-decoration: none !important;
+}
+/* ===== LINKS NO LOGIN/REGISTRO (card-footer) ===== */
+.login-box .card .card-footer .my-0 > a,
+.login-box .card .card-footer .my-0 > a:link,
+.login-box .card .card-footer .my-0 > a:visited {
+  color: var(--client-link) !important;
+  text-decoration: none !important;   /* sem sublinhado */
+}
+
+.login-box .card .card-footer .my-0 > a:hover,
+.login-box .card .card-footer .my-0 > a:focus,
+.login-box .card .card-footer .my-0 > a:active {
+  color: var(--client-link-hover) !important;
+  text-decoration: none !important;   /* mantenha sem sublinhado */
+}
+
+/* (opcional) mesma regra para a tela de registro */
+.register-box .card .card-footer .my-0 > a,
+.register-box .card .card-footer .my-0 > a:link,
+.register-box .card .card-footer .my-0 > a:visited {
+  color: var(--client-link) !important;
+  text-decoration: none !important;
+}
+.register-box .card .card-footer .my-0 > a:hover,
+.register-box .card .card-footer .my-0 > a:focus,
+.register-box .card .card-footer .my-0 > a:active {
+  color: var(--client-link-hover) !important;
   text-decoration: none !important;
 }

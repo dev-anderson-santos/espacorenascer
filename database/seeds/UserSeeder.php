@@ -14,13 +14,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => '',
-            'username' => '',
-            'email' => '',
-            'password' => '',
-            'phone' => '',
-            'is_admin' => '',
-            'status' => ''
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'name' => 'Anderson Barbosa dos Santos',
+            'username' => 'dev.anderson',
+            'email' => 'dev.anderson.santos@gmail.com',
+            'password' => Hash::make('88812345'),
+            'phone' => '21976662004',
+            'is_admin' => '1',
+            'status' => '1',
         ]);
     }
 }

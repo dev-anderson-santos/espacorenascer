@@ -50,11 +50,11 @@
                 <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-8 align-self-end">
                         {{-- <h1 class="text-white font-weight-bold">Your Favorite Place for Free Bootstrap Themes</h1> --}}
-                        <img class="img-fluid" src="{{ asset('images/logo-2.png') }}" alt="Logo">
+                        <img class="img-fluid" src="{{ asset('images/logo_2.png') }}" alt="Logo">
                         {{-- <hr class="divider" /> --}}
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white mb-5"><b>Planejando sublocar um lugar aconchegante para realizar seu trabalho? <br>O ESPAÇO CULTIVAR pensou e organizou esse local para você.</b></p>
+                        <p class="text-white mb-5"><b>O {{ config('app.name') }}</b> Terapêutico nasceu com o propósito de oferecer um ambiente acolhedor e profissional para o cuidado da saúde e do desenvolvimento humano. <br></p>
                         <a class="btn btn-theme btn-xl" href="#about">Saiba mais</a>
                     </div>
                 </div>
@@ -65,9 +65,20 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <h2 class="text-white mt-0">O Espaço que você precisa do jeito que você quer</h2>
+                        <h2 class="mt-0" style="color: #7A4A2F">Estrutura</h2>
                         <hr class="divider divider-light" />
-                        <p class="text-white mb-4"><b>Você terapeuta está procurando um lugar para sublocar e desempenhar seu trabalho sem maiores preocupações? Venha conhecer o Espaço Cultivar.</b></p>
+                        <p class="mb-4" style="color: #7A4A2F">
+                            <b>Contamos com salas aconchegantes, climatizadas e bem iluminadas, pensadas para garantir o bem-estar de profissionais e pacientes. 
+                            O espaço inclui:</b>
+                            <ul style="color: #7A4A2F; text-align: left; display: inline-block; margin-top: 10px;">
+                            <li>Salas de atendimento equipadas e multifuncionais</li>
+                            <li>Recepção acolhedora para receber os pacientes</li>
+                            <li>Cozinha e espaço para os profissionais</li>
+                            <li>Ambiente tranquilo, com privacidade e conforto</li>
+                            <li>Estrutura adaptada para diferentes práticas terapêuticas</li>
+                            </ul>
+
+                        </p>
                         <a class="btn btn-light btn-xl" href="#services">Conheça nossas salas</a>
                     </div>
                 </div>
@@ -199,9 +210,9 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <h2 class="text-white mt-0">Localização</h2>
+                        <h2 class="mt-0" style="color: #7A4A2F">Localização</h2>
                         <hr class="divider divider-light" />
-                        <p class="text-white mb-4"><b>O espaço perfeito para você está localizado no coração de Nova Iguaçú, bem próximo a Via Light no centro comercial da cidade.</b></p>
+                        <p class="mb-4" style="color: #7A4A2F"><b>Estamos localizados no centro de Nova Iguaçu, em uma região de fácil acesso, próximo a pontos de transporte público e com opções de estacionamento. Uma localização estratégica que facilita a chegada de pacientes e profissionais, garantindo praticidade no dia a dia. Próximo a papelaria Tids e C&A.</b></p>
                         {{-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3447.6768083693264!2d-43.446646103036635!3d-22.75960642196577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99670010b1275d%3A0x309493d995cb5039!2sR.%20Prof.%20Venina%20Correa%20Torres%2C%2017A%20-%20Centro%2C%20Nova%20Igua%C3%A7u%20-%20RJ%2C%2026221-200!5e0!3m2!1spt-BR!2sbr!4v1650679236821!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> --}}
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d601.2174680267128!2d-43.44903548882779!3d-22.75931395142512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x996700c4af495b%3A0xc88baf13be3a2c0d!2sR.%20Maria%20Adelaide%20de%20Carvalho%2C%2020%20-%20Centro%2C%20Nova%20Igua%C3%A7u%20-%20RJ%2C%2026210-070!5e1!3m2!1spt-BR!2sbr!4v1757802596578!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>

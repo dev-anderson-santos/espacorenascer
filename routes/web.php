@@ -143,6 +143,8 @@ Route::get('/client-theme.css', function () {
     :root { 
         --client-color: {$hex}; 
         --client-color-secondary: {$hexSecondary};
+        --client-link: var(--client-color);
+        --client-link-hover: #5b2b10; /* ou o hover que preferir */
     }
 
     /* Card na cor do cliente */

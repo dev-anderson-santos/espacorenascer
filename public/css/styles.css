@@ -3038,14 +3038,14 @@ textarea.form-control-lg {
   border-color: #f4623a;
 }
 .btn-theme {
-  color: #fff;
-  background-color: #5ce1e6;
-  border-color: #5ce1e6;
+  color: #7A4A2F;
+  background-color: #e2d3c0;
+  border-color: #e2d3c0;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #cf5331;
-  border-color: #c34e2e;
+  background-color: #7A4A2F;
+  border-color: #7A4A2F;
 }
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
@@ -11335,7 +11335,7 @@ hr.divider {
   height: 0.2rem;
   max-width: 3.25rem;
   margin: 1.5rem auto;
-  background-color: #5ce1e6;
+  background-color: #7A4A2F;
   opacity: 1;
 }
 
