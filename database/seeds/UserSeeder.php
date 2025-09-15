@@ -23,5 +23,16 @@ class UserSeeder extends Seeder
             'is_admin' => '1',
             'status' => '1',
         ]);
+
+        DB::table('users')->insert([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'name' => 'Maria Isabel Valle',
+            'username' => 'maria.isabel',
+            'email' => 'maria.isabel@email.com',
+            'password' => Hash::make('55512345'),
+            'phone' => '21986229578',
+            'is_admin' => '1',
+            'status' => '1',
+        ]);
     }
 }
