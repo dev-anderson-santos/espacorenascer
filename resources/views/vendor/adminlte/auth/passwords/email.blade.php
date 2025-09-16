@@ -40,7 +40,7 @@
         {{-- Send reset link button --}}
         <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
             <span class="fas fa-share-square"></span>
-            {{ __('adminlte::adminlte.send_password_reset_link') }}
+            {{ __('auth.send_password_reset_link') }}
         </button>
 
         <a href="{{ route('login') }}" class="btn btn-block btn-client-secondary">Tentar realizar login</a>
