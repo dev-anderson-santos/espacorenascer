@@ -30,7 +30,7 @@ return [
     'toggle_navigation'           => 'Trocar navegação',
     'login_message'               => 'Entre para iniciar uma nova sessão',
     'register_message'            => 'Registrar-se',
-    'password_reset_message'      => 'Redefinir senha',
+    'password_reset_message'      => 'Redefinir sua senha',
     'reset_password'              => 'Redefinir senha',
     'send_password_reset_link'    => 'Enviar link para redefinição de senha',
 ];
