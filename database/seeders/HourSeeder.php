@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\HourModel;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
