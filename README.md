@@ -1,4 +1,4 @@
-<p align="center"><img src="https://espacojuntos.com/vendor/adminlte/dist/img/logo.jpeg" width="400"></p>
+<p align="center"><img src="https://psiespacorenascer.com/vendor/adminlte/dist/img/logo.jpeg" width="400"></p>
 
 ## About Laravel
 
