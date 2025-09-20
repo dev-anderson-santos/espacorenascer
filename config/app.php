@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Espaço Cultivar'),
+    'name' => env('APP_NAME', 'Espaço Renascer'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://espacocultivar.com'),
+    'url' => env('APP_URL', 'https://psiespacorenascer.com'),
 
     'asset_url' => env('ASSET_URL', null),
 

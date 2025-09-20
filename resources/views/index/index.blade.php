@@ -143,8 +143,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/01.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/01.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -152,8 +152,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/02.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/02.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -161,8 +161,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/03.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/03.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -170,8 +170,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/04.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/04.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -179,8 +179,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/05.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/05.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -188,8 +188,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/06.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/06.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption p-3">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>
@@ -197,8 +197,8 @@
                         <a class="portfolio-box" href="{{ asset('images/salas/07.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/07.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption p-3">
-                                <div class="project-category text-white-50">Cultivar</div>
-                                <div class="project-name">Espaço</div>
+                                <div class="project-category text-white-50">Espaço</div>
+                                <div class="project-name">Renascer</div>
                             </div>
                         </a>
                     </div>

@@ -74,8 +74,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'nao-responda@espacocultivar.com'),
-        'name' => env('MAIL_FROM_NAME', 'Espaço Cultivar'),
+        'address' => env('MAIL_FROM_ADDRESS', 'nao-responda@psiespacorenascer.com'),
+        'name' => env('MAIL_FROM_NAME', 'Espaço Renascer'),
     ],
 
     /*
