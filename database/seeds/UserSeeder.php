@@ -26,11 +26,11 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => (string) \Illuminate\Support\Str::uuid(),
-            'name' => 'Maria Isabel Valle',
+            'name' => 'Daiana Duarte',
             'username' => 'maria.isabel',
-            'email' => 'maria.isabel@email.com',
+            'email' => 'daiana.duarte@email.com',
             'password' => Hash::make('55512345'),
-            'phone' => '21986229578',
+            'phone' => '21993281117',
             'is_admin' => '1',
             'status' => '1',
         ]);
