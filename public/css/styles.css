@@ -3038,14 +3038,14 @@ textarea.form-control-lg {
   border-color: #f4623a;
 }
 .btn-theme {
-  color: #7A4A2F;
-  background-color: #e2d3c0;
-  border-color: #e2d3c0;
+  color: #d2a387;
+  background-color: #fdf4ef;
+  border-color: #fdf4ef;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #7A4A2F;
-  border-color: #7A4A2F;
+  background-color: #d2a387;
+  border-color: #d2a387;
 }
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
@@ -11335,7 +11335,7 @@ hr.divider {
   height: 0.2rem;
   max-width: 3.25rem;
   margin: 1.5rem auto;
-  background-color: #7A4A2F;
+  background-color: #d2a387;
   opacity: 1;
 }
 
@@ -11372,13 +11372,13 @@ hr.divider-light {
     background-color: transparent;
   }
   #mainNav .navbar-brand {
-    color: rgba(122, 74, 47, 0.7);
+    color: rgba(210, 163, 135, 1);
   }
   #mainNav .navbar-brand:hover {
     color: #fff;
   }
   #mainNav .navbar-nav .nav-item .nav-link {
-    color: rgba(122, 74, 47, 0.7);
+    color: rgba(210, 163, 135, 1);
     padding: 0 1rem;
   }
   #mainNav .navbar-nav .nav-item .nav-link:hover {

@@ -12,7 +12,8 @@ return [
     |
     */
 
-    'primary_color' => env('CLIENT_PRIMARY_HEX', '#6b4322'),
-    'secondary_color' => env('CLIENT_SECONDARY_HEX', '#e2d3c0'),
+    'primary_color' => env('CLIENT_PRIMARY_HEX', '#d2a387'),
+    'secondary_color' => env('CLIENT_SECONDARY_HEX', '#fdf4ef'),
+    'highlight_color' => env('CLIENT_HIGHLIGHT_HEX', '#b2bf91'),
 
 ];

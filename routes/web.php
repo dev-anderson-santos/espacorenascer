@@ -136,15 +136,39 @@ Route::group(['prefix' => 'app'],function () {
 });
 
 Route::get('/client-theme.css', function () {
-    $hex = config('client.primary_hex', '#7A4A2F');
-    $hexSecondary = config('client.secondary_hex', '#e2d3c0');
+    $hex = config('client.primary_hex', '#d2a387');
+    $hexSecondary = config('client.secondary_hex', '#fdf4ef');
+    $hexHighlight = config('client.highlight_color', '#b2bf91');
 
     $css = <<<CSS
     :root { 
         --client-color: {$hex}; 
         --client-color-secondary: {$hexSecondary};
+        --client-highlight-color: {$hexHighlight};
         --client-link: var(--client-color);
         --client-link-hover: #5b2b10; /* ou o hover que preferir */
+    }
+
+    .main-sidebar.bg-custom-sidebar {
+        background-color: var(--client-color-secondary) !important;
+    }
+
+    .main-sidebar.bg-custom-sidebar .nav-link,
+    .main-sidebar.bg-custom-sidebar .brand-link {
+        color: var(--client-color) !important;
+    }
+
+    .main-sidebar.bg-custom-sidebar .nav-link:hover,
+    .main-sidebar.bg-custom-sidebar .nav-link:focus {
+        background-color: #d8dccdff; /* Cor de destaque para o hover */
+        color: white; /* Cor do texto no hover */
+    }
+
+    /* Adicione estas classes para o item de menu ativo */
+    .nav-sidebar .nav-item > .nav-link.active,
+    .nav-sidebar .nav-item > .nav-link.active:hover {
+        background-color: var(--client-highlight-color) !important;
+        color: white !important; /* Para garantir contraste com a cor de destaque */
     }
 
     /* Card na cor do cliente */

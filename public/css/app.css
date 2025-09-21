@@ -5602,7 +5602,7 @@ a.badge-dark.focus {
 }
 
 .alert-info {
-  color: #385d7a;
+  color: #b2bf91;
   background-color: #e2f0fb;
   border-color: #d6e9f9;
 }
@@ -6025,20 +6025,20 @@ a.badge-dark.focus {
 }
 
 .list-group-item-info {
-  color: #385d7a;
+  color: #b2bf91;
   background-color: #d6e9f9;
 }
 
 .list-group-item-info.list-group-item-action:hover,
 .list-group-item-info.list-group-item-action:focus {
-  color: #385d7a;
+  color: #b2bf91;
   background-color: #c0ddf6;
 }
 
 .list-group-item-info.list-group-item-action.active {
   color: #fff;
-  background-color: #385d7a;
-  border-color: #385d7a;
+  background-color: #b2bf91;
+  border-color: #b2bf91;
 }
 
 .list-group-item-warning {

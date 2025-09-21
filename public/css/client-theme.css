@@ -89,3 +89,13 @@
   color: var(--client-link-hover) !important;
   text-decoration: none !important;
 }
+
+/* Adicione esta seção ao seu CSS para o sidebar */
+.main-sidebar.bg-custom-sidebar {
+    background-color: var(--client-color-secondary) !important;
+}
+
+.main-sidebar.bg-custom-sidebar .nav-link,
+.main-sidebar.bg-custom-sidebar .brand-link {
+    color: var(--client-color) !important;
+}
