@@ -37,7 +37,7 @@
                         <li class="nav-item"><a class="nav-link" href="#about">Sobre nós</a></li>
                         <li class="nav-item"><a class="nav-link" href="#services">Salas</a></li>
                         {{-- <li class="nav-item"><a class="nav-link" href="#portfolio">Localização</a></li> --}}
-                        <li class="nav-item"><a class="nav-link" href="#localizacao">Localização</a></li>
+                        {{-- <li class="nav-item"><a class="nav-link" href="#localizacao">Localização</a></li> --}}
                         <li class="nav-item"><a class="nav-link" href="#contact">Contato</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Área do Cliente</a></li>
                     </ul>
@@ -139,7 +139,7 @@
                             
                         @endforeach
                     @else
-                    <div class="col-lg-4 col-sm-6">
+                    {{-- <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/01.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/01.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
@@ -147,8 +147,8 @@
                                 <div class="project-name">Renascer</div>
                             </div>
                         </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
+                    </div> --}}
+                    {{-- <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/02.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/02.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption">
@@ -156,7 +156,7 @@
                                 <div class="project-name">Renascer</div>
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/03.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/03.jpeg') }}" alt="..." />
@@ -193,7 +193,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-lg-4 col-sm-6">
+                    {{-- <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/07.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
                             <img class="img-fluid" src="{{ asset('images/salas/07.jpeg') }}" alt="..." />
                             <div class="portfolio-box-caption p-3">
@@ -201,24 +201,23 @@
                                 <div class="project-name">Renascer</div>
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
                     @endif
                 </div>
             </div>
         </div>
-        <section class="page-section bg-theme" id="localizacao">
+        {{-- <section class="page-section bg-theme" id="localizacao">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8 text-center">
                         <h2 class="mt-0" style="color: #d2a387">Localização</h2>
                         <hr class="divider divider-light" />
                         <p class="mb-4" style="color: #d2a387"><b>Estamos localizados no centro de Nova Iguaçu, em uma região de fácil acesso, próximo a pontos de transporte público e com opções de estacionamento. Uma localização estratégica que facilita a chegada de pacientes e profissionais, garantindo praticidade no dia a dia. Próximo a papelaria Tids e C&A.</b></p>
-                        {{-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3447.6768083693264!2d-43.446646103036635!3d-22.75960642196577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99670010b1275d%3A0x309493d995cb5039!2sR.%20Prof.%20Venina%20Correa%20Torres%2C%2017A%20-%20Centro%2C%20Nova%20Igua%C3%A7u%20-%20RJ%2C%2026221-200!5e0!3m2!1spt-BR!2sbr!4v1650679236821!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> --}}
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d601.2174680267128!2d-43.44903548882779!3d-22.75931395142512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x996700c4af495b%3A0xc88baf13be3a2c0d!2sR.%20Maria%20Adelaide%20de%20Carvalho%2C%2020%20-%20Centro%2C%20Nova%20Igua%C3%A7u%20-%20RJ%2C%2026210-070!5e1!3m2!1spt-BR!2sbr!4v1757802596578!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- Call to action-->
         <section class="page-section bg-dark text-white">
             <div class="container px-4 px-lg-5 text-center">
