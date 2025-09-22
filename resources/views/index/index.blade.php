@@ -54,7 +54,7 @@
                         {{-- <hr class="divider" /> --}}
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white mb-5"><b>O {{ config('app.name') }}</b> Terapêutico nasceu com o propósito de oferecer um ambiente acolhedor e profissional para o cuidado da saúde e do desenvolvimento humano. <br></p>
+                        <p class="text-white mb-5">Precisa de um ambiente aconchegante para realizar seus atendimentos? No <b>{{ config('app.name') }}</b> você encontra o lugar certo para florescer profissionalmente.<br></p>
                         <a class="btn btn-theme btn-xl" href="#about">Saiba mais</a>
                     </div>
                 </div>
@@ -68,15 +68,7 @@
                         <h2 class="mt-0" style="color: #d2a387">Estrutura</h2>
                         <hr class="divider divider-light" />
                         <p class="mb-4" style="color: #d2a387">
-                            <b>Contamos com salas aconchegantes, climatizadas e bem iluminadas, pensadas para garantir o bem-estar de profissionais e pacientes. 
-                            O espaço inclui:</b>
-                            <ul style="color: #d2a387; text-align: left; display: inline-block; margin-top: 10px;">
-                            <li>Salas de atendimento equipadas e multifuncionais</li>
-                            <li>Recepção acolhedora para receber os pacientes</li>
-                            <li>Cozinha e espaço para os profissionais</li>
-                            <li>Ambiente tranquilo, com privacidade e conforto</li>
-                            <li>Estrutura adaptada para diferentes práticas terapêuticas</li>
-                            </ul>
+                            <b>Um espaço que une acolhimento, serenidade e estrutura para o seu trabalho. <b>O {{ config('app.name') }}</b> nasceu para estar ao seu lado nessa jornada.</b><br><br>
 
                         </p>
                         <a class="btn btn-light btn-xl" href="#services">Conheça nossas salas</a>
@@ -191,7 +183,7 @@
                                 <div class="project-category text-white-50">Espaço</div>
                                 <div class="project-name">Renascer</div>
                             </div>
-                        </a>
+                        </a>psiespacorenascer.com
                     </div>
                     {{-- <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/07.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
