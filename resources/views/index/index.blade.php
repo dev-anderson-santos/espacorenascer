@@ -37,7 +37,7 @@
                         <li class="nav-item"><a class="nav-link" href="#about">Sobre nós</a></li>
                         <li class="nav-item"><a class="nav-link" href="#services">Salas</a></li>
                         {{-- <li class="nav-item"><a class="nav-link" href="#portfolio">Localização</a></li> --}}
-                        {{-- <li class="nav-item"><a class="nav-link" href="#localizacao">Localização</a></li> --}}
+                        <li class="nav-item"><a class="nav-link" href="#localizacao">Localização</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact">Contato</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Área do Cliente</a></li>
                     </ul>
@@ -198,18 +198,18 @@
                 </div>
             </div>
         </div>
-        {{-- <section class="page-section bg-theme" id="localizacao">
+        <section class="page-section bg-theme" id="localizacao">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8 text-center">
                         <h2 class="mt-0" style="color: #d2a387">Localização</h2>
                         <hr class="divider divider-light" />
-                        <p class="mb-4" style="color: #d2a387"><b>Estamos localizados no centro de Nova Iguaçu, em uma região de fácil acesso, próximo a pontos de transporte público e com opções de estacionamento. Uma localização estratégica que facilita a chegada de pacientes e profissionais, garantindo praticidade no dia a dia. Próximo a papelaria Tids e C&A.</b></p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d601.2174680267128!2d-43.44903548882779!3d-22.75931395142512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x996700c4af495b%3A0xc88baf13be3a2c0d!2sR.%20Maria%20Adelaide%20de%20Carvalho%2C%2020%20-%20Centro%2C%20Nova%20Igua%C3%A7u%20-%20RJ%2C%2026210-070!5e1!3m2!1spt-BR!2sbr!4v1757802596578!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <p class="mb-4" style="color: #d2a387"><b>O Espaço Renascer fica no coração de Nova Iguaçu, em frente aos Correios e ao lado do Banco Itaú. Fácil de encontrar, feito para acolher você.</b></p>
+                        <iframe src="https://www.google.com/maps/embed?pb=!4v1758624628986!6m8!1m7!1sVUfwJBAuxbILMSn7_IrIZA!2m2!1d-22.75925725979727!2d-43.4511068959737!3f84.37!4f-11.189999999999998!5f2.0872964783847774" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- Call to action-->
         <section class="page-section bg-dark text-white">
             <div class="container px-4 px-lg-5 text-center">
