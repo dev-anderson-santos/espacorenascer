@@ -183,7 +183,7 @@
                                 <div class="project-category text-white-50">Espaço</div>
                                 <div class="project-name">Renascer</div>
                             </div>
-                        </a>psiespacorenascer.com
+                        </a>
                     </div>
                     {{-- <div class="col-lg-4 col-sm-6">
                         <a class="portfolio-box" href="{{ asset('images/salas/07.jpeg') }}" title="{{ app()->environment('APP_NAME') }}">
