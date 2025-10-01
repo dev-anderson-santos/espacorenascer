@@ -15,6 +15,7 @@ class SchedulesNextMonthModel extends Model
     public $incrementing = false;
     
     protected $fillable = [
+        'id',
         'user_id', 
         'room_id', 
         'created_by',

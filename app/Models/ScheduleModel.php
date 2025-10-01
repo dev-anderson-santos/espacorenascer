@@ -24,6 +24,7 @@ class ScheduleModel extends Model
     public $dates = ['deleted_at', 'finalizado_em'];
     
     protected $fillable = [
+        'id',
         'user_id', 
         'room_id', 
         'created_by',

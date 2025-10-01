@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\ScheduleNextMonthMirrorLog;
 use App\Models\DataNaoFaturadaModel;
 use App\Models\SchedulesNextMonthModel;
+use Illuminate\Support\Str;
 
 class MonitorScheduleMirrorCron extends Command
 {
@@ -111,6 +112,7 @@ class MonitorScheduleMirrorCron extends Command
                         // $s->data_nao_faturada_id = $scheduleNext->data_nao_faturada_id;
                         // $s->save();
                         ScheduleModel::create([
+                            'id' => (string) Str::uuid(),
                             'user_id' => $scheduleNext->user_id,
                             'room_id' => $scheduleNext->room_id,
                             'created_by' => $scheduleNext->created_by,
@@ -195,7 +197,9 @@ class MonitorScheduleMirrorCron extends Command
                                 // $s->status = $arrDados[$keyExterno]['status'];
                                 // $s->tipo = $arrDados[$keyExterno]['tipo'];
                                 // $s->save();
-                                SchedulesNextMonthModel::create($arrDados[$keyExterno]);
+                                $payload = $arrDados[$keyExterno];
+                                $payload['id'] = (string) Str::uuid();
+                                SchedulesNextMonthModel::create($payload);
                             });
                         }
                     }
