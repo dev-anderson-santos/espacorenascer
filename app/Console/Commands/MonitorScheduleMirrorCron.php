@@ -51,7 +51,7 @@ class MonitorScheduleMirrorCron extends Command
             $messageDebug = 0;
             $schedulesNextMonthId = [];
             $mirroredSchedules = 0;
-            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->addMonth()->format('m'))
+            $schedulesNextMonth = SchedulesNextMonthModel::whereMonth('date', now()->format('m'))
                                 ->where('is_mirrored', 1) // Está para ser espelhado
                                 ->get();
 
