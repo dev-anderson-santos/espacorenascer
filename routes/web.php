@@ -51,10 +51,10 @@ Route::group(['prefix' => 'app'],function () {
             Route::post('/cancel-all-fixed-next-month-schedules/{user_id?}', 'ScheduleController@cancelAllFixedNextMonthSchedules');
             Route::get('/modal-cancelar-agendamento-fixo', 'ScheduleController@modalCancelarAgendamentoFixo')->name('schedule.modal-cancelar-agendamento-fixo');
             Route::post('/cancelar-agendamento-fixo', 'ScheduleController@cancelarAgendamentoFixo')->name('schedule.cancelar-agendamento-fixo');
-            Route::get('/index-administrador', 'ScheduleController@indexAdmin')->name('schedule.index-administrador');
-            Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule-administrador');
-            Route::get('/schedule-search', 'ScheduleController@scheduleSearch')->name('schedule.search');
-            Route::post('/schedule-search', 'ScheduleController@showSpecificShceduleMonth')->name('schedule.show-specific-shedule-month');
+            // Route::get('/index-administrador', 'ScheduleController@indexAdmin')->name('schedule.index-administrador');
+            // Route::post('/index-administrador', 'ScheduleController@showSpecificShceduleAdministrador')->name('schedule.show-specific-shedule-administrador');
+            // Route::get('/schedule-search', 'ScheduleController@scheduleSearch')->name('schedule.search');
+            // Route::post('/schedule-search', 'ScheduleController@showSpecificShceduleMonth')->name('schedule.show-specific-shedule-month');
         });
     
         Route::group(['middleware' => 'is_admin'], function () {
